@@ -6,6 +6,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Component
 public class Iptime {
 
     private static final Pattern findSetCookie = Pattern.compile("setCookie\\(\'[^\\(\\)]+\'\\)");
@@ -116,7 +117,7 @@ public class Iptime {
         List<String> result = new ArrayList<>();
         for (int i = 0; i < inputValue.size(); i = i + 3) {
             if (tdValue.contains(inputValue.get(i))) {
-                result.add(inputValue.get(i));
+                result.add(inputValue.get(i).toUpperCase());
             }
         }
         return result;
