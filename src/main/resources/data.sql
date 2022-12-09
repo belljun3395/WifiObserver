@@ -37,3 +37,33 @@ into member_mac_address_list
 (id, mac_address, member_id)
 values (default, 'DE:CF:44:B1:A4:2E', 4);
 
+insert
+into club_arrival_departure_list
+(id, local_date, member_id)
+values (default, '2022-12-10', 1);
+
+insert
+into club_arrival_departure_list
+    (id, local_date, member_id)
+values (default, '2022-12-10', 2);
+
+insert
+into club_arrival_departure_list
+(id, local_date, member_id)
+values (default, '2022-12-9', 2);
+
+// before more than one month
+insert
+into club_arrival_departure_list
+(id, local_date, member_id)
+values (default, '2022-11-9', 2);
+
+insert
+into club_arrival_departure_list
+(id, local_date, member_id)
+values (default, '2022-12-10', 3);
+
+insert
+into club_arrival_departure_list
+(id, local_date, member_id)
+values (default, '2022-12-10', 4);
