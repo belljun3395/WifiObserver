@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,14 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     private final IptimeService iptimeService;
     private final MacAddressRepository macAddressRepository;
+
+    @Override
+    public List<Long> browseRegistedMembers() {
+        List<MacAddress> all = macAddressRepository.findAll();
+        return all.stream()
+                .map(macAddress -> macAddress.getMemberId())
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void registerMacAddress(MacAddressDTO macAddressDTO) {
