@@ -38,7 +38,7 @@ public class Iptime {
     }
 
 
-    public void getList(String cookieValue) throws IOException {
+    public List<String> getList(String cookieValue) throws IOException {
         Response listResponsePage = ConnectionInfo.getList(cookieValue);
 
         Element body = listResponsePage.parse()
@@ -57,10 +57,11 @@ public class Iptime {
 
         List<String> result = getResult_Only_MAC(tdValue, inputValue);
 
-        for (String r : result) {
-            System.out.println(r);
-        }
+//        for (String r : result) {
+//            System.out.println(r);
+//        }
 
+        return result;
     }
 
     private List<Element> getTd(Elements tbody) {
