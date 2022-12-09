@@ -34,6 +34,7 @@ public class MacAddressServiceImpl implements MacAddressService {
         return byMemberId.get();
     }
 
+    @Override
     public void checkMemberMacAddressIsExist(MacAddress macAddress) throws IOException {
         if (!macAddress.checkExist(iptimeService.getMacAddressesList())) {
             throw new IllegalStateException("this member need to re-register");
