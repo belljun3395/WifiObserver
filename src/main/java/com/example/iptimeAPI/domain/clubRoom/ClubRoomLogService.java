@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ClubRoomLogService {
 
-    void addToDB(Long memberId);
+    void save(Long memberId);
 
     List<List<Long>> calculateRanking(List<Long> memberIds);
 

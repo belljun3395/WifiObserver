@@ -32,7 +32,7 @@ public class ClubsController {
     public void enterClub(Long memberId) throws IOException {
         MacAddress macAddress = macAddressService.validateRegistedMember(memberId);
         macAddressService.checkMemberMacAddressIsExist(macAddress);
-        clubRoomLogService.addToDB(memberId);
+        clubRoomLogService.save(memberId);
     }
 
     @GetMapping("/rankings")

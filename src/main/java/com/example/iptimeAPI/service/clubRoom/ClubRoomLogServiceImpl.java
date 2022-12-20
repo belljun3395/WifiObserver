@@ -18,7 +18,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     private final ClubRoomLogRepository repository;
 
     @Override
-    public void addToDB(Long memberId) {
+    public void save(Long memberId) {
         ClubRoomLog clubRoomLog = new ClubRoomLog(memberId, LocalDate.now());
         repository.save(clubRoomLog);
     }
