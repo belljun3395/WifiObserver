@@ -20,6 +20,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Override
     public void save(Long memberId) {
         ClubRoomLog clubRoomLog = new ClubRoomLog(memberId, LocalDate.now());
+        // todo check already exist
         repository.save(clubRoomLog);
     }
 
@@ -93,6 +94,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         List<List<Long>> result = new LinkedList<>();
         for (Map.Entry<Long, List<Long>> ranking : rankingResultOrderByVisitCount) {
             List<Long> members = ranking.getValue();
+            Collections.shuffle(members);
             result.add(members);
         }
         return result;
