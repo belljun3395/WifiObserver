@@ -38,6 +38,6 @@ public class ClubsController {
     @GetMapping("/rankings")
     public List<List<Long>> rankings() {
         List<Long> memberIds = macAddressService.browseRegisteredMembers();
-        return clubRoomLogService.calculateRanking(memberIds);
+        return clubRoomLogService.getRanking(memberIds);
     }
 }

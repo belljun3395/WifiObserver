@@ -6,6 +6,6 @@ public interface ClubRoomLogService {
 
     void save(Long memberId);
 
-    List<List<Long>> calculateRanking(List<Long> memberIds);
+    List<List<Long>> getRanking(List<Long> memberIds);
 
 }

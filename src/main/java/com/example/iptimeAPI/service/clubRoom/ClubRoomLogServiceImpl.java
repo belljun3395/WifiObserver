@@ -21,11 +21,12 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     public void save(Long memberId) {
         ClubRoomLog clubRoomLog = new ClubRoomLog(memberId, LocalDate.now());
         // todo check already exist
+        // consider use redis?
         repository.save(clubRoomLog);
     }
 
     @Override
-    public List<List<Long>> calculateRanking(List<Long> memberIds) {
+    public List<List<Long>> getRanking(List<Long> memberIds) {
 
         Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds);
 

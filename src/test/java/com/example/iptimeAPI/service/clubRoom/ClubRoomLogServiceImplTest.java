@@ -20,7 +20,7 @@ class ClubRoomLogServiceImplTest {
      */
     @Test
     public void calculateRanking_1() {
-        List<List<Long>> rankingList = clubRoomLogService.calculateRanking(List.of(1L, 2L, 3L, 4L));
+        List<List<Long>> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
 
         int secondSize = rankingList.get(1)
                 .size(); // 1, 3, 4
@@ -31,7 +31,7 @@ class ClubRoomLogServiceImplTest {
 
     @Test
     public void calculateRanking_2() {
-        List<List<Long>> rankingList = clubRoomLogService.calculateRanking(List.of(1L, 2L, 3L, 4L));
+        List<List<Long>> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
 
         List<Long> first = rankingList.get(0);
         Long firstMemberId = first.get(0);
