@@ -15,61 +15,62 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
-    private final ClubRoomLogRepository clubRoomLogRepository;
+    private final ClubRoomLogRepository repository;
 
     @Override
     public void addToDB(Long memberId) {
         ClubRoomLog clubRoomLog = new ClubRoomLog(memberId, LocalDate.now());
-        clubRoomLogRepository.save(clubRoomLog);
+        repository.save(clubRoomLog);
     }
 
     @Override
     public List<List<Long>> calculateRanking(List<Long> memberIds) {
 
-        Map<Long, Long> memberVistCountMap = getMemberVisitCountResult(memberIds);
+        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds);
 
-        List<Map.Entry<Long, Long>> memberVisitCountList = sortReverseByValue(memberVistCountMap);
+        List<Map.Entry<Long, Long>> memberOrderByVisitCount = orderByVisitCount(memberVisitCount);
 
-        return getCalculatedRankingResult(memberVisitCountList);
+        return getCalculatedRankingResult(memberOrderByVisitCount);
     }
 
     private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds) {
-        Map<Long, Long> memberVistCountMap = new HashMap<>();
+        Map<Long, Long> memberVisitCount = new HashMap<>();
         for (Long memberId : memberIds) {
-            long count = clubRoomLogRepository.findAllByMemberIdAndLocalDateBetween(memberId, LocalDate.now()
+            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(memberId, LocalDate.now()
                             .minusMonths(1L), LocalDate.now())
                     .stream()
                     .count();
-            memberVistCountMap.put(memberId, count);
+
+            memberVisitCount.put(memberId, visitCount);
         }
-        return memberVistCountMap;
+        return memberVisitCount;
     }
 
-    private static List<Map.Entry<Long, Long>> sortReverseByValue(Map<Long, Long> memberVistCountMap) {
-        Set<Map.Entry<Long, Long>> memberVisitCountSet = memberVistCountMap.entrySet();
-        List<Map.Entry<Long, Long>> memberVisitCountList = new LinkedList<>(memberVisitCountSet);
-        memberVisitCountList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        return memberVisitCountList;
+    private static List<Map.Entry<Long, Long>> orderByVisitCount(Map<Long, Long> memberVisitCount) {
+        List<Map.Entry<Long, Long>> memberOrderByVisitCount = new LinkedList<>(memberVisitCount.entrySet());
+        memberOrderByVisitCount.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        return memberOrderByVisitCount;
     }
 
-    private static List<List<Long>> getCalculatedRankingResult(List<Map.Entry<Long, Long>> memberVisitCountList) {
+    private static List<List<Long>> getCalculatedRankingResult(List<Map.Entry<Long, Long>> memberOrderByVisitCount) {
 
         Map<Long, List<Long>> calculatedRankingResult = new HashMap<>();
-        for (Map.Entry<Long, Long> me : memberVisitCountList) {
-            if (calculatedRankingResult.containsKey(me.getValue())) {
-                List<Long> memberIdList = mergeList(calculatedRankingResult.get(me.getValue()), me.getKey());
-                calculatedRankingResult.put(me.getValue(), memberIdList);
+        for (Map.Entry<Long, Long> member : memberOrderByVisitCount) {
+            Long memberId = member.getKey();
+            Long memberVisitCount = member.getValue();
+            if (calculatedRankingResult.containsKey(memberVisitCount)) {
+                List<Long> memberIdList = mergeList(calculatedRankingResult.get(memberVisitCount), memberId);
+                calculatedRankingResult.put(memberVisitCount, memberIdList);
             }
-            if (!calculatedRankingResult.containsKey(me.getValue())) {
-                calculatedRankingResult.put(me.getValue(), List.of(me.getKey()));
+
+            if (!calculatedRankingResult.containsKey(memberVisitCount)) {
+                calculatedRankingResult.put(memberVisitCount, List.of(memberId));
             }
         }
 
-        List<Map.Entry<Long, List<Long>>> reverseByKey = sortReverseByKey(calculatedRankingResult);
+        List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount = orderByRankingVisitCount(calculatedRankingResult);
 
-        List<List<Long>> result = convertToList(reverseByKey);
-
-        return result;
+        return convertToRanking(rankingResultOrderByVisitCount);
     }
 
     private static List<Long> mergeList(List<Long> baseList, Long value) {
@@ -82,17 +83,17 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         return memberIdList;
     }
 
-    private static List<Map.Entry<Long, List<Long>>> sortReverseByKey(Map<Long, List<Long>> calculatedRankingResult) {
-        Set<Map.Entry<Long, List<Long>>> calculatedRankingResultSet = calculatedRankingResult.entrySet();
-        List<Map.Entry<Long, List<Long>>> calculatedRankingList = new LinkedList<>(calculatedRankingResultSet);
-        calculatedRankingList.sort(Map.Entry.comparingByKey(Comparator.reverseOrder()));
-        return calculatedRankingList;
+    private static List<Map.Entry<Long, List<Long>>> orderByRankingVisitCount(Map<Long, List<Long>> calculatedRankingResult) {
+        List<Map.Entry<Long, List<Long>>> reverseByKey = new LinkedList<>(calculatedRankingResult.entrySet());
+        reverseByKey.sort(Map.Entry.comparingByKey(Comparator.reverseOrder()));
+        return reverseByKey;
     }
 
-    private static List<List<Long>> convertToList(List<Map.Entry<Long, List<Long>>> reverseByKey) {
+    private static List<List<Long>> convertToRanking(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
         List<List<Long>> result = new LinkedList<>();
-        for (Map.Entry<Long, List<Long>> me : reverseByKey) {
-            result.add(me.getValue());
+        for (Map.Entry<Long, List<Long>> ranking : rankingResultOrderByVisitCount) {
+            List<Long> members = ranking.getValue();
+            result.add(members);
         }
         return result;
     }
