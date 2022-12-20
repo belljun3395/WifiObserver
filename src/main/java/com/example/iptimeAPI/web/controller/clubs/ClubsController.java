@@ -4,6 +4,7 @@ import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
+import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class ClubsController {
     }
 
     @GetMapping("/rankings")
-    public List<List<Long>> rankings() {
+    public List<MemberRankingDTO> rankings() {
         List<Long> memberIds = macAddressService.browseRegisteredMembers();
         return clubRoomLogService.getRanking(memberIds);
     }

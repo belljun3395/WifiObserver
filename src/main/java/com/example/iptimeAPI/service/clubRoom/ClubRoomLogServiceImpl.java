@@ -3,6 +3,7 @@ package com.example.iptimeAPI.service.clubRoom;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     @Override
-    public List<List<Long>> getRanking(List<Long> memberIds) {
+    public List<MemberRankingDTO> getRanking(List<Long> memberIds) {
 
         Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds);
 
@@ -54,7 +55,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         return memberOrderByVisitCount;
     }
 
-    private static List<List<Long>> getCalculatedRankingResult(List<Map.Entry<Long, Long>> memberOrderByVisitCount) {
+    private static List<MemberRankingDTO> getCalculatedRankingResult(List<Map.Entry<Long, Long>> memberOrderByVisitCount) {
 
         Map<Long, List<Long>> calculatedRankingResult = new HashMap<>();
         for (Map.Entry<Long, Long> member : memberOrderByVisitCount) {
@@ -91,13 +92,27 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         return reverseByKey;
     }
 
-    private static List<List<Long>> convertToRanking(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
-        List<List<Long>> result = new LinkedList<>();
+    private static List<MemberRankingDTO> convertToRanking(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
+        List<List<Long>> rankingAndMemberList = getRankingAndMemberList(rankingResultOrderByVisitCount);
+        return getMemberRankingDTOS(rankingAndMemberList);
+    }
+
+    private static List<List<Long>> getRankingAndMemberList(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
+        List<List<Long>> rankingAndMemberList = new ArrayList<>();
         for (Map.Entry<Long, List<Long>> ranking : rankingResultOrderByVisitCount) {
             List<Long> members = ranking.getValue();
             Collections.shuffle(members);
-            result.add(members);
+            rankingAndMemberList.add(members);
         }
-        return result;
+        return rankingAndMemberList;
+    }
+    private static List<MemberRankingDTO> getMemberRankingDTOS(List<List<Long>> rankingAndMemberList) {
+        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
+        for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
+            for (Long memberId : rankingAndMemberList.get(i)) {
+                memberRankingDTOS.add(new MemberRankingDTO(i, memberId));
+            }
+        }
+        return memberRankingDTOS;
     }
 }

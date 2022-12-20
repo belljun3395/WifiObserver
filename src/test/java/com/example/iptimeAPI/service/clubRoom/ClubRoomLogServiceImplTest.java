@@ -1,6 +1,7 @@
 package com.example.iptimeAPI.service.clubRoom;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +21,20 @@ class ClubRoomLogServiceImplTest {
      */
     @Test
     public void calculateRanking_1() {
-        List<List<Long>> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
+        List<MemberRankingDTO> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
 
-        int secondSize = rankingList.get(1)
-                .size(); // 1, 3, 4
+        Long rankingFirstMember = rankingList.get(0)
+                .getMemberId();
 
-        Assertions.assertThat(secondSize)
-                .isEqualTo(3);
+        Assertions.assertThat(rankingFirstMember)
+                .isEqualTo(2);
     }
 
     @Test
     public void calculateRanking_2() {
-        List<List<Long>> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
+        List<MemberRankingDTO>rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
 
-        List<Long> first = rankingList.get(0);
-        Long firstMemberId = first.get(0);
+        Long firstMemberId = rankingList.get(0).getMemberId();
 
         Assertions.assertThat(firstMemberId)
                 .isEqualTo(2);
