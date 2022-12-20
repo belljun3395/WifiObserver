@@ -1,7 +1,6 @@
-package com.example.iptimeAPI.service.macAddress;
+package com.example.iptimeAPI.domain.macAddress;
 
-import com.example.iptimeAPI.controller.dto.MacAddressDTO;
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.web.dto.MacAddressDTO;
 
 import java.io.IOException;
 import java.util.List;

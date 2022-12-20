@@ -2,6 +2,7 @@ package com.example.iptimeAPI.service.clubRoom;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
+import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

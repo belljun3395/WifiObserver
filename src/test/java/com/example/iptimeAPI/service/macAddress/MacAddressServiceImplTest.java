@@ -1,7 +1,8 @@
 package com.example.iptimeAPI.service.macAddress;
 
-import com.example.iptimeAPI.controller.dto.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

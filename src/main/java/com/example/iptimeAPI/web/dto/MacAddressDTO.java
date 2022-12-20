@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.controller.dto;
+package com.example.iptimeAPI.web.dto;
 
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import lombok.Data;

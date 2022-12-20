@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.service.clubRoom;
+package com.example.iptimeAPI.domain.clubRoom;
 
 import java.util.List;
 

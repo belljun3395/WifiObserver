@@ -1,8 +1,9 @@
 package com.example.iptimeAPI.service.macAddress;
 
-import com.example.iptimeAPI.controller.dto.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
+import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.domain.macAddress.MacAddresses;
 import com.example.iptimeAPI.util.iptime.service.IptimeService;
 import lombok.RequiredArgsConstructor;

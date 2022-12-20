@@ -1,7 +1,7 @@
-package com.example.iptimeAPI.controller.macAddress;
+package com.example.iptimeAPI.web.controller.macAddress;
 
-import com.example.iptimeAPI.controller.dto.MacAddressDTO;
-import com.example.iptimeAPI.service.macAddress.MacAddressService;
+import com.example.iptimeAPI.web.dto.MacAddressDTO;
+import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

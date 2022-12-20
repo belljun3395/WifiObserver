@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.service.clubRoom;
 
+import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
