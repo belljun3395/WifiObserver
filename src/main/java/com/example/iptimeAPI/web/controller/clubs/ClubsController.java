@@ -30,14 +30,14 @@ public class ClubsController {
 
     @PostMapping("/entrance")
     public void enterClub(Long memberId) throws IOException {
-        MacAddress macAddress = macAddressService.validateRegistedMember(memberId);
+        MacAddress macAddress = macAddressService.validateRegisteredMember(memberId);
         macAddressService.checkMemberMacAddressIsExist(macAddress);
         clubRoomLogService.save(memberId);
     }
 
     @GetMapping("/rankings")
     public List<List<Long>> rankings() {
-        List<Long> memberIds = macAddressService.browseRegistedMembers();
+        List<Long> memberIds = macAddressService.browseRegisteredMembers();
         return clubRoomLogService.calculateRanking(memberIds);
     }
 }

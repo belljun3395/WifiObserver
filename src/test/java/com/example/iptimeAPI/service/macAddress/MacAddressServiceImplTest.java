@@ -36,13 +36,13 @@ class MacAddressServiceImplTest {
 
     @Test
     public void validateRegistedMember() {
-        macAddressService.validateRegistedMember(1L);
+        macAddressService.validateRegisteredMember(1L);
     }
 
     @Test
     public void validateRegistedMember_Exception() {
         Assertions.assertThatIllegalStateException()
-                .isThrownBy(() -> macAddressService.validateRegistedMember(5L));
+                .isThrownBy(() -> macAddressService.validateRegisteredMember(5L));
     }
 
     @Test
@@ -55,7 +55,7 @@ class MacAddressServiceImplTest {
 
     @Test
     public void browseRegistedMembers() {
-        List<Long> members = macAddressService.browseRegistedMembers();
+        List<Long> members = macAddressService.browseRegisteredMembers();
 
         Assertions.assertThat(members.size())
                 .isEqualTo(4);

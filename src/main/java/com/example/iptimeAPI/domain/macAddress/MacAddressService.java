@@ -9,9 +9,9 @@ public interface MacAddressService {
 
     void registerMacAddress(MacAddressDTO macAddressDTO);
 
-    List<Long> browseRegistedMembers();
+    List<Long> browseRegisteredMembers();
 
-    MacAddress validateRegistedMember(Long memberId);
+    MacAddress validateRegisteredMember(Long memberId);
 
     void checkMemberMacAddressIsExist(MacAddress macAddress) throws IOException;
 

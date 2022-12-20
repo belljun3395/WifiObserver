@@ -4,7 +4,6 @@ import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.domain.macAddress.MacAddresses;
 import com.example.iptimeAPI.util.iptime.service.IptimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     private final MacAddressRepository macAddressRepository;
 
     @Override
-    public List<Long> browseRegistedMembers() {
+    public List<Long> browseRegisteredMembers() {
         List<MacAddress> all = macAddressRepository.findAll();
         return all.stream()
                 .map(macAddress -> macAddress.getMemberId())
@@ -36,7 +35,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     }
 
     @Override
-    public MacAddress validateRegistedMember(Long memberId) {
+    public MacAddress validateRegisteredMember(Long memberId) {
         Optional<MacAddress> byMemberId = macAddressRepository.findByMemberId(memberId);
         if (byMemberId.isEmpty()) {
             throw new IllegalStateException("this member need to register to DB");
@@ -58,13 +57,12 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     public List<MacAddressDTO> browseExistMember() throws IOException {
-        MacAddresses macAddresses = new MacAddresses(macAddressRepository.findAll());
-        List<MacAddress> macAddressesList = macAddresses.getMacAddresses();
+        List<MacAddress> registeredMacAddresses = macAddressRepository.findAll();
 
         List<String> ipTimeMacAddressesList = iptimeService.getMacAddressesList();
 
         List<MacAddressDTO> macAddressDTOS = new ArrayList<>();
-        for (MacAddress mac : macAddressesList) {
+        for (MacAddress mac : registeredMacAddresses) {
             if (mac.checkExist(ipTimeMacAddressesList)) {
                 macAddressDTOS.add(new MacAddressDTO(mac.getMemberId(), mac.getMacAddress()));
             }
