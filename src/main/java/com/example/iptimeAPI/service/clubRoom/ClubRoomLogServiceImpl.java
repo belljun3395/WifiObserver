@@ -36,6 +36,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         return getCalculatedRankingResult(memberOrderByVisitCount);
     }
 
+    // todo 기간 조정할 수 있도록
     private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds) {
         Map<Long, Long> memberVisitCount = new HashMap<>();
         for (Long memberId : memberIds) {
@@ -110,7 +111,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
             for (Long memberId : rankingAndMemberList.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(i, memberId));
+                memberRankingDTOS.add(new MemberRankingDTO(j, memberId));
             }
         }
         return memberRankingDTOS;
