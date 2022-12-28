@@ -21,7 +21,7 @@ class ClubRoomLogServiceImplTest {
      */
     @Test
     public void calculateRanking_1() {
-        List<MemberRankingDTO> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
+        List<MemberRankingDTO> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L), RankingType.valueOf("MONTH"));
 
         Long rankingFirstMember = rankingList.get(0)
                 .getMemberId();
@@ -32,7 +32,7 @@ class ClubRoomLogServiceImplTest {
 
     @Test
     public void calculateRanking_2() {
-        List<MemberRankingDTO>rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L));
+        List<MemberRankingDTO> rankingList = clubRoomLogService.getRanking(List.of(1L, 2L, 3L, 4L), RankingType.valueOf("MONTH"));
 
         Long firstMemberId = rankingList.get(0).getMemberId();
 

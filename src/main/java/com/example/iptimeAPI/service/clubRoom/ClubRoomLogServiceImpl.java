@@ -27,9 +27,9 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     @Override
-    public List<MemberRankingDTO> getRanking(List<Long> memberIds) {
+    public List<MemberRankingDTO> getRanking(List<Long> memberIds, RankingType type) {
 
-        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds);
+        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, type);
 
         List<Map.Entry<Long, Long>> memberOrderByVisitCount = orderByVisitCount(memberVisitCount);
 
@@ -37,14 +37,12 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     // todo 기간 조정할 수 있도록
-    private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds) {
+    private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, RankingType type) {
         Map<Long, Long> memberVisitCount = new HashMap<>();
         for (Long memberId : memberIds) {
-            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(memberId, LocalDate.now()
-                            .minusMonths(1L), LocalDate.now())
+            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(memberId, type.getBeforeLocalDate(), LocalDate.now())
                     .stream()
                     .count();
-
             memberVisitCount.put(memberId, visitCount);
         }
         return memberVisitCount;

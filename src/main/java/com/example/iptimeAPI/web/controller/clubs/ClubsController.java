@@ -1,15 +1,13 @@
 package com.example.iptimeAPI.web.controller.clubs;
 
+import com.example.iptimeAPI.service.clubRoom.RankingType;
 import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,9 +34,9 @@ public class ClubsController {
         clubRoomLogService.save(memberId);
     }
 
-    @GetMapping("/rankings")
-    public List<MemberRankingDTO> rankings() {
+    @GetMapping("/rankings/{type}")
+    public List<MemberRankingDTO> rankings(@PathVariable String type) {
         List<Long> memberIds = macAddressService.browseRegisteredMembers();
-        return clubRoomLogService.getRanking(memberIds);
+        return clubRoomLogService.getRanking(memberIds, RankingType.valueOf(type.toUpperCase()));
     }
 }
