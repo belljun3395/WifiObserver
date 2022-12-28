@@ -1,18 +1,27 @@
 package com.example.iptimeAPI.util.iptime.info;
 
-import com.example.iptimeAPI.util.iptime.config.Const;
+import com.example.iptimeAPI.util.iptime.config.IptimeConfig;
+import com.example.iptimeAPI.util.iptime.config.IptimeConfigHTTP;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
+@RequiredArgsConstructor
 public class AdminInfo {
 
-    public static Map<String, String> makeLoginData() {
+    private final IptimeConfigHTTP iptimeConfigHTTP;
+    private final IptimeConfig iptimeConfig;
+
+
+    public Map<String, String> getLoginData() {
         Map<String, String> data = new HashMap<>();
-        data.put("init_status", Const.Init_Status);
-        data.put("captcha_on", Const.Captcha_On);
-        data.put("username", Const.Username);
-        data.put("passwd", Const.Passwd);
+        data.put("init_status", iptimeConfigHTTP.getInit_status());
+        data.put("captcha_on", iptimeConfigHTTP.getCaptcha_on());
+        data.put("username", iptimeConfig.getUsername());
+        data.put("passwd", iptimeConfig.getPasswd());
         return data;
     }
 

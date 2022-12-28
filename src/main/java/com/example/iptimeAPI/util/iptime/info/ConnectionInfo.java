@@ -1,30 +1,51 @@
 package com.example.iptimeAPI.util.iptime.info;
 
-import com.example.iptimeAPI.util.iptime.config.CommonSetting;
-import com.example.iptimeAPI.util.iptime.config.Const;
+import com.example.iptimeAPI.util.iptime.config.*;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.util.Map;
 
-import static org.jsoup.Connection.*;
+import org.jsoup.Connection.*;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class ConnectionInfo {
-    private static CommonSetting commonSetting = new CommonSetting(Const.UserAgent, Const.Accept,Const.Accept_Encoding,Const.Accept_Language,Const.Cache_Control,Const.Connection,Const.Host,Const.Origin,Const.Upgrade_Insecure_Request);
-    private static  Map<String, String> data = AdminInfo.makeLoginData();
+
+    private final IptimeConfig iptimeConfig;
+    private final IptimeConfigHTTP iptimeConfigHTTP;
+    private final AdminInfo adminInfo;
 
 
-    public static Response getCookieValueConnection() throws IOException {
-        return connect(Const.CookieValueUrl, Method.POST, commonSetting, Const.CookieValue_Referer, Const.Content_Length, Const.Content_Type, data);
-    }
-    public static Response login(String cookie_value) throws IOException {
-        return connect(Const.LoginUrl, Method.GET, commonSetting, Const.Login_Referer, cookie_value, Const.Content_Length, Const.Content_Type, data);
-    }
-    public static Response getList(String cookie_value) throws IOException {
-        return connect(Const.ListUrl, Method.GET,commonSetting, Const.List_Referer, cookie_value);
+    private CommonSetting getCommonSetting() {
+        return CommonSetting.builder()
+                .agent(iptimeConfigHTTP.getUseragent())
+                .accept(iptimeConfigHTTP.getAccept())
+                .accept_encoding(iptimeConfigHTTP.getAccept_encoding())
+                .accept_language(iptimeConfigHTTP.getAccept_language())
+                .cache_control(iptimeConfigHTTP.getCache_control())
+                .connection(iptimeConfigHTTP.getConnection())
+                .host(iptimeConfig.getHost())
+                .origin(iptimeConfig.getOrigin())
+                .upgrade_insecure_request(iptimeConfigHTTP.getUpgrade_insecure_request())
+                .build();
     }
 
-    public static Response connect(String url, Method method, CommonSetting commonSetting, String referer, String content_length, String content_type, Map<String, String> data) throws IOException {
+
+    public Response getCookieValueConnection() throws IOException {
+        return connect(iptimeConfigHTTP.get_cookie_value(), Method.POST, getCommonSetting(), iptimeConfigHTTP.get_cookie_value_referer(), iptimeConfigHTTP.getContent_length(), iptimeConfigHTTP.getContent_type());
+    }
+
+    public Response login(String cookie_value) throws IOException {
+        return connect(iptimeConfigHTTP.get_login_url(), Method.GET, getCommonSetting(), iptimeConfigHTTP.get_login_referer(), cookie_value, iptimeConfigHTTP.getContent_length(), iptimeConfigHTTP.getContent_type());
+    }
+
+    public Response getList(String cookie_value) throws IOException {
+        return connect(iptimeConfigHTTP.get_list_url(), Method.GET, getCommonSetting(), iptimeConfigHTTP.get_list_referer(), cookie_value);
+    }
+
+    private Response connect(String url, Method method, CommonSetting commonSetting, String referer, String content_length, String content_type) throws IOException {
         return Jsoup.connect(url)
                 .userAgent(commonSetting.getAgent())
                 .header("Accept", commonSetting.getAccept())
@@ -40,11 +61,11 @@ public class ConnectionInfo {
                 .header("Referer", referer)
                 .header("Content-Length", content_length)
                 .header("Content-Type", content_type)
-                .data(data)
+                .data(adminInfo.getLoginData())
                 .execute();
     }
 
-    public static Response connect(String url, Method method, CommonSetting commonSetting, String referer, String cookie_value, String content_length, String content_type, Map<String, String> data) throws IOException {
+    private Response connect(String url, Method method, CommonSetting commonSetting, String referer, String cookie_value, String content_length, String content_type) throws IOException {
         return Jsoup.connect(url)
                 .userAgent(commonSetting.getAgent())
                 .header("Accept", commonSetting.getAccept())
@@ -61,10 +82,11 @@ public class ConnectionInfo {
                 .cookie("efm_session_id", cookie_value)
                 .header("Content-Length", content_length)
                 .header("Content-Type", content_type)
-                .data(data)
+                .data(adminInfo.getLoginData())
                 .execute();
     }
-    public static Response connect(String url, Method method, CommonSetting commonSetting, String referer, String cookie_value) throws IOException {
+
+    private Response connect(String url, Method method, CommonSetting commonSetting, String referer, String cookie_value) throws IOException {
         return Jsoup.connect(url)
                 .userAgent(commonSetting.getAgent())
                 .header("Accept", commonSetting.getAccept())
@@ -79,7 +101,7 @@ public class ConnectionInfo {
 
                 .header("Referer", referer)
                 .cookie("efm_session_id", cookie_value)
-                .data(data)
+                .data(adminInfo.getLoginData())
                 .execute();
     }
 }

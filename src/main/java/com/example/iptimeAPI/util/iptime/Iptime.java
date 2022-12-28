@@ -1,7 +1,8 @@
 package com.example.iptimeAPI.util.iptime;
 
+import com.example.iptimeAPI.util.iptime.config.IptimeConfigHTML;
 import com.example.iptimeAPI.util.iptime.info.ConnectionInfo;
-import com.example.iptimeAPI.util.iptime.config.Const;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,15 +16,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class Iptime {
 
-    private static final Pattern findSetCookie = Pattern.compile("setCookie\\(\'[^\\(\\)]+\'\\)");
-    private static final Pattern extractCookieName = Pattern.compile("([^\\(\\)]+)");
-    private static final String VOID = "";
+    private final Pattern findSetCookie = Pattern.compile("setCookie\\(\'[^\\(\\)]+\'\\)");
+    private final Pattern extractCookieName = Pattern.compile("([^\\(\\)]+)");
+    private final String VOID = "";
+
+    private final IptimeConfigHTML iptimeConfigHTML;
+    private final ConnectionInfo connectionInfo;
 
 
     public String getCookieValue() throws IOException {
-        Response cookieValueResponse = ConnectionInfo.getCookieValueConnection();
+        Response cookieValueResponse = connectionInfo.getCookieValueConnection();
 
         Document loginPageDocument = cookieValueResponse.parse();
         String bodyString = loginPageDocument.body()
@@ -35,16 +40,16 @@ public class Iptime {
     }
 
     public void login(String cookie_value) throws IOException {
-        ConnectionInfo.login(cookie_value);
+        connectionInfo.login(cookie_value);
     }
 
 
     public List<String> getList(String cookieValue) throws IOException {
-        Response listResponsePage = ConnectionInfo.getList(cookieValue);
+        Response listResponsePage = connectionInfo.getList(cookieValue);
 
         Element body = listResponsePage.parse()
                 .body();
-        Elements tbody = body.select(Const.Tag_Tbody);
+        Elements tbody = body.select(iptimeConfigHTML.getTbody());
 
         List<Element> td = getTd(tbody);
 
@@ -69,11 +74,11 @@ public class Iptime {
         List<Element> tdElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements tr = tbody.get(i)
-                    .select(Const.Tag_Tr);
-            Elements td = tr.select(Const.Tag_Td);
+                    .select(iptimeConfigHTML.getTr());
+            Elements td = tr.select(iptimeConfigHTML.getTd());
             for (Element j : td) {
                 if (!j.toString()
-                        .contains(Const.Extract_Style_Tag)) {
+                        .contains(iptimeConfigHTML.getStyle())) {
                     tdElement.add(j);
                 }
 
@@ -86,7 +91,7 @@ public class Iptime {
         List<Element> inputElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements input = tbody.get(i)
-                    .select(Const.Tag_Input);
+                    .select(iptimeConfigHTML.getInput());
             for (Element j : input) {
                 inputElement.add(j);
             }
