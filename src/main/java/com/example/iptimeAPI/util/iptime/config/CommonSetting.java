@@ -1,8 +1,9 @@
 package com.example.iptimeAPI.util.iptime.config;
 
 import lombok.Builder;
-import org.jsoup.Connection;
+import lombok.Getter;
 
+@Getter
 public class CommonSetting {
     private String agent;
     private String accept;
@@ -25,42 +26,6 @@ public class CommonSetting {
         this.host = host;
         this.origin = origin;
         this.upgrade_insecure_request = upgrade_insecure_request;
-    }
-
-    public String getAgent() {
-        return agent;
-    }
-
-    public String getAccept() {
-        return accept;
-    }
-
-    public String getAccept_encoding() {
-        return accept_encoding;
-    }
-
-    public String getAccept_language() {
-        return accept_language;
-    }
-
-    public String getCache_control() {
-        return cache_control;
-    }
-
-    public String getConnection() {
-        return connection;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public String getUpgrade_insecure_request() {
-        return upgrade_insecure_request;
     }
 
 }
