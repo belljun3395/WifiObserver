@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface IptimeService {
 
-    List<String> getMacAddressesList() throws IOException;
+    List<String> getLatestMacAddressesList() throws IOException;
 
 }

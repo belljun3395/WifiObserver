@@ -45,7 +45,7 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     public void checkMemberMacAddressIsExist(MacAddress macAddress) throws IOException {
-        if (!macAddress.checkExist(iptimeService.getMacAddressesList())) {
+        if (!macAddress.checkExist(iptimeService.getLatestMacAddressesList())) {
             throw new IllegalStateException("this member need to re-register");
         }
     }
@@ -59,7 +59,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     public List<MacAddressDTO> browseExistMember() throws IOException {
         List<MacAddress> registeredMacAddresses = macAddressRepository.findAll();
 
-        List<String> ipTimeMacAddressesList = iptimeService.getMacAddressesList();
+        List<String> ipTimeMacAddressesList = iptimeService.getLatestMacAddressesList();
 
         List<MacAddressDTO> macAddressDTOS = new ArrayList<>();
         for (MacAddress mac : registeredMacAddresses) {
