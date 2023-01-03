@@ -26,17 +26,6 @@ public class MacAddress {
     }
 
     public boolean checkExist(List<String> macAddresses) {
-        long isExist = macAddresses.stream()
-                .filter(s -> this.equals(s))
-                .count();
-        if (isExist == 1) {
-            return true;
-        }
-        return false;
+        return macAddresses.contains(this.macAddress);
     }
-
-    public boolean equals(String s) {
-        return macAddress.equals(s);
-    }
-
 }
