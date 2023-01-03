@@ -1,5 +1,10 @@
 ## 2차 API 설명
 
+### 아키텍처
+![Group 1](https://user-images.githubusercontent.com/102807742/210286789-df2c8fc9-8668-48cd-8555-8092a4aebe0c.png)
+
+현재 아키텍처의 모습은 이전과 동일하다.
+
 ### Iptime에서 리스트 조회
 ```java
     @Override
