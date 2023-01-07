@@ -28,7 +28,7 @@ public class ClubsController {
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
 
-    @GetMapping("/in")
+    @PostMapping("/in")
     public ApiResponse<ApiResponse.withData> isInClub(IpDTO ipDTO) {
         return ApiResponseGenerator.success(iptimeService.isInIptime(ipDTO), HttpStatus.OK, HttpStatus.OK.value() + "100", "in ecnv");
     }
