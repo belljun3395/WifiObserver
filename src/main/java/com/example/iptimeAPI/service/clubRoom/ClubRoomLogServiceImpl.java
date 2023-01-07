@@ -6,6 +6,7 @@ import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,12 +14,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
     private final ClubRoomLogRepository repository;
 
     @Override
+    @Transactional
     public void save(Long memberId) {
         Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
         if (byMemberId.isPresent()) {
