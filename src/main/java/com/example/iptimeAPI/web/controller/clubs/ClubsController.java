@@ -7,6 +7,8 @@ import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
+import com.example.iptimeAPI.web.exception.MacAddressValidateError;
+import com.example.iptimeAPI.web.exception.MacAddressValidateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +40,7 @@ public class ClubsController {
     public void enterClub(Long memberId) {
         MacAddress macAddress = macAddressService.findMemberMacAddress(memberId);
         if (!iptimeService.isExistMacAddress(macAddress)) {
-            throw new IllegalStateException("need macAddress regist");
+            throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
         }
         clubRoomLogService.save(memberId);
     }

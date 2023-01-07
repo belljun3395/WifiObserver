@@ -5,6 +5,8 @@ import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
+import com.example.iptimeAPI.web.exception.MacAddressValidateError;
+import com.example.iptimeAPI.web.exception.MacAddressValidateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     public MacAddress findMemberMacAddress(Long memberId) {
         Optional<MacAddress> byMemberId = repository.findByMemberId(memberId);
         if (byMemberId.isEmpty()) {
-            throw new IllegalStateException("this member need to register to DB");
+            throw new MacAddressValidateException(MacAddressValidateError.NOT_REGISTER_MEMBER);
         }
         return byMemberId.get();
     }
