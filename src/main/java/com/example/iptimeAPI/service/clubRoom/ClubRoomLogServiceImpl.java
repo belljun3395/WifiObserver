@@ -20,7 +20,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
     @Override
     public void save(Long memberId) {
-        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAAndLocalDate(memberId, LocalDate.now());
+        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
         if (byMemberId.isPresent()) {
             return;
         }
