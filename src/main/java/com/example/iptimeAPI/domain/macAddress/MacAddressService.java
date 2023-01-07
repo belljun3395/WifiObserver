@@ -1,7 +1,6 @@
 package com.example.iptimeAPI.domain.macAddress;
 
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
-import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
 
 import java.util.List;
 
@@ -9,13 +8,13 @@ public interface MacAddressService {
 
     void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO);
 
-    void editMacAddress(MacAddressResponseDTO macAddressResponseDTO);
+    void editMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO);
 
-    List<MacAddress> browseMacAddresses();
+    List<MacAddress.MacAddressResponseDTO> browseMacAddresses();
 
     List<Long> browseMacAddressesMembers();
 
-    MacAddress findMemberMacAddress(Long memberId);
+    MacAddress.MacAddressResponseDTO findMemberMacAddress(Long memberId);
 
 }
 

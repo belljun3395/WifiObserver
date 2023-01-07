@@ -3,7 +3,6 @@ package com.example.iptimeAPI.web.controller.macAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +19,13 @@ public class MacAddressController {
     }
 
     @GetMapping("/{memberId}")
-    public MacAddressResponseDTO findMemberMacAddress(@PathVariable("memberId") Long memberId) {
-        MacAddress memberMacAddress = macAddressService.findMemberMacAddress(memberId);
-        return new MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
+    public MacAddress.MacAddressResponseDTO findMemberMacAddress(@PathVariable("memberId") Long memberId) {
+        MacAddress.MacAddressResponseDTO memberMacAddress = macAddressService.findMemberMacAddress(memberId);
+        return new MacAddress.MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
     }
 
     @PutMapping("/{memberId}")
-    public void editMemberMacAddress(MacAddressResponseDTO macAddressResponseDTO) {
+    public void editMemberMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
         macAddressService.editMacAddress(macAddressResponseDTO);
     }
 

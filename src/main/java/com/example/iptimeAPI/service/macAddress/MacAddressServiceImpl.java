@@ -4,7 +4,6 @@ import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
 import com.example.iptimeAPI.web.exception.MacAddressValidateError;
 import com.example.iptimeAPI.web.exception.MacAddressValidateException;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +25,16 @@ public class MacAddressServiceImpl implements MacAddressService {
     }
 
     @Override
-    public void editMacAddress(MacAddressResponseDTO macAddressResponseDTO) {
+    public void editMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
         repository.save(new MacAddress(macAddressResponseDTO.getId(), macAddressResponseDTO.getMemberId(), macAddressResponseDTO.getMacAddress()));
     }
 
     @Override
-    public List<MacAddress> browseMacAddresses() {
-        return repository.findAll();
+    public List<MacAddress.MacAddressResponseDTO> browseMacAddresses() {
+        return repository.findAll()
+                .stream()
+                .map(macAddress -> new MacAddress.MacAddressResponseDTO(macAddress.getId(), macAddress.getMemberId(), macAddress.getMacAddress()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -44,11 +46,12 @@ public class MacAddressServiceImpl implements MacAddressService {
     }
 
     @Override
-    public MacAddress findMemberMacAddress(Long memberId) {
+    public MacAddress.MacAddressResponseDTO findMemberMacAddress(Long memberId) {
         Optional<MacAddress> byMemberId = repository.findByMemberId(memberId);
         if (byMemberId.isEmpty()) {
             throw new MacAddressValidateException(MacAddressValidateError.NOT_REGISTER_MEMBER);
         }
-        return byMemberId.get();
+        MacAddress macAddress = byMemberId.get();
+        return new MacAddress.MacAddressResponseDTO(macAddress.getId(), macAddress.getMemberId(), macAddress.getMacAddress());
     }
 }

@@ -1,9 +1,9 @@
 package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.iptime.IptimeService;
+import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.service.clubRoom.RankingType;
 import com.example.iptimeAPI.web.dto.IpDTO;
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
@@ -32,14 +32,14 @@ public class ClubsController {
 
     @GetMapping("/members")
     public List<Long> browseExistMember() {
-        List<MacAddress> macAddresses = macAddressService.browseMacAddresses();
+        List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
         return iptimeService.browseExistMembers(macAddresses);
     }
 
     @PostMapping("/entrance")
     public void enterClub(Long memberId) {
-        MacAddress macAddress = macAddressService.findMemberMacAddress(memberId);
-        if (!iptimeService.isExistMacAddress(macAddress)) {
+        MacAddress.MacAddressResponseDTO macAddress = macAddressService.findMemberMacAddress(memberId);
+        if (!iptimeService.isExistMacAddress(macAddress.getMacAddress())) {
             throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
         }
         clubRoomLogService.save(memberId);

@@ -34,8 +34,8 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public boolean isExistMacAddress(MacAddress macAddress) {
-        return macAddressesList.contains(macAddress.getMacAddress());
+    public boolean isExistMacAddress(String macAddress) {
+        return macAddressesList.contains(macAddress);
     }
 
     @Scheduled(fixedDelay = 3000)
@@ -56,10 +56,10 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public List<Long> browseExistMembers(List<MacAddress> registeredMacAddresses) {
+    public List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
         List<Long> existMembers = new ArrayList<>();
-        for (MacAddress mac : registeredMacAddresses) {
-            if (isExistMacAddress(mac)) {
+        for (MacAddress.MacAddressResponseDTO mac : registeredMacAddresses) {
+            if (this.isExistMacAddress(mac.getMacAddress())) {
                 existMembers.add(mac.getMemberId());
             }
         }
