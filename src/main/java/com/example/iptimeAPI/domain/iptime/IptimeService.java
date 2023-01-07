@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.util.iptime.service;
+package com.example.iptimeAPI.domain.iptime;
 
 import java.io.IOException;
 import java.util.List;

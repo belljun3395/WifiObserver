@@ -1,6 +1,7 @@
-package com.example.iptimeAPI.util.iptime.service;
+package com.example.iptimeAPI.service.iptime;
 
-import com.example.iptimeAPI.util.iptime.Iptime;
+import com.example.iptimeAPI.domain.iptime.Iptime;
+import com.example.iptimeAPI.domain.iptime.IptimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

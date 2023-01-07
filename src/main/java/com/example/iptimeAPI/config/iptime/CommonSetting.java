@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.util.iptime.config;
+package com.example.iptimeAPI.config.iptime;
 
 import lombok.Builder;
 import lombok.Getter;

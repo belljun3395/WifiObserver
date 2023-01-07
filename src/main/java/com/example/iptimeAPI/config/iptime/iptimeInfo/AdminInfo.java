@@ -1,7 +1,7 @@
-package com.example.iptimeAPI.util.iptime.info;
+package com.example.iptimeAPI.config.iptime.iptimeInfo;
 
-import com.example.iptimeAPI.util.iptime.config.IptimeConfig;
-import com.example.iptimeAPI.util.iptime.config.IptimeConfigHTTP;
+import com.example.iptimeAPI.config.iptime.IptimeConfig;
+import com.example.iptimeAPI.config.iptime.IptimeConfigHTTP;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

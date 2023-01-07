@@ -4,7 +4,7 @@ import com.example.iptimeAPI.web.dto.MacAddressDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.util.iptime.service.IptimeService;
+import com.example.iptimeAPI.domain.iptime.IptimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

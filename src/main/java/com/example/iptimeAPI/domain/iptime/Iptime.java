@@ -1,7 +1,7 @@
-package com.example.iptimeAPI.util.iptime;
+package com.example.iptimeAPI.domain.iptime;
 
-import com.example.iptimeAPI.util.iptime.config.IptimeConfigHTML;
-import com.example.iptimeAPI.util.iptime.info.ConnectionInfo;
+import com.example.iptimeAPI.config.iptime.IptimeConfigHTML;
+import com.example.iptimeAPI.config.iptime.iptimeInfo.ConnectionInfo;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
