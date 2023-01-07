@@ -18,11 +18,11 @@ public class ApiResponse<T> extends ResponseEntity<T> {
     @Getter
     public static class FailureBody implements Serializable {
         private Timestamp timestamp;
-        private int code;
+        private String code;
         private String error;
         private String message;
 
-        public FailureBody(final int code, final String error, final String message) {
+        public FailureBody(final String code, final String error, final String message) {
             this.timestamp = new Timestamp(System.currentTimeMillis());
             this.code = code;
             this.error = error;
