@@ -27,4 +27,6 @@ public class IptimeConfigECNV implements IptimeConfig {
     @Value("${ecnv.username}")
     private String username;
 
+    @Value("${ecnv.ip}")
+    private String ip;
 }

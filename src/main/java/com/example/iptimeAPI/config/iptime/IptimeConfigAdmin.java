@@ -1,7 +1,5 @@
-package com.example.iptimeAPI.config.iptime.iptimeInfo;
+package com.example.iptimeAPI.config.iptime;
 
-import com.example.iptimeAPI.config.iptime.IptimeConfig;
-import com.example.iptimeAPI.config.iptime.IptimeConfigHTTP;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +8,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class AdminInfo {
+public class IptimeConfigAdmin {
 
     private final IptimeConfigHTTP iptimeConfigHTTP;
     private final IptimeConfig iptimeConfig;

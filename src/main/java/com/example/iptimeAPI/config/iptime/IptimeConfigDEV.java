@@ -27,4 +27,6 @@ public class IptimeConfigDEV implements IptimeConfig {
     @Value("${dev.username}")
     private String username;
 
+    @Value("${dev.ip}")
+    private String ip;
 }

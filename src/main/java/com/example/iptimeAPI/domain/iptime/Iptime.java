@@ -1,7 +1,6 @@
 package com.example.iptimeAPI.domain.iptime;
 
 import com.example.iptimeAPI.config.iptime.IptimeConfigHTML;
-import com.example.iptimeAPI.config.iptime.iptimeInfo.ConnectionInfo;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
@@ -24,11 +23,14 @@ public class Iptime {
     private final String VOID = "";
 
     private final IptimeConfigHTML iptimeConfigHTML;
-    private final ConnectionInfo connectionInfo;
+    private final IptimeConnection iptimeConnection;
 
+    public String getIp() {
+        return iptimeConnection.getIp();
+    }
 
     public String getCookieValue() throws IOException {
-        Response cookieValueResponse = connectionInfo.getCookieValueConnection();
+        Response cookieValueResponse = iptimeConnection.getCookieValue();
 
         Document loginPageDocument = cookieValueResponse.parse();
         String bodyString = loginPageDocument.body()
@@ -39,13 +41,13 @@ public class Iptime {
         return cookieValue;
     }
 
-    public void login(String cookie_value) throws IOException {
-        connectionInfo.login(cookie_value);
-    }
+//    public void login(String cookie_value) throws IOException {
+//        iptimeConnection.login(cookie_value);
+//    }
 
 
     public List<String> getList(String cookieValue) throws IOException {
-        Response listResponsePage = connectionInfo.getList(cookieValue);
+        Response listResponsePage = iptimeConnection.getList(cookieValue);
 
         Element body = listResponsePage.parse()
                 .body();

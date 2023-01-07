@@ -2,11 +2,14 @@ package com.example.iptimeAPI.service.iptime;
 
 import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
+import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.web.dto.IpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +28,14 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public List<String> getLatestMacAddressesList() throws IOException {
-        return this.macAddressesList;
+    public boolean isInIptime(IpDTO ipDTO) {
+        return iptime.getIp()
+                .equals(ipDTO.getIp());
+    }
+
+    @Override
+    public boolean isExistMacAddress(MacAddress macAddress) {
+        return macAddressesList.contains(macAddress.getMacAddress());
     }
 
     @Scheduled(fixedDelay = 3000)
@@ -44,5 +53,16 @@ public class IptimeServiceImpl implements IptimeService {
         }
         this.cookieValue = iptime.getCookieValue();
         return iptime.getList(cookieValue);
+    }
+
+    @Override
+    public List<Long> browseExistMembers(List<MacAddress> registeredMacAddresses) {
+        List<Long> existMembers = new ArrayList<>();
+        for (MacAddress mac : registeredMacAddresses) {
+            if (isExistMacAddress(mac)) {
+                existMembers.add(mac.getMemberId());
+            }
+        }
+        return existMembers;
     }
 }

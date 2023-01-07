@@ -11,4 +11,6 @@ public interface IptimeConfig {
     String getPasswd();
 
     String getUsername();
+
+    String getIp();
 }

@@ -1,9 +1,9 @@
-package com.example.iptimeAPI.config.iptime.iptimeInfo;
+package com.example.iptimeAPI.domain.iptime;
 
 import com.example.iptimeAPI.config.iptime.CommonSetting;
+import com.example.iptimeAPI.config.iptime.IptimeConfigAdmin;
 import com.example.iptimeAPI.config.iptime.IptimeConfig;
 import com.example.iptimeAPI.config.iptime.IptimeConfigHTTP;
-import com.example.iptimeAPI.config.iptime.iptimeInfo.AdminInfo;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 
@@ -14,11 +14,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ConnectionInfo {
+public class IptimeConnection {
 
     private final IptimeConfig iptimeConfig;
     private final IptimeConfigHTTP iptimeConfigHTTP;
-    private final AdminInfo adminInfo;
+    private final IptimeConfigAdmin iptimeConfigAdmin;
+
+    public String getIp() {
+        return iptimeConfig.getIp();
+    }
 
 
     private CommonSetting getCommonSetting() {
@@ -36,13 +40,13 @@ public class ConnectionInfo {
     }
 
 
-    public Response getCookieValueConnection() throws IOException {
+    public Response getCookieValue() throws IOException {
         return connect(iptimeConfigHTTP.get_cookie_value(), Method.POST, getCommonSetting(), iptimeConfigHTTP.get_cookie_value_referer(), iptimeConfigHTTP.getContent_length(), iptimeConfigHTTP.getContent_type());
     }
 
-    public Response login(String cookie_value) throws IOException {
-        return connect(iptimeConfigHTTP.get_login_url(), Method.GET, getCommonSetting(), iptimeConfigHTTP.get_login_referer(), cookie_value, iptimeConfigHTTP.getContent_length(), iptimeConfigHTTP.getContent_type());
-    }
+//    public Response login(String cookie_value) throws IOException {
+//        return connect(iptimeConfigHTTP.get_login_url(), Method.GET, getCommonSetting(), iptimeConfigHTTP.get_login_referer(), cookie_value, iptimeConfigHTTP.getContent_length(), iptimeConfigHTTP.getContent_type());
+//    }
 
     public Response getList(String cookie_value) throws IOException {
         return connect(iptimeConfigHTTP.get_list_url(), Method.GET, getCommonSetting(), iptimeConfigHTTP.get_list_referer(), cookie_value);
@@ -64,7 +68,7 @@ public class ConnectionInfo {
                 .header("Referer", referer)
                 .header("Content-Length", content_length)
                 .header("Content-Type", content_type)
-                .data(adminInfo.getLoginData())
+                .data(iptimeConfigAdmin.getLoginData())
                 .execute();
     }
 
@@ -85,7 +89,7 @@ public class ConnectionInfo {
                 .cookie("efm_session_id", cookie_value)
                 .header("Content-Length", content_length)
                 .header("Content-Type", content_type)
-                .data(adminInfo.getLoginData())
+                .data(iptimeConfigAdmin.getLoginData())
                 .execute();
     }
 
@@ -104,7 +108,7 @@ public class ConnectionInfo {
 
                 .header("Referer", referer)
                 .cookie("efm_session_id", cookie_value)
-                .data(adminInfo.getLoginData())
+                .data(iptimeConfigAdmin.getLoginData())
                 .execute();
     }
 }
