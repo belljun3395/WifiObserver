@@ -9,7 +9,10 @@ import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.exception.MacAddressValidateError;
 import com.example.iptimeAPI.web.exception.MacAddressValidateException;
+import com.example.iptimeAPI.web.response.ApiResponse;
+import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,28 +29,30 @@ public class ClubsController {
     private final IptimeService iptimeService;
 
     @GetMapping("/in")
-    public boolean isInClub(IpDTO ipDTO) {
-        return iptimeService.isInIptime(ipDTO);
+    public ApiResponse<ApiResponse.withData> isInClub(IpDTO ipDTO) {
+        return ApiResponseGenerator.success(iptimeService.isInIptime(ipDTO), HttpStatus.OK, HttpStatus.OK.value() + "100", "in ecnv");
     }
 
     @GetMapping("/members")
-    public List<Long> browseExistMember() {
+    public ApiResponse<ApiResponse.withData> browseExistMember() {
         List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
-        return iptimeService.browseExistMembers(macAddresses);
+        return ApiResponseGenerator.success(iptimeService.browseExistMembers(macAddresses), HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
     }
 
     @PostMapping("/entrance")
-    public void enterClub(Long memberId) {
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(Long memberId) {
         MacAddress.MacAddressResponseDTO macAddress = macAddressService.findMemberMacAddress(memberId);
         if (!iptimeService.isExistMacAddress(macAddress.getMacAddress())) {
             throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
         }
         clubRoomLogService.save(memberId);
+        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
     }
 
     @GetMapping("/rankings/{type}")
-    public List<MemberRankingDTO> rankings(@PathVariable String type) {
+    public ApiResponse<ApiResponse.withData> rankings(@PathVariable String type) {
         List<Long> memberIds = macAddressService.browseMacAddressesMembers();
-        return clubRoomLogService.getRanking(memberIds, RankingType.valueOf(type.toUpperCase()));
+        List<MemberRankingDTO> ranking = clubRoomLogService.getRanking(memberIds, RankingType.valueOf(type.toUpperCase()));
+        return ApiResponseGenerator.success(ranking, HttpStatus.OK, HttpStatus.OK.value() + "500", "ranking result type : " + type);
     }
 }

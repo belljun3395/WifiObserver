@@ -3,7 +3,10 @@ package com.example.iptimeAPI.web.controller.macAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
+import com.example.iptimeAPI.web.response.ApiResponse;
+import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,19 +17,22 @@ public class MacAddressController {
     private final MacAddressService macAddressService;
 
     @PostMapping
-    public void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
+    public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
         macAddressService.registerMacAddress(macAddressRegistDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK + "600", "success register");
     }
 
     @GetMapping("/{memberId}")
-    public MacAddress.MacAddressResponseDTO findMemberMacAddress(@PathVariable("memberId") Long memberId) {
+    public ApiResponse<ApiResponse.withData> findMemberMacAddress(@PathVariable("memberId") Long memberId) {
         MacAddress.MacAddressResponseDTO memberMacAddress = macAddressService.findMemberMacAddress(memberId);
-        return new MacAddress.MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
+        MacAddress.MacAddressResponseDTO macAddressResponseDTO = new MacAddress.MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
+        return ApiResponseGenerator.success(macAddressResponseDTO, HttpStatus.OK, HttpStatus.OK + "600", "member's mac address info");
     }
 
     @PutMapping("/{memberId}")
-    public void editMemberMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
+    public ApiResponse<ApiResponse.withCodeAndMessage> editMemberMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
         macAddressService.editMacAddress(macAddressResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK + "600", "success edit mac address info");
     }
 
 }

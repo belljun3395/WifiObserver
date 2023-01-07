@@ -8,23 +8,27 @@ import com.example.iptimeAPI.web.exception.MacAddressValidateError;
 import com.example.iptimeAPI.web.exception.MacAddressValidateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MacAddressServiceImpl implements MacAddressService {
 
     private final MacAddressRepository repository;
 
     @Override
+    @Transactional
     public void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
         repository.save(macAddressRegistDTO.convertToMacAddress());
     }
 
     @Override
+    @Transactional
     public void editMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
         repository.save(new MacAddress(macAddressResponseDTO.getId(), macAddressResponseDTO.getMemberId(), macAddressResponseDTO.getMacAddress()));
     }
