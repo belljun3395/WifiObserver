@@ -1,23 +1,21 @@
 package com.example.iptimeAPI.domain.macAddress;
 
-import com.example.iptimeAPI.web.dto.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
+import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface MacAddressService {
 
-    void registerMacAddress(MacAddressDTO macAddressDTO);
+    void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO);
 
-    List<Long> browseRegisteredMembers();
-
-    MacAddress validateRegisteredMember(Long memberId);
-
-    void checkMemberMacAddressIsExist(MacAddress macAddress) throws IOException;
+    void editMacAddress(MacAddressResponseDTO macAddressResponseDTO);
 
     List<MacAddress> browseMacAddresses();
 
-    List<MacAddressDTO> browseExistMember() throws IOException;
+    List<Long> browseMacAddressesMembers();
+
+    MacAddress findMemberMacAddress(Long memberId);
 
 }
 

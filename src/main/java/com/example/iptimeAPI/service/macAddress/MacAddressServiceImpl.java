@@ -1,15 +1,13 @@
 package com.example.iptimeAPI.service.macAddress;
 
-import com.example.iptimeAPI.web.dto.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.domain.iptime.IptimeService;
+import com.example.iptimeAPI.web.dto.MacAddressResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,56 +16,37 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MacAddressServiceImpl implements MacAddressService {
 
-    private final IptimeService iptimeService;
-    private final MacAddressRepository macAddressRepository;
+    private final MacAddressRepository repository;
 
     @Override
-    public List<Long> browseRegisteredMembers() {
-        List<MacAddress> all = macAddressRepository.findAll();
+    public void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
+        repository.save(macAddressRegistDTO.convertToMacAddress());
+    }
+
+    @Override
+    public void editMacAddress(MacAddressResponseDTO macAddressResponseDTO) {
+        repository.save(new MacAddress(macAddressResponseDTO.getId(), macAddressResponseDTO.getMemberId(), macAddressResponseDTO.getMacAddress()));
+    }
+
+    @Override
+    public List<MacAddress> browseMacAddresses() {
+        return repository.findAll();
+    }
+
+    @Override
+    public List<Long> browseMacAddressesMembers() {
+        List<MacAddress> all = repository.findAll();
         return all.stream()
                 .map(macAddress -> macAddress.getMemberId())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void registerMacAddress(MacAddressDTO macAddressDTO) {
-        macAddressRepository.save(macAddressDTO.convertToMacAddress());
-    }
-
-    @Override
-    public MacAddress validateRegisteredMember(Long memberId) {
-        Optional<MacAddress> byMemberId = macAddressRepository.findByMemberId(memberId);
+    public MacAddress findMemberMacAddress(Long memberId) {
+        Optional<MacAddress> byMemberId = repository.findByMemberId(memberId);
         if (byMemberId.isEmpty()) {
             throw new IllegalStateException("this member need to register to DB");
         }
         return byMemberId.get();
     }
-
-    @Override
-    public void checkMemberMacAddressIsExist(MacAddress macAddress) throws IOException {
-        if (!macAddress.checkExist(iptimeService.getLatestMacAddressesList())) {
-            throw new IllegalStateException("this member need to re-register");
-        }
-    }
-
-    @Override
-    public List<MacAddress> browseMacAddresses() {
-        return new ArrayList<>(macAddressRepository.findAll());
-    }
-
-    @Override
-    public List<MacAddressDTO> browseExistMember() throws IOException {
-        List<MacAddress> registeredMacAddresses = macAddressRepository.findAll();
-
-        List<String> ipTimeMacAddressesList = iptimeService.getLatestMacAddressesList();
-
-        List<MacAddressDTO> macAddressDTOS = new ArrayList<>();
-        for (MacAddress mac : registeredMacAddresses) {
-            if (mac.checkExist(ipTimeMacAddressesList)) {
-                macAddressDTOS.add(new MacAddressDTO(mac.getMemberId(), mac.getMacAddress()));
-            }
-        }
-        return macAddressDTOS;
-    }
-
 }

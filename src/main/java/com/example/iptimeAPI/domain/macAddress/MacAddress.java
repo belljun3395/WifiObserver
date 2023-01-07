@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -25,7 +24,9 @@ public class MacAddress {
         this.macAddress = macAddress;
     }
 
-    public boolean checkExist(List<String> macAddresses) {
-        return macAddresses.contains(this.macAddress);
+    public MacAddress(Long id, Long memberId, String macAddress) {
+        this.id = id;
+        this.memberId = memberId;
+        this.macAddress = macAddress;
     }
 }
