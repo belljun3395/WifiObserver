@@ -8,4 +8,6 @@ public interface MacAddressRepository extends JpaRepository<MacAddress, Long> {
 
     Optional<MacAddress> findByMemberId(Long memberId);
 
+    Optional<MacAddress> findByMacAddress(String macAddress);
+
 }

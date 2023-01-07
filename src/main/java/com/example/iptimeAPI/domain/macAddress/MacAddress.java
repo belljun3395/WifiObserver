@@ -31,6 +31,10 @@ public class MacAddress {
         this.macAddress = macAddress;
     }
 
+    public boolean isSameMacAddress(String macAddress) {
+        return this.macAddress.equals(macAddress);
+    }
+
     @Data
     public static class MacAddressResponseDTO {
 

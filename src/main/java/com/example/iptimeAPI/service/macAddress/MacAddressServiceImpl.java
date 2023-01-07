@@ -25,7 +25,22 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     @Transactional
     public void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
-        repository.save(macAddressRegistDTO.convertToMacAddress());
+        Optional<MacAddress> byMemberId = repository.findByMemberId(macAddressRegistDTO.getMemberId());
+        Optional<MacAddress> byMacAddress = repository.findByMacAddress(macAddressRegistDTO.getMacAddress());
+
+        if (byMacAddress.isPresent()) {
+            throw new MacAddressValidateException(MacAddressValidateError.DUPLICATE_MACADDRESS);
+        }
+        if (byMemberId.isPresent()) {
+            MacAddress macAddress = byMemberId.get();
+            if (macAddress.isSameMacAddress(macAddressRegistDTO.getMacAddress())) {
+                throw new MacAddressValidateException(MacAddressValidateError.DUPLICATE_MACADDRESS);
+            }
+            this.editMacAddress(new MacAddressEditDTO(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
+        }
+        if (byMemberId.isEmpty()) {
+            repository.save(new MacAddress(macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
+        }
     }
 
     @Override
