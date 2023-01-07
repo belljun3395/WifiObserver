@@ -11,16 +11,18 @@ import com.example.iptimeAPI.web.exception.MacAddressValidateError;
 import com.example.iptimeAPI.web.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Api(tags = {"Clubs API"})
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/clubs")
+@RequestMapping("/api/clubs")
 public class ClubsController {
 
 
@@ -39,8 +41,8 @@ public class ClubsController {
         return ApiResponseGenerator.success(iptimeService.browseExistMembers(macAddresses), HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
     }
 
-    @PostMapping("/entrance")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(Long memberId) {
+    @GetMapping("/entrance/{memberId}")
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(@ApiParam(example = "1") @PathVariable Long memberId) {
         MacAddress.MacAddressResponseDTO macAddress = macAddressService.findMemberMacAddress(memberId);
         if (!iptimeService.isExistMacAddress(macAddress.getMacAddress())) {
             throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
@@ -50,7 +52,7 @@ public class ClubsController {
     }
 
     @GetMapping("/rankings/{type}")
-    public ApiResponse<ApiResponse.withData> rankings(@PathVariable String type) {
+    public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @PathVariable String type) {
         List<Long> memberIds = macAddressService.browseMacAddressesMembers();
         List<MemberRankingDTO> ranking = clubRoomLogService.getRanking(memberIds, RankingType.valueOf(type.toUpperCase()));
         return ApiResponseGenerator.success(ranking, HttpStatus.OK, HttpStatus.OK.value() + "500", "ranking result type : " + type);
