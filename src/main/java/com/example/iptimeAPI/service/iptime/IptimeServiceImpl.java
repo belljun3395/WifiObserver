@@ -40,7 +40,8 @@ public class IptimeServiceImpl implements IptimeService {
         return macAddressesList.contains(macAddress);
     }
 
-    @Scheduled(fixedDelay = 3000)
+    //    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 60000 * 60)
     public void renewalList() throws IOException {
         List<String> latestMacAddressesList = this.getMacAddressesList();
         if (!macAddressesList.equals(latestMacAddressesList)) {
