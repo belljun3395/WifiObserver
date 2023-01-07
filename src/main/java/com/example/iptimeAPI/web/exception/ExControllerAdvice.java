@@ -46,11 +46,12 @@ public class ExControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MacAddressValidateException.class})
-    public ApiResponse<ApiResponse.FailureBody> TokenValidateExHandler(MacAddressValidateException exception) {
+    public ApiResponse<ApiResponse.FailureBody> MacAddressValidateExHandler(MacAddressValidateException exception) {
         logger(exception);
         String defaultMessage = exception.getMessage();
-        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, exception.getCode(),
-                exception.getClass().getSimpleName(), defaultMessage);
+        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + exception.getCode(),
+                exception.getClass()
+                        .getSimpleName(), defaultMessage);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
