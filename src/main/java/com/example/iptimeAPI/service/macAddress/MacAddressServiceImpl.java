@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.service.macAddress;
 
+import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
@@ -29,8 +30,8 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     @Transactional
-    public void editMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO) {
-        repository.save(new MacAddress(macAddressResponseDTO.getId(), macAddressResponseDTO.getMemberId(), macAddressResponseDTO.getMacAddress()));
+    public void editMacAddress(MacAddressEditDTO macAddressEditDTO) {
+        repository.save(new MacAddress(macAddressEditDTO.getId(), macAddressEditDTO.getMemberId(), macAddressEditDTO.getMacAddress()));
     }
 
     @Override

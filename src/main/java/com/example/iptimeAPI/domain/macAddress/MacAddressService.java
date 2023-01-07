@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.domain.macAddress;
 
+import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 
 import java.util.List;
@@ -8,7 +9,7 @@ public interface MacAddressService {
 
     void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO);
 
-    void editMacAddress(MacAddress.MacAddressResponseDTO macAddressResponseDTO);
+    void editMacAddress(MacAddressEditDTO macAddressEditDTO);
 
     List<MacAddress.MacAddressResponseDTO> browseMacAddresses();
 
