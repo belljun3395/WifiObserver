@@ -4,13 +4,13 @@ import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import lombok.Data;
 
 @Data
-public class MacAddressDTO {
+public class MacAddressRegistDTO {
 
     private Long memberId;
 
     private String macAddress;
 
-    public MacAddressDTO(Long memberId, String macAddress) {
+    public MacAddressRegistDTO(Long memberId, String macAddress) {
         this.memberId = memberId;
         this.macAddress = macAddress;
     }
