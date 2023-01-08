@@ -15,7 +15,7 @@
         + `IptimeService#isExistMacAddress` : 위의 macAddress가 iptime의 리스트에 존재하는지 확인한다.
         + `ClubRoomLogService#save` : member의 동방 출석을 저장한다.
 + 사이트 접속시 동방 wifi를 통해 접속하였고 서비스에 등록된 mac주소를 가진 기기로 접속한 것이 아니라면 macAddress를 다시 등록하여야 한다.
-    +`PUT /macs`
+    + `PUT /macs`
         + `MacAddressService#registerMacAddress` : member의 macAddress를 수정한다.
 
 
