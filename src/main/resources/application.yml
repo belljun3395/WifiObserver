@@ -21,6 +21,15 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+            loggerLevel: basic
+
 logging.level:
   org.hibernate.SQL: debug
 #  org.springframework.transaction.interceptor : trace
