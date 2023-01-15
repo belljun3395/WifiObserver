@@ -1,6 +1,5 @@
 package com.example.iptimeAPI.domain.iptime;
 
-import com.example.iptimeAPI.config.iptime.IptimeConfigHTML;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
@@ -22,7 +21,7 @@ public class Iptime {
     private final Pattern extractCookieName = Pattern.compile("([^\\(\\)]+)");
     private final String VOID = "";
 
-    private final IptimeConfigHTML iptimeConfigHTML;
+    private final IptimeHTML iptimeHTML;
     private final IptimeConnection iptimeConnection;
 
     public String getIp() {
@@ -41,17 +40,13 @@ public class Iptime {
         return cookieValue;
     }
 
-//    public void login(String cookie_value) throws IOException {
-//        iptimeConnection.login(cookie_value);
-//    }
-
 
     public List<String> getList(String cookieValue) throws IOException {
         Response listResponsePage = iptimeConnection.getList(cookieValue);
 
         Element body = listResponsePage.parse()
                 .body();
-        Elements tbody = body.select(iptimeConfigHTML.getTbody());
+        Elements tbody = body.select(iptimeHTML.getTbody());
 
         List<Element> td = getTd(tbody);
 
@@ -76,11 +71,11 @@ public class Iptime {
         List<Element> tdElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements tr = tbody.get(i)
-                    .select(iptimeConfigHTML.getTr());
-            Elements td = tr.select(iptimeConfigHTML.getTd());
+                    .select(iptimeHTML.getTr());
+            Elements td = tr.select(iptimeHTML.getTd());
             for (Element j : td) {
                 if (!j.toString()
-                        .contains(iptimeConfigHTML.getStyle())) {
+                        .contains(iptimeHTML.getStyle())) {
                     tdElement.add(j);
                 }
 
@@ -93,7 +88,7 @@ public class Iptime {
         List<Element> inputElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements input = tbody.get(i)
-                    .select(iptimeConfigHTML.getInput());
+                    .select(iptimeHTML.getInput());
             for (Element j : input) {
                 inputElement.add(j);
             }
