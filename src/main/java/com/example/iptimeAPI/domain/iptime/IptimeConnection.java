@@ -3,9 +3,7 @@ package com.example.iptimeAPI.domain.iptime;
 import com.example.iptimeAPI.config.iptime.IptimeAdminConfig;
 import com.example.iptimeAPI.config.iptime.info.IptimeInfoConfig;
 import com.example.iptimeAPI.config.iptime.IptimeHTTPConfig;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -14,23 +12,19 @@ import org.jsoup.Connection.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class IptimeConnection {
 
     private final IptimeInfoConfig iptimeInfoConfig;
     private final IptimeHTTPConfig iptimeHTTPConfig;
     private final IptimeAdminConfig iptimeAdminConfig;
-    private CommonSetting commonsetting = CommonSetting.builder()
-            .agent(iptimeHTTPConfig.getUseragent())
-            .accept(iptimeHTTPConfig.getAccept())
-            .accept_encoding(iptimeHTTPConfig.getAccept_encoding())
-            .accept_language(iptimeHTTPConfig.getAccept_language())
-            .cache_control(iptimeHTTPConfig.getCache_control())
-            .connection(iptimeHTTPConfig.getConnection())
-            .host(iptimeInfoConfig.getHost())
-            .origin(iptimeInfoConfig.getOrigin())
-            .upgrade_insecure_request(iptimeHTTPConfig.getUpgrade_insecure_request())
-            .build();
+    private CommonSetting commonsetting;
+
+    public IptimeConnection(IptimeInfoConfig iptimeInfoConfig, IptimeHTTPConfig iptimeHTTPConfig, IptimeAdminConfig iptimeAdminConfig) {
+        this.iptimeInfoConfig = iptimeInfoConfig;
+        this.iptimeHTTPConfig = iptimeHTTPConfig;
+        this.iptimeAdminConfig = iptimeAdminConfig;
+        this.commonsetting = new CommonSetting(iptimeHTTPConfig.getUseragent(), iptimeHTTPConfig.getAccept(), iptimeHTTPConfig.getAccept_encoding(), iptimeHTTPConfig.getAccept_language(), iptimeHTTPConfig.getCache_control(), iptimeHTTPConfig.getConnection(), iptimeInfoConfig.getHost(), iptimeInfoConfig.getOrigin(), iptimeHTTPConfig.getUpgrade_insecure_request());
+    }
 
     public boolean isConnect(String ip) {
         return iptimeInfoConfig.getIp()
@@ -96,7 +90,6 @@ public class IptimeConnection {
         private String origin;
         private String upgrade_insecure_request;
 
-        @Builder
         public CommonSetting(String agent, String accept, String accept_encoding, String accept_language, String cache_control, String connection, String host, String origin, String upgrade_insecure_request) {
             this.agent = agent;
             this.accept = accept;
