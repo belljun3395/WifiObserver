@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.config.iptime;
+package com.example.iptimeAPI.config.iptime.info;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Profile("dev")
 @Component
 @PropertySource("classpath:iptime-dev.properties")
-public class IptimeConfigDEV implements IptimeConfig {
+public class IptimeInfoConfigDEV implements IptimeInfoConfig {
 
     @Value("${dev.host.url}")
     private String hosturl;

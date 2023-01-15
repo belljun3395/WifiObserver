@@ -1,6 +1,6 @@
-package com.example.iptimeAPI.config.iptime;
+package com.example.iptimeAPI.config.iptime.info;
 
-public interface IptimeConfig {
+public interface IptimeInfoConfig {
 
     String getHosturl();
 
