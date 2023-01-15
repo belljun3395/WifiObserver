@@ -24,8 +24,8 @@ public class Iptime {
     private final IptimeHTML iptimeHTML;
     private final IptimeConnection iptimeConnection;
 
-    public String getIp() {
-        return iptimeConnection.getIp();
+    public boolean isIn(String ip) {
+        return iptimeConnection.isConnect(ip);
     }
 
     public String getCookieValue() throws IOException {

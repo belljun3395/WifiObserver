@@ -32,8 +32,9 @@ public class IptimeConnection {
             .upgrade_insecure_request(iptimeHTTPConfig.getUpgrade_insecure_request())
             .build();
 
-    public String getIp() {
-        return iptimeInfoConfig.getIp();
+    public boolean isConnect(String ip) {
+        return iptimeInfoConfig.getIp()
+                .equals(ip);
     }
 
     public Response getCookieValue() throws IOException {

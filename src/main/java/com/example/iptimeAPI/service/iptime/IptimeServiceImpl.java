@@ -30,9 +30,7 @@ public class IptimeServiceImpl implements IptimeService {
 
     @Override
     public IpResponseDTO isInIptime(IpDTO ipDTO) {
-        boolean isIn = iptime.getIp()
-                .equals(ipDTO.getIp());
-        return new IpResponseDTO(isIn);
+        return new IpResponseDTO(iptime.isIn(ipDTO.getIp()));
     }
 
     @Override
