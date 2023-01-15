@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IptimeServiceImpl implements IptimeService {
@@ -58,12 +58,10 @@ public class IptimeServiceImpl implements IptimeService {
 
     @Override
     public List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
-        List<Long> existMembers = new ArrayList<>();
-        for (MacAddress.MacAddressResponseDTO mac : registeredMacAddresses) {
-            if (this.isExistMacAddress(mac.getMacAddress())) {
-                existMembers.add(mac.getMemberId());
-            }
-        }
-        return existMembers;
+        return registeredMacAddresses.stream()
+                .filter(macAddressResponseDTO -> isExistMacAddress(macAddressResponseDTO.getMacAddress()))
+                .map(MacAddress.MacAddressResponseDTO::getMemberId)
+                .collect(Collectors.toList());
     }
+
 }
