@@ -27,15 +27,15 @@ into member_mac_address_list
 (id, mac_address, member_id)
 values (default, 'F4:D4:88:75:85:1A', 2);
 
-insert
-into member_mac_address_list
-(id, mac_address, member_id)
-values (default, '1A:E6:56:14:1B:F5', 3);
-
-insert
-into member_mac_address_list
-(id, mac_address, member_id)
-values (default, 'DE:CF:44:B1:A4:2E', 4);
+-- insert
+-- into member_mac_address_list
+-- (id, mac_address, member_id)
+-- values (default, '1A:E6:56:14:1B:F5', 3);
+--
+-- insert
+-- into member_mac_address_list
+-- (id, mac_address, member_id)
+-- values (default, 'DE:CF:44:B1:A4:2E', 4);
 
 insert
 into club_arrival_departure_list
@@ -62,18 +62,18 @@ into club_arrival_departure_list
 (id, local_date, member_id)
 values (default, '2022-12-31', 2);
 
-insert
-into club_arrival_departure_list
-(id, local_date, member_id)
-values (default, '2022-12-30', 3);
-
-insert
-into club_arrival_departure_list
-(id, local_date, member_id)
-values (default, '2022-12-31', 3);
-
-
-insert
-into club_arrival_departure_list
-(id, local_date, member_id)
-values (default, '2023-01-1', 4);
+-- insert
+-- into club_arrival_departure_list
+-- (id, local_date, member_id)
+-- values (default, '2022-12-30', 3);
+--
+-- insert
+-- into club_arrival_departure_list
+-- (id, local_date, member_id)
+-- values (default, '2022-12-31', 3);
+--
+--
+-- insert
+-- into club_arrival_departure_list
+-- (id, local_date, member_id)
+-- values (default, '2023-01-1', 4);
