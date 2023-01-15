@@ -36,6 +36,7 @@ public class MacAddressServiceImpl implements MacAddressService {
             if (macAddress.isSameMacAddress(macAddressRegistDTO.getMacAddress())) {
                 throw new MacAddressValidateException(MacAddressValidateError.DUPLICATE_MACADDRESS);
             }
+            // todo 조금 더 고민해 보기
             this.editMacAddress(new MacAddressEditDTO(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
         }
         if (byMemberId.isEmpty()) {
@@ -46,6 +47,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     @Transactional
     public void editMacAddress(MacAddressEditDTO macAddressEditDTO) {
+        // todo study update를 어떠한 방식으로 하는 것이 좋을까? DTO를 통해 들어오는 정보중 어느 것이 수정된 것인지 알 수 없기에 아래와 같이 새로운 객체를 반환하는 것으로 구현하였다.
         repository.save(new MacAddress(macAddressEditDTO.getId(), macAddressEditDTO.getMemberId(), macAddressEditDTO.getMacAddress()));
     }
 
@@ -59,8 +61,7 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     public List<Long> browseMacAddressesMembers() {
-        List<MacAddress> all = repository.findAll();
-        return all.stream()
+        return repository.findAll().stream()
                 .map(macAddress -> macAddress.getMemberId())
                 .collect(Collectors.toList());
     }
