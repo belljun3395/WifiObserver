@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.config.iptime;
 
+import com.example.iptimeAPI.config.iptime.info.IptimeInfoConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @PropertySource("classpath:iptime-http.properties")
-public class IptimeConfigHTTP {
+public class IptimeHTTPConfig {
 
-    private final IptimeConfig iptimeConfig;
+    private final IptimeInfoConfig iptimeInfoConfig;
 
     @Value("${http.useragent}")
     private String useragent;
@@ -60,26 +61,26 @@ public class IptimeConfigHTTP {
     private String captcha_on;
 
     public String get_cookie_value_referer() {
-        return iptimeConfig.getHosturl() + login_session;
+        return iptimeInfoConfig.getHosturl() + login_session;
     }
 
     public String get_cookie_value() {
-        return iptimeConfig.getHosturl() + login_handler;
+        return iptimeInfoConfig.getHosturl() + login_handler;
     }
 
-    public String get_login_url() {
-        return iptimeConfig.getHosturl() + login;
-    }
-
-    public String get_login_referer() {
-        return iptimeConfig.getHosturl() + login_handler;
-    }
+//    public String get_login_url() {
+//        return iptimeConfig.getHosturl() + login;
+//    }
+//
+//    public String get_login_referer() {
+//        return iptimeConfig.getHosturl() + login_handler;
+//    }
 
     public String get_list_url() {
-        return iptimeConfig.getHosturl() + login_timepro_query;
+        return iptimeInfoConfig.getHosturl() + login_timepro_query;
     }
 
     public String get_list_referer() {
-        return iptimeConfig.getHosturl() + login_handler;
+        return iptimeInfoConfig.getHosturl() + login_handler;
     }
 }
