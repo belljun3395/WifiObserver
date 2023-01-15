@@ -35,9 +35,11 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
         Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, type);
 
-        List<Map.Entry<Long, Long>> memberOrderByVisitCount = orderByVisitCount(memberVisitCount);
+        Map<Long, List<Long>> memberVisitCountResult = calculateMemberVisitCount(memberVisitCount);
 
-        return getCalculatedRankingResult(memberOrderByVisitCount);
+        List<List<Long>> rankingResults = convertToRanking(memberVisitCountResult);
+
+        return convertToDTOs(rankingResults);
     }
 
     private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, RankingType type) {
@@ -51,64 +53,48 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         return memberVisitCount;
     }
 
-    private List<Map.Entry<Long, Long>> orderByVisitCount(Map<Long, Long> memberVisitCount) {
-        List<Map.Entry<Long, Long>> memberOrderByVisitCount = new LinkedList<>(memberVisitCount.entrySet());
-        memberOrderByVisitCount.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        return memberOrderByVisitCount;
+
+    private Map<Long, List<Long>> calculateMemberVisitCount(Map<Long, Long> memberOrderByVisitCount) {
+        Map<Long, List<Long>> calculatedMemberVisitCountResult = calculateMemberVisitCountResult(memberOrderByVisitCount);
+
+        return orderByCount(calculatedMemberVisitCountResult);
     }
 
-    private List<MemberRankingDTO> getCalculatedRankingResult(List<Map.Entry<Long, Long>> memberOrderByVisitCount) {
-
+    private Map<Long, List<Long>> calculateMemberVisitCountResult(Map<Long, Long> memberOrderByVisitCount) {
         Map<Long, List<Long>> calculatedRankingResult = new HashMap<>();
-        for (Map.Entry<Long, Long> member : memberOrderByVisitCount) {
-            Long memberId = member.getKey();
-            Long memberVisitCount = member.getValue();
-            if (calculatedRankingResult.containsKey(memberVisitCount)) {
-                List<Long> memberIdList = mergeList(calculatedRankingResult.get(memberVisitCount), memberId);
-                calculatedRankingResult.put(memberVisitCount, memberIdList);
+        memberOrderByVisitCount.forEach((memberId, visitCount) -> {
+                if (calculatedRankingResult.containsKey(visitCount)) {
+                    calculatedRankingResult.merge(
+                            visitCount, List.of(memberId),
+                            (base, plus) ->
+                                    Stream.of(base, plus)
+                                            .flatMap(Collection::stream)
+                                            .collect(Collectors.toList())
+                    );
+                }
+
+                if (!calculatedRankingResult.containsKey(visitCount)) {
+                    calculatedRankingResult.put(visitCount, List.of(memberId));
+                }
             }
-
-            if (!calculatedRankingResult.containsKey(memberVisitCount)) {
-                calculatedRankingResult.put(memberVisitCount, List.of(memberId));
-            }
-        }
-
-        List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount = orderByRankingVisitCount(calculatedRankingResult);
-
-        return convertToRanking(rankingResultOrderByVisitCount);
+        );
+        return calculatedRankingResult;
     }
 
-    private List<Long> mergeList(List<Long> baseList, Long value) {
-        List<Long> base = baseList;
-        List<Long> plus = List.of(value);
-
-        List<Long> memberIdList = Stream.of(base, plus)
-                .flatMap(x -> x.stream())
-                .collect(Collectors.toList());
-        return memberIdList;
-    }
-
-    private List<Map.Entry<Long, List<Long>>> orderByRankingVisitCount(Map<Long, List<Long>> calculatedRankingResult) {
-        List<Map.Entry<Long, List<Long>>> reverseByKey = new LinkedList<>(calculatedRankingResult.entrySet());
-        reverseByKey.sort(Map.Entry.comparingByKey(Comparator.reverseOrder()));
+    private Map<Long, List<Long>> orderByCount(Map<Long, List<Long>> calculatedRankingResult) {
+        Map<Long, List<Long>> reverseByKey = new TreeMap<>(Comparator.reverseOrder());
+        reverseByKey.putAll(calculatedRankingResult);
         return reverseByKey;
     }
 
-    private List<MemberRankingDTO> convertToRanking(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
-        List<List<Long>> rankingAndMemberList = getRankingAndMemberList(rankingResultOrderByVisitCount);
-        return getMemberRankingDTOS(rankingAndMemberList);
+    private List<List<Long>> convertToRanking(Map<Long, List<Long>> rankingResultOrderByVisitCount) {
+        return rankingResultOrderByVisitCount.values()
+                .stream()
+                .peek(Collections::shuffle)
+                .collect(Collectors.toList());
     }
 
-    private List<List<Long>> getRankingAndMemberList(List<Map.Entry<Long, List<Long>>> rankingResultOrderByVisitCount) {
-        List<List<Long>> rankingAndMemberList = new ArrayList<>();
-        for (Map.Entry<Long, List<Long>> ranking : rankingResultOrderByVisitCount) {
-            List<Long> members = ranking.getValue();
-            Collections.shuffle(members);
-            rankingAndMemberList.add(members);
-        }
-        return rankingAndMemberList;
-    }
-    private List<MemberRankingDTO> getMemberRankingDTOS(List<List<Long>> rankingAndMemberList) {
+    private List<MemberRankingDTO> convertToDTOs(List<List<Long>> rankingAndMemberList) {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
             for (Long memberId : rankingAndMemberList.get(i)) {
