@@ -9,6 +9,8 @@ import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.exception.MacAddressValidateError;
 import com.example.iptimeAPI.web.exception.MacAddressValidateException;
+import com.example.iptimeAPI.web.fegin.FeignUserInfo;
+import com.example.iptimeAPI.web.fegin.UserInfo;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(tags = {"Clubs API"})
@@ -29,6 +32,7 @@ public class ClubsController {
     private final MacAddressService macAddressService;
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
+    private final FeignUserInfo feignUserInfo;
 
     @PostMapping("/in")
     public ApiResponse<ApiResponse.withData> isInClub(IpDTO ipDTO) {
@@ -54,7 +58,11 @@ public class ClubsController {
     @GetMapping("/rankings/{type}")
     public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @PathVariable String type) {
         List<Long> memberIds = macAddressService.browseMacAddressesMembers();
-        List<MemberRankingDTO> ranking = clubRoomLogService.getRanking(memberIds, RankingType.valueOf(type.toUpperCase()));
+        List<UserInfo> userInfos = new ArrayList<>();
+        for (Long memberId : memberIds) {
+            userInfos.add(feignUserInfo.getUserInfo(memberId));
+        }
+        List<MemberRankingDTO> ranking = clubRoomLogService.getRanking(userInfos, RankingType.valueOf(type.toUpperCase()));
         return ApiResponseGenerator.success(ranking, HttpStatus.OK, HttpStatus.OK.value() + "500", "ranking result type : " + type);
     }
 }

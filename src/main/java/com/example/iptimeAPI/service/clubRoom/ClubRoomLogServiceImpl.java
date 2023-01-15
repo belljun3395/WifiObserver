@@ -4,6 +4,7 @@ import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
+import com.example.iptimeAPI.web.fegin.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,41 +32,41 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     @Override
-    public List<MemberRankingDTO> getRanking(List<Long> memberIds, RankingType type) {
+    public List<MemberRankingDTO> getRanking(List<UserInfo> userInfos, RankingType type) {
 
-        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, type);
+        Map<UserInfo, Long> memberVisitCount = getMemberVisitCountResult(userInfos, type);
 
-        Map<Long, List<Long>> memberVisitCountResult = calculateMemberVisitCount(memberVisitCount);
+        Map<Long, List<UserInfo>> memberVisitCountResult = calculateMemberVisitCount(memberVisitCount);
 
-        List<List<Long>> rankingResults = convertToRanking(memberVisitCountResult);
+        List<List<UserInfo>> rankingResults = convertToRanking(memberVisitCountResult);
 
         return convertToDTOs(rankingResults);
     }
 
-    private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, RankingType type) {
-        Map<Long, Long> memberVisitCount = new HashMap<>();
-        for (Long memberId : memberIds) {
-            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(memberId, type.getBeforeLocalDate(), LocalDate.now())
+    private Map<UserInfo, Long> getMemberVisitCountResult(List<UserInfo> userInfos, RankingType type) {
+        Map<UserInfo, Long> memberVisitCount = new HashMap<>();
+        for (UserInfo userInfo : userInfos) {
+            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(userInfo.getId(), type.getBeforeLocalDate(), LocalDate.now())
                     .stream()
                     .count();
-            memberVisitCount.put(memberId, visitCount);
+            memberVisitCount.put(userInfo, visitCount);
         }
         return memberVisitCount;
     }
 
 
-    private Map<Long, List<Long>> calculateMemberVisitCount(Map<Long, Long> memberOrderByVisitCount) {
-        Map<Long, List<Long>> calculatedMemberVisitCountResult = calculateMemberVisitCountResult(memberOrderByVisitCount);
+    private Map<Long, List<UserInfo>> calculateMemberVisitCount(Map<UserInfo, Long> memberOrderByVisitCount) {
+        Map<Long, List<UserInfo>> calculatedMemberVisitCountResult = calculateMemberVisitCountResult(memberOrderByVisitCount);
 
         return orderByCount(calculatedMemberVisitCountResult);
     }
 
-    private Map<Long, List<Long>> calculateMemberVisitCountResult(Map<Long, Long> memberOrderByVisitCount) {
-        Map<Long, List<Long>> calculatedRankingResult = new HashMap<>();
-        memberOrderByVisitCount.forEach((memberId, visitCount) -> {
+    private Map<Long, List<UserInfo>> calculateMemberVisitCountResult(Map<UserInfo, Long> memberOrderByVisitCount) {
+        Map<Long, List<UserInfo>> calculatedRankingResult = new HashMap<>();
+        memberOrderByVisitCount.forEach((userInfoDTO, visitCount) -> {
                 if (calculatedRankingResult.containsKey(visitCount)) {
                     calculatedRankingResult.merge(
-                            visitCount, List.of(memberId),
+                            visitCount, List.of(userInfoDTO),
                             (base, plus) ->
                                     Stream.of(base, plus)
                                             .flatMap(Collection::stream)
@@ -74,31 +75,31 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
                 }
 
                 if (!calculatedRankingResult.containsKey(visitCount)) {
-                    calculatedRankingResult.put(visitCount, List.of(memberId));
+                    calculatedRankingResult.put(visitCount, List.of(userInfoDTO));
                 }
             }
         );
         return calculatedRankingResult;
     }
 
-    private Map<Long, List<Long>> orderByCount(Map<Long, List<Long>> calculatedRankingResult) {
-        Map<Long, List<Long>> reverseByKey = new TreeMap<>(Comparator.reverseOrder());
+    private Map<Long, List<UserInfo>> orderByCount(Map<Long, List<UserInfo>> calculatedRankingResult) {
+        Map<Long, List<UserInfo>> reverseByKey = new TreeMap<>(Comparator.reverseOrder());
         reverseByKey.putAll(calculatedRankingResult);
         return reverseByKey;
     }
 
-    private List<List<Long>> convertToRanking(Map<Long, List<Long>> rankingResultOrderByVisitCount) {
+    private List<List<UserInfo>> convertToRanking(Map<Long, List<UserInfo>> rankingResultOrderByVisitCount) {
         return rankingResultOrderByVisitCount.values()
                 .stream()
                 .peek(Collections::shuffle)
                 .collect(Collectors.toList());
     }
 
-    private List<MemberRankingDTO> convertToDTOs(List<List<Long>> rankingAndMemberList) {
+    private List<MemberRankingDTO> convertToDTOs(List<List<UserInfo>> rankingAndMemberList) {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
-            for (Long memberId : rankingAndMemberList.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(j, memberId));
+            for (UserInfo userInfo : rankingAndMemberList.get(i)) {
+                memberRankingDTOS.add(new MemberRankingDTO(j, userInfo));
             }
         }
         return memberRankingDTOS;
