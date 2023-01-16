@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -96,10 +97,14 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     private List<MemberRankingDTO> convertToDTOs(List<List<UserInfo>> rankingAndMemberList) {
+        return convertToMemberRankingDTOs(rankingAndMemberList, MemberRankingDTO::new);
+    }
+
+    private static List<MemberRankingDTO> convertToMemberRankingDTOs(List<List<UserInfo>> rankingAndMemberList, BiFunction<Integer, UserInfo, MemberRankingDTO> biFunction) {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
             for (UserInfo userInfo : rankingAndMemberList.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(j, userInfo));
+                memberRankingDTOS.add(biFunction.apply(i, userInfo));
             }
         }
         return memberRankingDTOS;

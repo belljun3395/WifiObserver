@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,14 +29,14 @@ public class MacAddressServiceImpl implements MacAddressService {
         Optional<MacAddress> byMemberId = repository.findByMemberId(macAddressRegistDTO.getMemberId());
         Optional<MacAddress> byMacAddress = repository.findByMacAddress(macAddressRegistDTO.getMacAddress());
 
-        if (byMacAddress.isPresent()) {
-            throw new MacAddressValidateException(MacAddressValidateError.DUPLICATE_MACADDRESS);
-        }
+        validateMacAddress(byMacAddress, Optional::isPresent, MacAddressValidateError.DUPLICATE_MACADDRESS);
+
         if (byMemberId.isPresent()) {
+            validateMacAddress(byMemberId,
+                    mac -> mac.get()
+                            .isSameMacAddress(macAddressRegistDTO.getMacAddress()),
+                    MacAddressValidateError.DUPLICATE_MACADDRESS);
             MacAddress macAddress = byMemberId.get();
-            if (macAddress.isSameMacAddress(macAddressRegistDTO.getMacAddress())) {
-                throw new MacAddressValidateException(MacAddressValidateError.DUPLICATE_MACADDRESS);
-            }
             // todo 조금 더 고민해 보기
             this.editMacAddress(new MacAddressEditDTO(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
         }
@@ -62,17 +63,21 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     public List<Long> browseMacAddressesMembers() {
         return repository.findAll().stream()
-                .map(macAddress -> macAddress.getMemberId())
+                .map(MacAddress::getMemberId)
                 .collect(Collectors.toList());
     }
 
     @Override
     public MacAddress.MacAddressResponseDTO findMemberMacAddress(Long memberId) {
         Optional<MacAddress> byMemberId = repository.findByMemberId(memberId);
-        if (byMemberId.isEmpty()) {
-            throw new MacAddressValidateException(MacAddressValidateError.NOT_REGISTER_MEMBER);
-        }
+        validateMacAddress(byMemberId, Optional::isEmpty, MacAddressValidateError.NOT_REGISTER_MEMBER);
         MacAddress macAddress = byMemberId.get();
         return new MacAddress.MacAddressResponseDTO(macAddress.getId(), macAddress.getMemberId(), macAddress.getMacAddress());
+    }
+
+    private void validateMacAddress(Optional<MacAddress> macAddress, Predicate<Optional<MacAddress>> predicate, MacAddressValidateError error) {
+        if (predicate.test(macAddress)) {
+            throw new MacAddressValidateException(error);
+        }
     }
 }
