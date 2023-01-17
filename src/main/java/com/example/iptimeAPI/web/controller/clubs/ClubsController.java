@@ -42,11 +42,18 @@ public class ClubsController {
     @GetMapping("/members")
     public ApiResponse<ApiResponse.withData> browseExistMember() {
         List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
-        return ApiResponseGenerator.success(iptimeService.browseExistMembers(macAddresses), HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
+        List<Long> members = iptimeService.browseExistMembers(macAddresses);
+        List<UserInfo> userInfos = new ArrayList<>();
+        for (Long memberId : members) {
+            userInfos.add(feignUserInfo.getUserInfo(memberId));
+        }
+        return ApiResponseGenerator.success(userInfos, HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
     }
 
     @GetMapping("/entrance/{memberId}")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(@ApiParam(example = "1") @PathVariable Long memberId) {
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(@RequestHeader(value = "Authorization") String accessToken) {
+        Long memberId = feignUserInfo.getUserInfoByToken(accessToken)
+                .getId();
         MacAddress.MacAddressResponseDTO macAddress = macAddressService.findMemberMacAddress(memberId);
         if (!iptimeService.isExistMacAddress(macAddress.getMacAddress())) {
             throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);

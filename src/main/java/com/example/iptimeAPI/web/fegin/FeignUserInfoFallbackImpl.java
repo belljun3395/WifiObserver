@@ -9,4 +9,9 @@ public class FeignUserInfoFallbackImpl implements FeignUserInfo {
     public UserInfo getUserInfo(Long userId) {
         return null;
     }
+
+    @Override
+    public UserInfo getUserInfoByToken(String accessToken) {
+        return null;
+    }
 }

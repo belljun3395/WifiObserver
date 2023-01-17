@@ -4,10 +4,10 @@ import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
+import com.example.iptimeAPI.web.fegin.FeignUserInfo;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class MacAddressController {
 
     private final MacAddressService macAddressService;
+    private final FeignUserInfo feignUserInfo;
 
     @PostMapping
     public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
@@ -27,7 +28,9 @@ public class MacAddressController {
     }
 
     @GetMapping("/{memberId}")
-    public ApiResponse<ApiResponse.withData> findMemberMacAddress(@ApiParam(example = "1") @PathVariable("memberId") Long memberId) {
+    public ApiResponse<ApiResponse.withData> findMemberMacAddress(@RequestHeader(value = "Authorization") String accessToken) {
+        Long memberId = feignUserInfo.getUserInfoByToken(accessToken)
+                .getId();
         MacAddress.MacAddressResponseDTO memberMacAddress = macAddressService.findMemberMacAddress(memberId);
         MacAddress.MacAddressResponseDTO macAddressResponseDTO = new MacAddress.MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
         return ApiResponseGenerator.success(macAddressResponseDTO, HttpStatus.OK, HttpStatus.OK.value() + "600", "member's mac address info");
