@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.web.dto;
+package com.example.iptimeAPI.service.iptime.dto;
 
 import lombok.Data;
 

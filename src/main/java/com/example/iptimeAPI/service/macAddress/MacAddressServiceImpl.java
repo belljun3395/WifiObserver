@@ -5,8 +5,8 @@ import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.web.exception.MacAddressValidateError;
-import com.example.iptimeAPI.web.exception.MacAddressValidateException;
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateError;
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class MacAddressServiceImpl implements MacAddressService {
                     MacAddressValidateError.DUPLICATE_MACADDRESS);
             MacAddress macAddress = byMemberId.get();
             // todo 조금 더 고민해 보기
-            this.editMacAddress(new MacAddressEditDTO(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
+//            this.editMacAddress(new MacAddressEditDTO(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
         }
         if (byMemberId.isEmpty()) {
             repository.save(new MacAddress(macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));

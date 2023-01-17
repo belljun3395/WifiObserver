@@ -3,7 +3,7 @@ package com.example.iptimeAPI.service.iptime;
 import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
-import com.example.iptimeAPI.web.dto.IpResponseDTO;
+import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
