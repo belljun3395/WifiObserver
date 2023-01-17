@@ -1,5 +1,9 @@
 # iptimeAPI
 
+## 클래스 다이어그램
+![클래스다이어그램](https://user-images.githubusercontent.com/102807742/212796768-f871c4c2-3aea-4c75-9099-52c82955941d.png)
+
+
 ## API 설명
 
 
