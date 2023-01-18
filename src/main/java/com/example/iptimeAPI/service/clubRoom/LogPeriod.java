@@ -2,7 +2,7 @@ package com.example.iptimeAPI.service.clubRoom;
 
 import java.time.LocalDate;
 
-public enum RankingType {
+public enum LogPeriod {
     YEAR("YEAR",
             LocalDate.now()
                     .minusYears(1L)),
@@ -18,7 +18,7 @@ public enum RankingType {
 
     private LocalDate beforeLocalDate;
 
-    RankingType(String type, LocalDate beforeLocalDate) {
+    LogPeriod(String type, LocalDate beforeLocalDate) {
         this.type = type;
         this.beforeLocalDate = beforeLocalDate;
     }
