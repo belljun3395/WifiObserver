@@ -3,15 +3,12 @@ package com.example.iptimeAPI.service.clubRoom;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
-import com.example.iptimeAPI.web.dto.MemberRankingDTO;
-import com.example.iptimeAPI.web.fegin.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,80 +30,63 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     @Override
-    public List<MemberRankingDTO> getRanking(List<UserInfo> userInfos, RankingType type) {
+    public Map<Long, List<Long>> calcRankings(List<Long> memberIds, LogPeriod type) {
 
-        Map<UserInfo, Long> memberVisitCount = getMemberVisitCountResult(userInfos, type);
+        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, type);
 
-        Map<Long, List<UserInfo>> memberVisitCountResult = calculateMemberVisitCount(memberVisitCount);
-
-        List<List<UserInfo>> rankingResults = convertToRanking(memberVisitCountResult);
-
-        return convertToDTOs(rankingResults);
+        return calculateMemberVisitCount(memberVisitCount);
     }
 
-    private Map<UserInfo, Long> getMemberVisitCountResult(List<UserInfo> userInfos, RankingType type) {
-        Map<UserInfo, Long> memberVisitCount = new HashMap<>();
-        for (UserInfo userInfo : userInfos) {
-            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(userInfo.getId(), type.getBeforeLocalDate(), LocalDate.now())
+    private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, LogPeriod type) {
+        Map<Long, Long> memberVisitCount = new HashMap<>();
+        for (Long id : memberIds) {
+            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(id, type.getBeforeLocalDate(), LocalDate.now())
                     .stream()
                     .count();
-            memberVisitCount.put(userInfo, visitCount);
+            memberVisitCount.put(id, visitCount);
         }
         return memberVisitCount;
     }
 
 
-    private Map<Long, List<UserInfo>> calculateMemberVisitCount(Map<UserInfo, Long> memberOrderByVisitCount) {
-        Map<Long, List<UserInfo>> calculatedMemberVisitCountResult = calculateMemberVisitCountResult(memberOrderByVisitCount);
-
-        return orderByCount(calculatedMemberVisitCountResult);
+    private Map<Long, List<Long>> calculateMemberVisitCount(Map<Long, Long> memberOrderByVisitCount) {
+        return calculateMemberVisitCountResult(memberOrderByVisitCount, Comparator.reverseOrder());
     }
 
-    private Map<Long, List<UserInfo>> calculateMemberVisitCountResult(Map<UserInfo, Long> memberOrderByVisitCount) {
-        Map<Long, List<UserInfo>> calculatedRankingResult = new HashMap<>();
-        memberOrderByVisitCount.forEach((userInfoDTO, visitCount) -> {
-                if (calculatedRankingResult.containsKey(visitCount)) {
-                    calculatedRankingResult.merge(
-                            visitCount, List.of(userInfoDTO),
-                            (base, plus) ->
-                                    Stream.of(base, plus)
-                                            .flatMap(Collection::stream)
-                                            .collect(Collectors.toList())
-                    );
-                }
-
-                if (!calculatedRankingResult.containsKey(visitCount)) {
-                    calculatedRankingResult.put(visitCount, List.of(userInfoDTO));
-                }
+    private Map<Long, List<Long>> calculateMemberVisitCountResult(Map<Long, Long> memberOrderByVisitCount, Comparator comparator) {
+        Map<Long, List<Long>> calculatedRankingResult = new TreeMap<>(comparator);
+        memberOrderByVisitCount.forEach((memberId, visitCount) -> {
+            if (calculatedRankingResult.containsKey(visitCount)) {
+                calculatedRankingResult.merge(
+                        visitCount, List.of(memberId),
+                        (base, plus) ->
+                                Stream.of(base, plus)
+                                        .flatMap(Collection::stream)
+                                        .collect(Collectors.toList())
+                );
             }
+
+            if (!calculatedRankingResult.containsKey(visitCount)) {
+                calculatedRankingResult.put(visitCount, List.of(memberId));
+            }
+                }
         );
         return calculatedRankingResult;
     }
 
-    private Map<Long, List<UserInfo>> orderByCount(Map<Long, List<UserInfo>> calculatedRankingResult) {
-        Map<Long, List<UserInfo>> reverseByKey = new TreeMap<>(Comparator.reverseOrder());
-        reverseByKey.putAll(calculatedRankingResult);
-        return reverseByKey;
-    }
-
-    private List<List<UserInfo>> convertToRanking(Map<Long, List<UserInfo>> rankingResultOrderByVisitCount) {
-        return rankingResultOrderByVisitCount.values()
+    @Override
+    public  Long calcRanking(Map<Long, List<Long>> rankings, Long memberId) {
+        return rankings.entrySet()
                 .stream()
-                .peek(Collections::shuffle)
-                .collect(Collectors.toList());
+                .filter(r -> r.getValue()
+                        .contains(memberId))
+                .findFirst()
+                .get()
+                .getKey();
     }
 
-    private List<MemberRankingDTO> convertToDTOs(List<List<UserInfo>> rankingAndMemberList) {
-        return convertToMemberRankingDTOs(rankingAndMemberList, MemberRankingDTO::new);
-    }
-
-    private static List<MemberRankingDTO> convertToMemberRankingDTOs(List<List<UserInfo>> rankingAndMemberList, BiFunction<Integer, UserInfo, MemberRankingDTO> biFunction) {
-        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
-        for (int i = 0, j = 1; i < rankingAndMemberList.size(); i++, j++) {
-            for (UserInfo userInfo : rankingAndMemberList.get(i)) {
-                memberRankingDTOS.add(biFunction.apply(i, userInfo));
-            }
-        }
-        return memberRankingDTOS;
+    @Override
+    public Long calcVisitCount(Long memberId, LogPeriod type) {
+        return (long) repository.findAllByMemberId(memberId).size();
     }
 }

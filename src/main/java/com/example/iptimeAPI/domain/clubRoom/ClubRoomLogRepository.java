@@ -11,4 +11,5 @@ public interface ClubRoomLogRepository extends JpaRepository<ClubRoomLog, Long> 
 
         List<ClubRoomLog> findAllByMemberIdAndLocalDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
 
+        List<ClubRoomLog> findAllByMemberId(Long memberId);
 }

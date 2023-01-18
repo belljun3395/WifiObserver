@@ -1,16 +1,17 @@
 package com.example.iptimeAPI.domain.clubRoom;
 
-import com.example.iptimeAPI.service.clubRoom.RankingType;
-import com.example.iptimeAPI.web.dto.MemberRankingDTO;
-import com.example.iptimeAPI.web.fegin.UserInfo;
+import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClubRoomLogService {
 
     void save(Long memberId);
 
-    List<MemberRankingDTO> getRanking(List<UserInfo> userInfos, RankingType type);
+    Map<Long, List<Long>> calcRankings(List<Long> memberIds, LogPeriod type);
 
+    Long calcRanking(Map<Long, List<Long>> rankings, Long memberId);
 
+    Long calcVisitCount(Long memberId, LogPeriod type);
 }
