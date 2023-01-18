@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.domain.macAddress;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,7 @@ public class MacAddress {
     }
 
     @Data
+    @AllArgsConstructor
     public static class MacAddressResponseDTO {
 
         private Long id;
@@ -43,12 +45,6 @@ public class MacAddress {
         private Long memberId;
 
         private String macAddress;
-
-        public MacAddressResponseDTO(Long id, Long memberId, String macAddress) {
-            this.id = id;
-            this.memberId = memberId;
-            this.macAddress = macAddress;
-        }
     }
 
 }
