@@ -1,6 +1,5 @@
 package com.example.iptimeAPI.web.controller.macAddress;
 
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
@@ -27,13 +26,10 @@ public class MacAddressController {
         return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "600", "success register");
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping
     public ApiResponse<ApiResponse.withData> findMemberMacAddress(@RequestHeader(value = "Authorization") String accessToken) {
-        Long memberId = feignUserInfo.getUserInfoByToken(accessToken)
-                .getId();
-        MacAddress.MacAddressResponseDTO memberMacAddress = macAddressService.findMemberMacAddress(memberId);
-        MacAddress.MacAddressResponseDTO macAddressResponseDTO = new MacAddress.MacAddressResponseDTO(memberMacAddress.getId(), memberMacAddress.getMemberId(), memberMacAddress.getMacAddress());
-        return ApiResponseGenerator.success(macAddressResponseDTO, HttpStatus.OK, HttpStatus.OK.value() + "600", "member's mac address info");
+        Long memberId = feignUserInfo.getUserInfoByToken(accessToken).getId();
+        return ApiResponseGenerator.success(macAddressService.findMemberMacAddress(memberId), HttpStatus.OK, HttpStatus.OK.value() + "600", "member's mac address info");
     }
 
     @PutMapping
