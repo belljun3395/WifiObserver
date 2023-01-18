@@ -10,7 +10,7 @@ public interface IptimeService {
 
     IpResponseDTO isInIptime(IpDTO ipDTO);
 
-    boolean isExistMacAddress(String macAddress);
+    void isExistMacAddress(String macAddress);
 
     List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses );
 }

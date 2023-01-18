@@ -4,6 +4,8 @@ import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateError;
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,8 +36,10 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public boolean isExistMacAddress(String macAddress) {
-        return macAddressesList.contains(macAddress);
+    public void isExistMacAddress(String macAddress) {
+        if (!macAddressesList.contains(macAddress)) {
+            throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
+        }
     }
 
     //    @Scheduled(fixedDelay = 3000)
@@ -59,7 +63,7 @@ public class IptimeServiceImpl implements IptimeService {
     @Override
     public List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
         return registeredMacAddresses.stream()
-                .filter(macAddressResponseDTO -> isExistMacAddress(macAddressResponseDTO.getMacAddress()))
+                .filter(macAddressResponseDTO -> macAddressesList.contains(macAddressResponseDTO.getMacAddress()))
                 .map(MacAddress.MacAddressResponseDTO::getMemberId)
                 .collect(Collectors.toList());
     }
