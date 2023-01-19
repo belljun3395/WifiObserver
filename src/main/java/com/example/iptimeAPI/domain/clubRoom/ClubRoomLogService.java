@@ -7,9 +7,9 @@ import java.util.Map;
 
 public interface ClubRoomLogService {
 
-    void save(Long memberId);
+    boolean save(Long memberId);
 
-    Map<Long, List<Long>> calcRankings(List<Long> memberIds, LogPeriod type);
+    RankingsVO getRanking(LogPeriod period);
 
     Long calcRanking(Map<Long, List<Long>> rankings, Long memberId);
 

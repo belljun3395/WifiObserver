@@ -1,9 +1,11 @@
 package com.example.iptimeAPI.service.clubRoom;
 
-import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
-import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
-import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.domain.clubRoom.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,23 +20,43 @@ import java.util.stream.Stream;
 public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
     private final ClubRoomLogRepository repository;
+    private final RankingsRepository rankingsRepository;
 
     @Override
     @Transactional
-    public void save(Long memberId) {
+    public boolean save(Long memberId) {
         Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
         if (byMemberId.isPresent()) {
-            return;
+            return false;
         }
         repository.save(new ClubRoomLog(memberId, LocalDate.now()));
+        return true;
     }
 
-    @Override
-    public Map<Long, List<Long>> calcRankings(List<Long> memberIds, LogPeriod type) {
+    @Async
+    @EventListener
+    @Transactional
+    public void calcRankings(EnterClubEvent enterClubEvent) {
+        List<Long> memberIds = enterClubEvent.getMemberIds();
 
-        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, type);
+        saveRankings(memberIds, LogPeriod.YEAR);
+        saveRankings(memberIds, LogPeriod.MONTH);
+        saveRankings(memberIds, LogPeriod.WEEK);
+    }
 
-        return calculateMemberVisitCount(memberVisitCount);
+    private void saveRankings(List<Long> memberIds, LogPeriod period) {
+        Map<Long, Long> memberVisitCountYear = getMemberVisitCountResult(memberIds, period);
+        Map<Long, List<Long>> rankingsYear = calculateMemberVisitCount(memberVisitCountYear);
+        rankingsRepository.save(new RankingsVO(rankingsYear, period));
+    }
+
+    public RankingsVO getRanking(LogPeriod period) {
+        return rankingsRepository.findRecent(period)
+                .stream()
+                .max(Comparator.comparing(RankingsVO::getLocalDateTime))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("no ranking result");
+                });
     }
 
     private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, LogPeriod type) {

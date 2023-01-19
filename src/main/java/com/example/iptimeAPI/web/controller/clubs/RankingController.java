@@ -1,6 +1,7 @@
 package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
@@ -29,9 +30,8 @@ public class RankingController {
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @RequestParam String period) {
-        List<Long> memberIds = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRankings(memberIds, LogPeriod.valueOf(period.toUpperCase()));
-        List<List<Long>> rankingMemberIds = new ArrayList<>(shuffleRankings(rankings));
+        RankingsVO rankingsVO = clubRoomLogService.getRanking(LogPeriod.valueOf(period.toUpperCase()));
+        List<List<Long>> rankingMemberIds = new ArrayList<>(shuffleRankings(rankingsVO.getRankings()));
 
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingMemberIds.size(); i++, j++) {
@@ -54,11 +54,10 @@ public class RankingController {
     @GetMapping("/member")
     public ApiResponse<ApiResponse.withData> memberRankingCountInfo(@RequestHeader(value = "Authorization") String accessToken, @RequestParam String period) {
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
-        List<Long> memberIds = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRankings(memberIds, periodType);
+        RankingsVO rankingsVO = clubRoomLogService.getRanking(LogPeriod.valueOf(period.toUpperCase()));
 
         UserInfo user = feignUserInfo.getUserInfoByToken(accessToken);
-        Long memberRanking = clubRoomLogService.calcRanking(rankings, user.getId());
+        Long memberRanking = clubRoomLogService.calcRanking(rankingsVO.getRankings(), user.getId());
         Long visitCount = clubRoomLogService.calcVisitCount(user.getId(), periodType);
 
         MemberRankingInfoDTO memberRankingInfoDTO = new MemberRankingInfoDTO(user.getYear(), user.getName(), user.getId(), memberRanking, visitCount);

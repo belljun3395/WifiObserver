@@ -2,6 +2,7 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.service.clubRoom.EnterClubEvent;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
@@ -12,6 +13,7 @@ import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,7 @@ public class ClubsController {
     private final MacAddressService macAddressService;
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final FeignUserInfo feignUserInfo;
 
 
@@ -43,12 +46,12 @@ public class ClubsController {
     }
 
     @PostMapping("/entrance")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO, @RequestHeader(value = "Authorization") String accessToken) throws IOException {
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO) throws IOException {
         if (!iptimeService.isInIptime(ipDTO)
                 .isIn()) {
             return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
         }
-        Long memberId = feignUserInfo.getUserInfoByToken(accessToken).getId();
+        Long memberId = feignUserInfo.getUserInfo(1L).getId();
         String macAddress = macAddressService.findMemberMacAddress(memberId).getMacAddress();
         try {
             iptimeService.isExistMacAddress(macAddress);
@@ -56,7 +59,12 @@ public class ClubsController {
             iptimeService.renewalList();
             iptimeService.isExistMacAddress(macAddress);
         }
-        clubRoomLogService.save(memberId);
+
+        if (clubRoomLogService.save(memberId)) {
+            List<Long> memberIds = macAddressService.browseMacAddressesMembers();
+            applicationEventPublisher.publishEvent(new EnterClubEvent(memberIds));
+        }
+
         return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
     }
 }

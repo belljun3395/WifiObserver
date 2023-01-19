@@ -5,6 +5,12 @@ spring:
     password: root@1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: econo_forest
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -16,7 +22,6 @@ spring:
   sql:
     init:
       mode: always
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
