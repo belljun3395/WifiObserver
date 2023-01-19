@@ -1,9 +1,9 @@
 package com.example.iptimeAPI.web.controller.macAddress;
 
+import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
-import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -28,7 +28,8 @@ public class MacAddressController {
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> findMemberMacAddress(@RequestHeader(value = "Authorization") String accessToken) {
-        Long memberId = userServiceImpl.getUserByToken(accessToken).getId();
+        Long memberId = userServiceImpl.getUserByToken(accessToken)
+                .getId();
         return ApiResponseGenerator.success(macAddressService.findMemberMacAddress(memberId), HttpStatus.OK, HttpStatus.OK.value() + "600", "member's mac address info");
     }
 

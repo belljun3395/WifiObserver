@@ -119,7 +119,8 @@ public class Iptime {
         List<String> result = new ArrayList<>();
         for (int i = 0; i < inputValue.size(); i = i + 3) {
             if (tdValue.contains(inputValue.get(i))) {
-                result.add(inputValue.get(i).toUpperCase());
+                result.add(inputValue.get(i)
+                        .toUpperCase());
             }
         }
         return result;
@@ -137,6 +138,7 @@ public class Iptime {
 
     /**
      * 텍스트에 존재하는 괄호 내용 모두 추출 <p>
+     *
      * @param text
      * @return
      */

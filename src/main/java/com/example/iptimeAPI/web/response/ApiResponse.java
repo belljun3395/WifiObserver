@@ -44,6 +44,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
             this.data = data;
         }
     }
+
     @Getter
     public static class withCodeAndMessage implements Serializable {
         private Timestamp timestamp;

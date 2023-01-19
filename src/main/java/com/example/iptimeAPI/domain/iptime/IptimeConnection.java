@@ -1,15 +1,15 @@
 package com.example.iptimeAPI.domain.iptime;
 
 import com.example.iptimeAPI.config.iptime.IptimeAdminConfig;
-import com.example.iptimeAPI.config.iptime.info.IptimeInfoConfig;
 import com.example.iptimeAPI.config.iptime.IptimeHTTPConfig;
+import com.example.iptimeAPI.config.iptime.info.IptimeInfoConfig;
 import lombok.Getter;
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
-import org.jsoup.Connection.*;
-import org.springframework.stereotype.Component;
 
 @Component
 public class IptimeConnection {

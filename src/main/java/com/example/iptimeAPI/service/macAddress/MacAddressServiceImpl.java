@@ -1,12 +1,12 @@
 package com.example.iptimeAPI.service.macAddress;
 
-import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
-import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressRepository;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateError;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
+import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
+import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,8 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     public List<Long> browseMacAddressesMembers() {
-        return repository.findAll().stream()
+        return repository.findAll()
+                .stream()
                 .map(MacAddress::getMemberId)
                 .collect(Collectors.toList());
     }

@@ -18,6 +18,12 @@ import java.util.List;
 @RestControllerAdvice
 public class ExControllerAdvice {
 
+    private static void logger(Exception exception) {
+        log.error(exception.getClass()
+                        .getSimpleName() + " = [{}][{}]",
+                exception.getClass(), exception.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalStateException.class})
     public ApiResponse<ApiResponse.FailureBody> illegalStateExHandler(IllegalStateException exception) {
@@ -61,11 +67,7 @@ public class ExControllerAdvice {
         logger(exception);
         String defaultMessage = exception.getMessage();
         return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + "000",
-                exception.getClass().getSimpleName(), defaultMessage);
-    }
-
-    private static void logger(Exception exception) {
-        log.error(exception.getClass().getSimpleName() + " = [{}][{}]",
-                            exception.getClass(), exception.getMessage());
+                exception.getClass()
+                        .getSimpleName(), defaultMessage);
     }
 }

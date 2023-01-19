@@ -1,9 +1,9 @@
 package com.example.iptimeAPI.service.user;
 
 import com.example.iptimeAPI.domain.user.User;
+import com.example.iptimeAPI.domain.user.UserRepository;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
-import com.example.iptimeAPI.domain.user.UserRepository;
 import com.example.iptimeAPI.service.user.exception.OuterServiceException;
 import com.example.iptimeAPI.service.user.exception.OuterServiceValidateException;
 import com.example.iptimeAPI.service.user.fegin.FeignUserInfo;

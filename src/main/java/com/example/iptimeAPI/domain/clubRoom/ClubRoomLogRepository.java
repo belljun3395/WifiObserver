@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClubRoomLogRepository extends JpaRepository<ClubRoomLog, Long> {
-        Optional<ClubRoomLog> findByMemberIdAndLocalDate(Long memberId, LocalDate localDate);
+    Optional<ClubRoomLog> findByMemberIdAndLocalDate(Long memberId, LocalDate localDate);
 
-        List<ClubRoomLog> findAllByMemberIdAndLocalDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
+    List<ClubRoomLog> findAllByMemberIdAndLocalDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
 
-        List<ClubRoomLog> findAllByMemberId(Long memberId);
+    List<ClubRoomLog> findAllByMemberId(Long memberId);
 }

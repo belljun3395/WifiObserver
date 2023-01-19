@@ -4,9 +4,9 @@ import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 import com.example.iptimeAPI.service.user.UserServiceImpl;
+import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -15,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api(tags = {"Ranking API"})

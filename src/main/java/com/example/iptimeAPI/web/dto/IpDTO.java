@@ -3,6 +3,7 @@ package com.example.iptimeAPI.web.dto;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import javax.validation.constraints.Pattern;
 
 @Data

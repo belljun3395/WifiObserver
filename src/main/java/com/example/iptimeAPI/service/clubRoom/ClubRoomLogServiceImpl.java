@@ -2,8 +2,6 @@ package com.example.iptimeAPI.service.clubRoom;
 
 import com.example.iptimeAPI.domain.clubRoom.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -78,26 +76,26 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     private Map<Long, List<Long>> calculateMemberVisitCountResult(Map<Long, Long> memberOrderByVisitCount, Comparator comparator) {
         Map<Long, List<Long>> calculatedRankingResult = new TreeMap<>(comparator);
         memberOrderByVisitCount.forEach((memberId, visitCount) -> {
-            if (calculatedRankingResult.containsKey(visitCount)) {
-                calculatedRankingResult.merge(
-                        visitCount, List.of(memberId),
-                        (base, plus) ->
-                                Stream.of(base, plus)
-                                        .flatMap(Collection::stream)
-                                        .collect(Collectors.toList())
-                );
-            }
+                    if (calculatedRankingResult.containsKey(visitCount)) {
+                        calculatedRankingResult.merge(
+                                visitCount, List.of(memberId),
+                                (base, plus) ->
+                                        Stream.of(base, plus)
+                                                .flatMap(Collection::stream)
+                                                .collect(Collectors.toList())
+                        );
+                    }
 
-            if (!calculatedRankingResult.containsKey(visitCount)) {
-                calculatedRankingResult.put(visitCount, List.of(memberId));
-            }
+                    if (!calculatedRankingResult.containsKey(visitCount)) {
+                        calculatedRankingResult.put(visitCount, List.of(memberId));
+                    }
                 }
         );
         return calculatedRankingResult;
     }
 
     @Override
-    public  Long calcRanking(Map<Long, List<Long>> rankings, Long memberId) {
+    public Long calcRanking(Map<Long, List<Long>> rankings, Long memberId) {
         return rankings.entrySet()
                 .stream()
                 .filter(r -> r.getValue()
@@ -109,6 +107,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
     @Override
     public Long calcVisitCount(Long memberId, LogPeriod type) {
-        return (long) repository.findAllByMemberId(memberId).size();
+        return (long) repository.findAllByMemberId(memberId)
+                .size();
     }
 }
