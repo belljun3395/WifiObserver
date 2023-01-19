@@ -36,4 +36,4 @@
 
 랭킹은 많이 변하지 않을 정보인데 매번 조회와 계산 과정을 거처야 하기에 비효율적일 것이라 판단된다.
 
-이를 해결하기 위해 랭킹을 저장하는 방안이 필요해 보인다. ([해결링크](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
+이를 해결하기 위해 랭킹을 저장하는 방안이 필요해 보인다. ([해결링크](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
