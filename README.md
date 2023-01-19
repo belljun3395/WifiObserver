@@ -42,6 +42,7 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 + Java 11
 + Springboot
 + MySql / MariaDB / H2
++ MariaDB
 + Openfeign
 
 
