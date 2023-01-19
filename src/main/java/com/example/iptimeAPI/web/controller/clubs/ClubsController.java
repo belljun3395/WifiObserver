@@ -2,6 +2,7 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @Api(tags = {"Clubs API"})
@@ -41,10 +43,19 @@ public class ClubsController {
     }
 
     @PostMapping("/entrance")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO, @RequestHeader(value = "Authorization") String accessToken) {
-        iptimeService.isInIptime(ipDTO);
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO, @RequestHeader(value = "Authorization") String accessToken) throws IOException {
+        if (!iptimeService.isInIptime(ipDTO)
+                .isIn()) {
+            return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
+        }
         Long memberId = feignUserInfo.getUserInfoByToken(accessToken).getId();
-        iptimeService.isExistMacAddress(macAddressService.findMemberMacAddress(memberId).getMacAddress());
+        String macAddress = macAddressService.findMemberMacAddress(memberId).getMacAddress();
+        try {
+            iptimeService.isExistMacAddress(macAddress);
+        } catch (MacAddressValidateException macAddressValidateException) {
+            iptimeService.renewalList();
+            iptimeService.isExistMacAddress(macAddress);
+        }
         clubRoomLogService.save(memberId);
         return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
     }
