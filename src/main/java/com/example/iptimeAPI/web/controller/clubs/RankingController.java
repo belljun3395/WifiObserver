@@ -2,12 +2,11 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
-import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
+import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
-import com.example.iptimeAPI.web.fegin.FeignUserInfo;
-import com.example.iptimeAPI.web.fegin.UserInfo;
+import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -24,9 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/api/rankings")
 public class RankingController {
-    private final MacAddressService macAddressService;
     private final ClubRoomLogService clubRoomLogService;
-    private final FeignUserInfo feignUserInfo;
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @RequestParam String period) {
@@ -36,7 +34,7 @@ public class RankingController {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingMemberIds.size(); i++, j++) {
             for (Long memberId : rankingMemberIds.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(j, feignUserInfo.getUserInfo(memberId)));
+                memberRankingDTOS.add(new MemberRankingDTO(j, userServiceImpl.getUserById(memberId)));
             }
         }
 
@@ -56,7 +54,7 @@ public class RankingController {
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
         RankingsVO rankingsVO = clubRoomLogService.getRanking(LogPeriod.valueOf(period.toUpperCase()));
 
-        UserInfo user = feignUserInfo.getUserInfoByToken(accessToken);
+        UserInfoDTO user = userServiceImpl.getUserByToken(accessToken);
         Long memberRanking = clubRoomLogService.calcRanking(rankingsVO.getRankings(), user.getId());
         Long visitCount = clubRoomLogService.calcVisitCount(user.getId(), periodType);
 

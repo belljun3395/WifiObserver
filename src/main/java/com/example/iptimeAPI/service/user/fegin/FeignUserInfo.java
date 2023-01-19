@@ -1,5 +1,6 @@
-package com.example.iptimeAPI.web.fegin;
+package com.example.iptimeAPI.service.user.fegin;
 
+import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 public interface FeignUserInfo {
 
     @RequestMapping(method = RequestMethod.GET, path = "/api/users/{userId}")
-    UserInfo getUserInfo(@PathVariable("userId") Long userId);
+    UserInfoDTO getUserInfo(@PathVariable("userId") Long userId);
 
     @RequestMapping(method = RequestMethod.GET, path = "/api/users/token")
-    UserInfo getUserInfoByToken(@RequestHeader(name = "Authorization") String accessToken);
+    UserInfoDTO getUserInfoByToken(@RequestHeader(name = "Authorization") String accessToken);
 
 }

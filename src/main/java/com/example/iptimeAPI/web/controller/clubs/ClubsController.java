@@ -4,11 +4,11 @@ import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.service.clubRoom.EnterClubEvent;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
+import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.web.fegin.FeignUserInfo;
-import com.example.iptimeAPI.web.fegin.UserInfo;
+import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -31,27 +31,27 @@ public class ClubsController {
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final FeignUserInfo feignUserInfo;
+    private final UserServiceImpl userServiceImpl;
 
 
     @GetMapping("/members")
     public ApiResponse<ApiResponse.withData> browseExistMember() {
         List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
         List<Long> members = iptimeService.browseExistMembers(macAddresses);
-        List<UserInfo> userInfos = new ArrayList<>();
+        List<UserInfoDTO> userInfoDTOS = new ArrayList<>();
         for (Long memberId : members) {
-            userInfos.add(feignUserInfo.getUserInfo(memberId));
+            userInfoDTOS.add(userServiceImpl.getUserById(memberId));
         }
-        return ApiResponseGenerator.success(userInfos, HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
+        return ApiResponseGenerator.success(userInfoDTOS, HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
     }
 
     @PostMapping("/entrance")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO) throws IOException {
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO, @RequestHeader(value = "Authorization") String accessToken) throws IOException {
         if (!iptimeService.isInIptime(ipDTO)
                 .isIn()) {
             return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100", "enter ecnv");
         }
-        Long memberId = feignUserInfo.getUserInfo(1L).getId();
+        Long memberId = userServiceImpl.getUserByToken(accessToken).getId();
         String macAddress = macAddressService.findMemberMacAddress(memberId).getMacAddress();
         try {
             iptimeService.isExistMacAddress(macAddress);

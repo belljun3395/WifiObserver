@@ -1,6 +1,6 @@
 package com.example.iptimeAPI.web.dto;
 
-import com.example.iptimeAPI.web.fegin.UserInfo;
+import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,5 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class MemberRankingDTO {
     private Integer ranking;
-    private UserInfo userInfo;
+    private UserInfoDTO userInfoDTO;
 }

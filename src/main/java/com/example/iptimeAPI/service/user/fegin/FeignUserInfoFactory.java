@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.web.fegin;
+package com.example.iptimeAPI.service.user.fegin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
