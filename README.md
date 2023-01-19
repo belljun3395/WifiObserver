@@ -48,9 +48,9 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 
 ## 엔드포인트
 
-+ [Club]()
-+ [Ranking]()
-+ [Mac]()
++ [Club](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/endpoint/Club.md)
++ [Ranking](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/endpoint/Ranking.md)
++ [Mac](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/endpoint/Mac.md)
 
 
 
@@ -62,4 +62,8 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 
 ## 기타
 
-+ [테스트]()
++ [테스트](https://github.com/belljun3395/econovation-foreset-iptimeAPI/tree/main/docs/test)
++ 문제
+  + [랭킹관련 문제](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
+  + [출석 관련 문제](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
+  + [외부 서비스 관련문제](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)

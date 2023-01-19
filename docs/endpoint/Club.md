@@ -41,7 +41,7 @@
 
 #### 예상되는 문제
 
-iptime이 MAC 주소를 갱신하는 시점과 타이밍이 맞지 않을 수 있다. (todo [해결링크]())
+iptime이 MAC 주소를 갱신하는 시점과 타이밍이 맞지 않을 수 있다. ([해결링크](https://github.com/belljun3395/econovation-foreset-iptimeAPI/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
 
 ### 2. 현재 동방 인원
 
