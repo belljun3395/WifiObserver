@@ -2,9 +2,9 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.clubRoom.EnterClubEvent;
+import com.example.iptimeAPI.service.facade.IptimeMacAddressFacade;
 import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.IpDTO;
@@ -30,15 +30,14 @@ public class ClubsController {
     private final MacAddressService macAddressService;
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
+    private final IptimeMacAddressFacade iptimeMacAddressFacade;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final UserServiceImpl userServiceImpl;
 
 
     @GetMapping("/members")
     public ApiResponse<ApiResponse.withData> browseExistMember() {
-        // todo facade pattern 고려
-        List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
-        List<Long> members = iptimeService.browseExistMembers(macAddresses);
+        List<Long> members = iptimeMacAddressFacade.browseExistMembers();
         List<UserInfoVO> userInfoVOS = new ArrayList<>();
         for (Long memberId : members) {
             userInfoVOS.add(userServiceImpl.getUserById(memberId));
@@ -54,11 +53,7 @@ public class ClubsController {
         }
         Long memberId = userServiceImpl.getUserByToken(accessToken)
                 .getId();
-        String macAddress = macAddressService.findMemberMacAddress(memberId)
-                .getMacAddress();
-
-        // todo facade pattern 고려
-        iptimeService.isExistMacAddress(macAddress);
+        iptimeMacAddressFacade.validateExistMemberMacAddress(memberId);
 
         if (clubRoomLogService.save(memberId)) {
             List<Long> memberIds = macAddressService.browseMacAddressesMembers();

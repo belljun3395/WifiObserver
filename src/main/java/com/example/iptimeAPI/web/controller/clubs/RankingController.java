@@ -2,8 +2,8 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
+import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
-import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/rankings")
 public class RankingController {
     private final ClubRoomLogService clubRoomLogService;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @RequestParam String period) {
@@ -37,7 +37,7 @@ public class RankingController {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingMemberIds.size(); i++, j++) {
             for (Long memberId : rankingMemberIds.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(j, userServiceImpl.getUserById(memberId)));
+                memberRankingDTOS.add(new MemberRankingDTO(j, userService.getUserById(memberId)));
             }
         }
 
@@ -57,7 +57,7 @@ public class RankingController {
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
         RankingsVO rankingsVO = clubRoomLogService.getRanking(LogPeriod.valueOf(period.toUpperCase()));
 
-        UserInfoVO user = userServiceImpl.getUserByToken(accessToken);
+        UserInfoVO user = userService.getUserByToken(accessToken);
         Long memberRanking = clubRoomLogService.calcRanking(rankingsVO.getRankings(), user.getId());
         Long visitCount = clubRoomLogService.calcVisitCount(user.getId(), periodType);
 
