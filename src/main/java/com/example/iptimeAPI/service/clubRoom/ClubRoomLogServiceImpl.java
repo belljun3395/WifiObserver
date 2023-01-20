@@ -43,9 +43,9 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     private void saveRankings(List<Long> memberIds, LogPeriod period) {
-        Map<Long, Long> memberVisitCountYear = getMemberVisitCountResult(memberIds, period);
-        Map<Long, List<Long>> rankingsYear = calculateMemberVisitCount(memberVisitCountYear);
-        rankingsRepository.save(new RankingsVO(rankingsYear, period));
+        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, period);
+        Map<Long, List<Long>> rankings = calculateMemberVisitCount(memberVisitCount);
+        rankingsRepository.save(new RankingsVO(rankings, period));
     }
 
     public RankingsVO getRanking(LogPeriod period) {
