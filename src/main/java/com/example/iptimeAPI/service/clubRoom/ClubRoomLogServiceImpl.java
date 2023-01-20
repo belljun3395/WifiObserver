@@ -34,18 +34,30 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Async
     @EventListener
     @Transactional
-    public void calcRankings(EnterClubEvent enterClubEvent) {
+    public void saveRankings(EnterClubEvent enterClubEvent) {
         List<Long> memberIds = enterClubEvent.getMemberIds();
 
-        saveRankings(memberIds, LogPeriod.YEAR);
-        saveRankings(memberIds, LogPeriod.MONTH);
-        saveRankings(memberIds, LogPeriod.WEEK);
+        RankingsVO rankingVOYear = getRanking(LogPeriod.YEAR);
+        RankingsVO rankingVOMonth = getRanking(LogPeriod.MONTH);
+        RankingsVO rankingVOWeek = getRanking(LogPeriod.WEEK);
+
+        Map<Long, List<Long>> rankingYear = calcRanking(memberIds, LogPeriod.YEAR);
+        Map<Long, List<Long>> rankingMonth = calcRanking(memberIds, LogPeriod.MONTH);
+        Map<Long, List<Long>> rankingWeek = calcRanking(memberIds, LogPeriod.WEEK);
+
+        saveRanking(rankingVOYear.compareRanking(rankingYear), LogPeriod.YEAR);
+        saveRanking(rankingVOMonth.compareRanking(rankingMonth), LogPeriod.MONTH);
+        saveRanking(rankingVOWeek.compareRanking(rankingWeek), LogPeriod.WEEK);
     }
 
-    private void saveRankings(List<Long> memberIds, LogPeriod period) {
+    private void saveRanking(Map<Long, List<Long>> ranking, LogPeriod period) {
+        rankingsRepository.save(new RankingsVO(ranking, period));
+    }
+
+    private Map<Long, List<Long>> calcRanking(List<Long> memberIds, LogPeriod period) {
         Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, period);
         Map<Long, List<Long>> rankings = calculateMemberVisitCount(memberVisitCount);
-        rankingsRepository.save(new RankingsVO(rankings, period));
+        return rankings;
     }
 
     public RankingsVO getRanking(LogPeriod period) {

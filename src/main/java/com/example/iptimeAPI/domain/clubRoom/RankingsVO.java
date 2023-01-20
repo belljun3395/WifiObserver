@@ -1,6 +1,9 @@
 package com.example.iptimeAPI.domain.clubRoom;
 
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 import lombok.Getter;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +19,7 @@ import java.util.Map;
 @Document("ranking")
 @Getter
 public class RankingsVO {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -33,4 +37,17 @@ public class RankingsVO {
         this.localDateTime = LocalDateTime.now();
     }
 
+    public Map<Long, List<Long>> compareRanking(Map<Long, List<Long>> compareRanking) {
+        Set<Entry<Long, List<Long>>> baseRanking = rankings.entrySet();
+
+        Iterator<Entry<Long, List<Long>>> iterator = baseRanking.iterator();
+        while (iterator.hasNext()) {
+            Long rank = iterator.next().getKey();
+            if (iterator.next().getValue().contains(compareRanking.get(rank))) {
+                this.rankings = compareRanking;
+                break;
+            }
+        }
+        return this.rankings;
+    }
 }
