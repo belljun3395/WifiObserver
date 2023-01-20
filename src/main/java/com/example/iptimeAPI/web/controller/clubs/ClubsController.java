@@ -5,9 +5,8 @@ import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.service.clubRoom.EnterClubEvent;
-import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.service.user.UserServiceImpl;
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
@@ -37,13 +36,14 @@ public class ClubsController {
 
     @GetMapping("/members")
     public ApiResponse<ApiResponse.withData> browseExistMember() {
+        // todo facade pattern 고려
         List<MacAddress.MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
         List<Long> members = iptimeService.browseExistMembers(macAddresses);
-        List<UserInfoDTO> userInfoDTOS = new ArrayList<>();
+        List<UserInfoVO> userInfoVOS = new ArrayList<>();
         for (Long memberId : members) {
-            userInfoDTOS.add(userServiceImpl.getUserById(memberId));
+            userInfoVOS.add(userServiceImpl.getUserById(memberId));
         }
-        return ApiResponseGenerator.success(userInfoDTOS, HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
+        return ApiResponseGenerator.success(userInfoVOS, HttpStatus.OK, HttpStatus.OK.value() + "100", "exist members");
     }
 
     @PostMapping("/entrance")
@@ -56,12 +56,9 @@ public class ClubsController {
                 .getId();
         String macAddress = macAddressService.findMemberMacAddress(memberId)
                 .getMacAddress();
-        try {
-            iptimeService.isExistMacAddress(macAddress);
-        } catch (MacAddressValidateException macAddressValidateException) {
-            iptimeService.renewalList();
-            iptimeService.isExistMacAddress(macAddress);
-        }
+
+        // todo facade pattern 고려
+        iptimeService.isExistMacAddress(macAddress);
 
         if (clubRoomLogService.save(memberId)) {
             List<Long> memberIds = macAddressService.browseMacAddressesMembers();

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserInfoDTO {
+public class UserInfoVO {
     private Long year;
     private String name;
     private Long id;

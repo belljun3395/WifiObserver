@@ -1,18 +1,18 @@
 package com.example.iptimeAPI.service.user.fegin;
 
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FeignUserInfoFallbackImpl implements FeignUserInfo {
 
     @Override
-    public UserInfoDTO getUserInfo(Long userId) {
+    public UserInfoVO getUserInfo(Long userId) {
         return null;
     }
 
     @Override
-    public UserInfoDTO getUserInfoByToken(String accessToken) {
+    public UserInfoVO getUserInfoByToken(String accessToken) {
         return null;
     }
 }

@@ -1,11 +1,11 @@
 package com.example.iptimeAPI.domain.user;
 
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 
 public interface UserService {
 
-    UserInfoDTO getUserByToken(String accessToken);
+    UserInfoVO getUserByToken(String accessToken);
 
-    UserInfoDTO getUserById(Long userId);
+    UserInfoVO getUserById(Long userId);
 
 }

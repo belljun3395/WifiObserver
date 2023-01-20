@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.service.macAddress.exception;
+package com.example.iptimeAPI.service.exception;
 
 import lombok.Getter;
 

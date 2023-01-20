@@ -3,7 +3,7 @@ package com.example.iptimeAPI.service.user;
 import com.example.iptimeAPI.domain.user.User;
 import com.example.iptimeAPI.domain.user.UserRepository;
 import com.example.iptimeAPI.domain.user.UserService;
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.service.user.exception.OuterServiceException;
 import com.example.iptimeAPI.service.user.exception.OuterServiceValidateException;
 import com.example.iptimeAPI.service.user.fegin.FeignUserInfo;
@@ -19,15 +19,15 @@ public class UserServiceImpl implements UserService {
     private final FeignUserInfo feignUserInfo;
 
     @Override
-    public UserInfoDTO getUserByToken(String accessToken) {
+    public UserInfoVO getUserByToken(String accessToken) {
         Optional<User> userByAccessToken = repository.findByAccessToken(accessToken);
         if (userByAccessToken.isPresent()) {
             return userByAccessToken.get()
-                    .getUserInfoDTO();
+                    .getUserInfoVO();
         }
 
         try {
-            UserInfoDTO userInfoByToken = feignUserInfo.getUserInfoByToken(accessToken);
+            UserInfoVO userInfoByToken = feignUserInfo.getUserInfoByToken(accessToken);
             User user = new User(accessToken, userInfoByToken);
             repository.save(user);
             return userInfoByToken;
@@ -37,11 +37,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDTO getUserById(Long userId) {
+    public UserInfoVO getUserById(Long userId) {
         Optional<User> userByAccessToken = repository.findByUserId(userId);
         if (userByAccessToken.isPresent()) {
             return userByAccessToken.get()
-                    .getUserInfoDTO();
+                    .getUserInfoVO();
         }
 
         try {

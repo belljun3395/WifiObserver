@@ -1,6 +1,6 @@
 package com.example.iptimeAPI.domain.user;
 
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -23,7 +23,7 @@ public class User {
     @Indexed
     private String accessToken;
 
-    private UserInfoDTO userInfoDTO;
+    private UserInfoVO userInfoVO;
 
     @Indexed
     private Long userId;
@@ -32,9 +32,9 @@ public class User {
     @TimeToLive
     private Long expiration = DEFAULT_TTL;
 
-    public User(String accessToken, UserInfoDTO userInfoDTO) {
+    public User(String accessToken, UserInfoVO userInfoVO) {
         this.accessToken = accessToken;
-        this.userInfoDTO = userInfoDTO;
-        this.userId = userInfoDTO.getId();
+        this.userInfoVO = userInfoVO;
+        this.userId = userInfoVO.getId();
     }
 }

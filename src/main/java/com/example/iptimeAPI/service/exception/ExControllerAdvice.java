@@ -1,6 +1,5 @@
-package com.example.iptimeAPI.web.exception;
+package com.example.iptimeAPI.service.exception;
 
-import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import lombok.extern.slf4j.Slf4j;

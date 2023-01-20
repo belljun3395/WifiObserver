@@ -4,7 +4,7 @@ import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 import com.example.iptimeAPI.service.user.UserServiceImpl;
-import com.example.iptimeAPI.service.user.dto.UserInfoDTO;
+import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
@@ -57,7 +57,7 @@ public class RankingController {
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
         RankingsVO rankingsVO = clubRoomLogService.getRanking(LogPeriod.valueOf(period.toUpperCase()));
 
-        UserInfoDTO user = userServiceImpl.getUserByToken(accessToken);
+        UserInfoVO user = userServiceImpl.getUserByToken(accessToken);
         Long memberRanking = clubRoomLogService.calcRanking(rankingsVO.getRankings(), user.getId());
         Long visitCount = clubRoomLogService.calcVisitCount(user.getId(), periodType);
 
