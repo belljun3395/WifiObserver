@@ -11,7 +11,7 @@ public interface IptimeService {
 
     IpResponseDTO isInIptime(IpDTO ipDTO);
 
-    void isExistMacAddress(String macAddress);
+    void isExistMacAddress(String macAddress) throws IOException;
 
     List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses);
 
