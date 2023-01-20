@@ -56,8 +56,11 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 
 
 ## 클래스 다이어그램
-
+### 1차
 ![iptimeAPI클래스다이어그램](https://user-images.githubusercontent.com/102807742/213398057-85e75726-0b96-4811-b573-21088abdfe04.png)
+
+### 2차
+![package](https://user-images.githubusercontent.com/102807742/213704038-5113d7ed-27ed-4e6e-bddf-174459632fae.png)
 
 
 
