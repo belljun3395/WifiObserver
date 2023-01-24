@@ -2,7 +2,6 @@ package com.example.iptimeAPI.domain.clubRoom;
 
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,12 +36,9 @@ public class RankingsVO {
     }
 
     public Map<Long, List<Long>> compareRanking(Map<Long, List<Long>> compareRanking) {
-        Set<Entry<Long, List<Long>>> baseRanking = rankings.entrySet();
-
-        Iterator<Entry<Long, List<Long>>> iterator = baseRanking.iterator();
-        while (iterator.hasNext()) {
-            Long rank = iterator.next().getKey();
-            if (iterator.next().getValue().contains(compareRanking.get(rank))) {
+        Set<Entry<Long, List<Long>>> compareRankings = compareRanking.entrySet();
+        for (Entry<Long, List<Long>> ranking : compareRankings) {
+            if (!this.rankings.containsValue(ranking.getValue())) {
                 this.rankings = compareRanking;
                 break;
             }
