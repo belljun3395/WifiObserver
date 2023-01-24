@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.service.exception;
+package com.example.iptimeAPI.web.exception;
 
 public enum MacAddressValidateError {
 

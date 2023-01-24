@@ -41,6 +41,7 @@ public class RankingController {
         List<List<Long>> rankingMemberIds = new ArrayList<>(
             shuffleRankings(rankingsVO.getRankings()));
 
+        // todo mapper 고민
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (int i = 0, j = 1; i < rankingMemberIds.size(); i++, j++) {
             for (Long memberId : rankingMemberIds.get(i)) {

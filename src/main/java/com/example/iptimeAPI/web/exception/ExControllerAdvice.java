@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.service.exception;
+package com.example.iptimeAPI.web.exception;
 
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
