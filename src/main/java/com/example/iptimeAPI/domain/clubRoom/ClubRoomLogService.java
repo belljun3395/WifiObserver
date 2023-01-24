@@ -4,14 +4,15 @@ import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ClubRoomLogService {
 
     boolean save(Long memberId);
 
-    RankingsVO getRanking(LogPeriod period);
+    Optional<RankingsVO> browseRanking(LogPeriod period);
 
-    Long calcRanking(Map<Long, List<Long>> rankings, Long memberId);
+    Long calcMemberRanking(Map<Long, List<Long>> rankings, Long memberId);
 
-    Long calcVisitCount(Long memberId, LogPeriod type);
+    Long browseMemberVisitCount(Long memberId, LogPeriod type);
 }

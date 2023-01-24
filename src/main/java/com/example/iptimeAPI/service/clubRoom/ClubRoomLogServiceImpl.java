@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,13 +36,27 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     public void saveRankings(EnterClubEvent enterClubEvent) {
         List<Long> memberIds = enterClubEvent.getMemberIds();
 
-        RankingsVO rankingVOYear = getRanking(LogPeriod.YEAR);
-        RankingsVO rankingVOMonth = getRanking(LogPeriod.MONTH);
-        RankingsVO rankingVOWeek = getRanking(LogPeriod.WEEK);
+        Optional<RankingsVO> rankingVOFindByYear = browseRanking(LogPeriod.YEAR);
+        Optional<RankingsVO> rankingVOFindByMonth = browseRanking(LogPeriod.MONTH);
+        Optional<RankingsVO> rankingVOFindByWeek = browseRanking(LogPeriod.WEEK);
 
         Map<Long, List<Long>> rankingYear = calcRanking(memberIds, LogPeriod.YEAR);
         Map<Long, List<Long>> rankingMonth = calcRanking(memberIds, LogPeriod.MONTH);
         Map<Long, List<Long>> rankingWeek = calcRanking(memberIds, LogPeriod.WEEK);
+
+        if (rankingVOFindByYear.isEmpty()
+            || rankingVOFindByMonth.isEmpty()
+            || rankingVOFindByWeek.isEmpty()
+        ) {
+            saveRanking(rankingYear, LogPeriod.YEAR);
+            saveRanking(rankingMonth, LogPeriod.MONTH);
+            saveRanking(rankingWeek, LogPeriod.WEEK);
+            return;
+        }
+
+        RankingsVO rankingVOYear = rankingVOFindByYear.get();
+        RankingsVO rankingVOMonth = rankingVOFindByMonth.get();
+        RankingsVO rankingVOWeek = rankingVOFindByWeek.get();
 
         saveRanking(rankingVOYear.compareRanking(rankingYear), LogPeriod.YEAR);
         saveRanking(rankingVOMonth.compareRanking(rankingMonth), LogPeriod.MONTH);
@@ -54,60 +67,33 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
         rankingsRepository.save(new RankingsVO(ranking, period));
     }
 
-    private Map<Long, List<Long>> calcRanking(List<Long> memberIds, LogPeriod period) {
-        Map<Long, Long> memberVisitCount = getMemberVisitCountResult(memberIds, period);
-        Map<Long, List<Long>> rankings = calculateMemberVisitCount(memberVisitCount);
-        return rankings;
-    }
-
-    public RankingsVO getRanking(LogPeriod period) {
+    public Optional<RankingsVO> browseRanking(LogPeriod period) {
         return rankingsRepository.findRecent(period)
-                .stream()
-                .max(Comparator.comparing(RankingsVO::getLocalDateTime))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("no ranking result");
-                });
+            .stream()
+            .max(Comparator.comparing(RankingsVO::getLocalDateTime));
     }
 
-    private Map<Long, Long> getMemberVisitCountResult(List<Long> memberIds, LogPeriod type) {
-        Map<Long, Long> memberVisitCount = new HashMap<>();
-        for (Long id : memberIds) {
-            long visitCount = repository.findAllByMemberIdAndLocalDateBetween(id, type.getBeforeLocalDate(), LocalDate.now())
-                    .stream()
-                    .count();
-            memberVisitCount.put(id, visitCount);
-        }
-        return memberVisitCount;
-    }
-
-
-    private Map<Long, List<Long>> calculateMemberVisitCount(Map<Long, Long> memberOrderByVisitCount) {
-        return calculateMemberVisitCountResult(memberOrderByVisitCount, Comparator.reverseOrder());
-    }
-
-    private Map<Long, List<Long>> calculateMemberVisitCountResult(Map<Long, Long> memberOrderByVisitCount, Comparator comparator) {
-        Map<Long, List<Long>> calculatedRankingResult = new TreeMap<>(comparator);
-        memberOrderByVisitCount.forEach((memberId, visitCount) -> {
-                    if (calculatedRankingResult.containsKey(visitCount)) {
-                        calculatedRankingResult.merge(
-                                visitCount, List.of(memberId),
-                                (base, plus) ->
-                                        Stream.of(base, plus)
-                                                .flatMap(Collection::stream)
-                                                .collect(Collectors.toList())
-                        );
-                    }
-
-                    if (!calculatedRankingResult.containsKey(visitCount)) {
-                        calculatedRankingResult.put(visitCount, List.of(memberId));
-                    }
-                }
-        );
-        return calculatedRankingResult;
+    private Map<Long, List<Long>> calcRanking(List<Long> memberIds, LogPeriod period) {
+        return memberIds.stream()
+            .map((Long id)
+                -> new MemberVisitCountVO(
+                id,
+                repository.countByMemberIdAndLocalDateBetween(
+                    id,
+                    period.getBeforeLocalDate(), LocalDate.now())
+            ))
+            .sorted(Comparator.comparing(MemberVisitCountVO::getMemberId).reversed())
+            .collect(Collectors.groupingBy(
+                    MemberVisitCountVO::getVisitCount,
+                    Collectors.mapping(
+                        MemberVisitCountVO::getMemberId,
+                        Collectors.toList())
+                )
+            );
     }
 
     @Override
-    public Long calcRanking(Map<Long, List<Long>> rankings, Long memberId) {
+    public Long calcMemberRanking(Map<Long, List<Long>> rankings, Long memberId) {
         return rankings.entrySet()
                 .stream()
                 .filter(r -> r.getValue()
@@ -118,8 +104,8 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     @Override
-    public Long calcVisitCount(Long memberId, LogPeriod type) {
-        return (long) repository.findAllByMemberId(memberId)
-                .size();
+    public Long browseMemberVisitCount(Long memberId, LogPeriod type) {
+        return repository.countByMemberIdAndLocalDateBetween(memberId,
+            type.getBeforeLocalDate(), LocalDate.now());
     }
 }
