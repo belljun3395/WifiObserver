@@ -7,6 +7,7 @@ import com.example.iptimeAPI.domain.clubRoom.RankingsRepository;
 import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -81,6 +82,25 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     private Map<Long, List<Long>> calcRanking(List<Long> memberIds, LogPeriod period) {
+        Map<Long, List<Long>> visitCountMemberIds = calcVisitCountMemberIds(memberIds, period);
+        return rankingOrderByVisitCount(visitCountMemberIds);
+    }
+
+    private Map<Long, List<Long>> rankingOrderByVisitCount(Map<Long, List<Long>> visitCountMemberIds) {
+        List<Long> reversedVisitCount = visitCountMemberIds.keySet().stream()
+            .sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+
+        Map<Long, List<Long>> ranking = new HashMap<>();
+        Long rank = 1L;
+        for (Long visitCount : reversedVisitCount) {
+            ranking.put(rank, visitCountMemberIds.get(visitCount));
+            rank++;
+        }
+
+        return ranking;
+    }
+
+    private Map<Long, List<Long>> calcVisitCountMemberIds(List<Long> memberIds, LogPeriod period) {
         return memberIds.stream()
             .map((Long id)
                 -> new MemberVisitCountVO(
@@ -89,7 +109,6 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
                     id,
                     period.getBeforeLocalDate(), LocalDate.now())
             ))
-            .sorted(Comparator.comparing(MemberVisitCountVO::getMemberId).reversed())
             .collect(Collectors.groupingBy(
                     MemberVisitCountVO::getVisitCount,
                     Collectors.mapping(
