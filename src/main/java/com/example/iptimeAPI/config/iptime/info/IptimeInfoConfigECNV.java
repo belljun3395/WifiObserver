@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Getter
-@Profile("!dev")
 @Component
 @PropertySource("classpath:iptime-ecnv.properties")
 public class IptimeInfoConfigECNV implements IptimeInfoConfig {
