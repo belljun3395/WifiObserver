@@ -59,7 +59,7 @@ public class IptimeServiceImpl implements IptimeService {
         }
     }
 
-    public List<String> getMacAddressesList() throws IOException {
+    private List<String> getMacAddressesList() throws IOException {
         List<String> list = iptime.getList(cookieValue);
         if (!list.isEmpty()) {
             return list;
