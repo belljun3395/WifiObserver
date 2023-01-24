@@ -35,7 +35,7 @@ values (default, '1A:E6:56:14:1B:F5', 3);
 insert
 into member_mac_address_list
     (id, mac_address, member_id)
-values (default, '38:68:93:6E:2B:20', 4);
+values (default, 'F2:06:CB:B6:3F:1E', 4);
 
 -- member 1 : week = 2, month = 3, year = 4
 insert
