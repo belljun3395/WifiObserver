@@ -29,12 +29,12 @@ values (default, '38:68:93:6E:2B:20', 2);
 
 insert
 into member_mac_address_list
-(id, mac_address, member_id)
+    (id, mac_address, member_id)
 values (default, '1A:E6:56:14:1B:F5', 3);
 
 insert
 into member_mac_address_list
-(id, mac_address, member_id)
+    (id, mac_address, member_id)
 values (default, '38:68:93:6E:2B:20', 4);
 
 -- member 1 : week = 2, month = 3, year = 4
@@ -45,7 +45,7 @@ values (default, now(), 1);
 
 insert
 into club_arrival_departure_list
-(id, local_date, member_id)
+    (id, local_date, member_id)
 values (default, DATE_SUB(NOW(), INTERVAL 3 DAY), 1);
 
 insert
@@ -71,13 +71,13 @@ values (default, DATE_SUB(NOW(), INTERVAL 8 DAY), 2);
 
 insert
 into club_arrival_departure_list
-(id, local_date, member_id)
+    (id, local_date, member_id)
 values (default, DATE_SUB(NOW(), INTERVAL 40 DAY), 2);
 
 -- member 3 : week = 1, month = 2, year = 2
 insert
 into club_arrival_departure_list
-(id, local_date, member_id)
+    (id, local_date, member_id)
 values (default, now(), 3);
 
 insert

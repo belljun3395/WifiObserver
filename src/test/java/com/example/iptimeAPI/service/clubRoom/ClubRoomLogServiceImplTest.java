@@ -25,7 +25,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcRanking_example() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.MONTH);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.MONTH);
         Set<Entry<Long, List<Long>>> entries = rankings.entrySet();
 
         for (Entry<Long, List<Long>> entry : entries) {
@@ -38,7 +39,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcRanking_week() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.WEEK);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.WEEK);
 
         List<Long> firstMembers = rankings.get(1L);
         Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
@@ -49,7 +51,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcRanking_month() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.MONTH);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.MONTH);
 
         List<Long> firstMembers = rankings.get(1L);
         Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
@@ -62,7 +65,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcRanking_year() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.YEAR);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.YEAR);
 
         List<Long> firstMembers = rankings.get(1L);
         Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
@@ -77,7 +81,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcMemberRanking_week() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.WEEK);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.WEEK);
 
         Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
         Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
@@ -95,7 +100,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcMemberRanking_month() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.MONTH);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.MONTH);
 
         Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
         Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
@@ -113,7 +119,8 @@ class ClubRoomLogServiceImplTest {
     @Test
     void calcMemberRanking_year() {
         List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members, LogPeriod.YEAR);
+        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
+            LogPeriod.YEAR);
 
         Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
         Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
