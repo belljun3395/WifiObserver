@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,26 +40,22 @@ public class RankingController {
         @ApiParam(example = "month") @RequestParam String period) {
         RankingsVO rankingsVO = clubRoomLogService.browseRanking(
             LogPeriod.valueOf(period.toUpperCase())).get();
-        List<List<Long>> rankingMemberIds = new ArrayList<>(
-            shuffleRankings(rankingsVO.getRankings()));
 
         // todo mapper 고민
+        Set<Entry<Long, List<Long>>> rankingEntries = rankingsVO.getRankings().entrySet();
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
-        for (int i = 0, j = 1; i < rankingMemberIds.size(); i++, j++) {
-            for (Long memberId : rankingMemberIds.get(i)) {
-                memberRankingDTOS.add(new MemberRankingDTO(j, userService.getUserById(memberId)));
+
+        for (Entry<Long, List<Long>> rankingEntry : rankingEntries) {
+            for (Long memberId : rankingEntry.getValue()) {
+                memberRankingDTOS.add(
+                    new MemberRankingDTO(rankingEntry.getKey(), userService.getUserById(memberId)));
             }
         }
 
+        Collections.shuffle(memberRankingDTOS);
+
         return ApiResponseGenerator.success(memberRankingDTOS, HttpStatus.OK,
             HttpStatus.OK.value() + "500", "ranking result period : " + period);
-    }
-
-    private List<List<Long>> shuffleRankings(Map<Long, List<Long>> rankings) {
-        return rankings.values()
-            .stream()
-            .peek(Collections::shuffle)
-            .collect(Collectors.toList());
     }
 
 
