@@ -14,10 +14,8 @@ import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,26 +40,34 @@ public class RankingController {
             LogPeriod.valueOf(period.toUpperCase())).get();
 
         // todo mapper 고민
-        Set<Entry<Long, List<Long>>> rankingEntries = rankingsVO.getRankings().entrySet();
-        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
-
-        for (Entry<Long, List<Long>> rankingEntry : rankingEntries) {
-            for (Long memberId : rankingEntry.getValue()) {
-                memberRankingDTOS.add(
-                    new MemberRankingDTO(rankingEntry.getKey(), userService.getUserById(memberId)));
-            }
-        }
-
-        Collections.shuffle(memberRankingDTOS);
+        List<MemberRankingDTO> memberRankingDTOS = shuffleAndMapDTO(
+            rankingsVO);
 
         return ApiResponseGenerator.success(memberRankingDTOS, HttpStatus.OK,
             HttpStatus.OK.value() + "500", "ranking result period : " + period);
     }
 
+    private List<MemberRankingDTO> shuffleAndMapDTO(RankingsVO rankingsVO) {
+        Set<Entry<Long, List<Long>>> rankingEntries = rankingsVO.getRankings().entrySet();
+        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
+
+        for (Entry<Long, List<Long>> rankingEntry : rankingEntries) {
+            List<Long> memberIds = rankingEntry.getValue();
+            Collections.shuffle(memberIds);
+            for (Long memberId : memberIds) {
+                memberRankingDTOS.add(
+                    new MemberRankingDTO(rankingEntry.getKey(), userService.getUserById(memberId)));
+            }
+        }
+        return memberRankingDTOS;
+    }
+
 
     @GetMapping("/member")
     public ApiResponse<ApiResponse.withData> memberRankingCountInfo(
-        @RequestHeader(value = "Authorization") String accessToken, @RequestParam String period) {
+        @RequestHeader(value = "Authorization") String accessToken,
+        @ApiParam(example = "month") @RequestParam String period) {
+
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
         RankingsVO rankingsVO = clubRoomLogService.browseRanking(
             LogPeriod.valueOf(period.toUpperCase())).get();
