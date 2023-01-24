@@ -1,11 +1,10 @@
 package com.example.iptimeAPI.web.response;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
 
 @Getter
 public class ApiResponse<T> extends ResponseEntity<T> {
@@ -17,6 +16,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     @Getter
     public static class FailureBody implements Serializable {
+
         private Timestamp timestamp;
         private String code;
         private String error;
@@ -32,6 +32,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     @Getter
     public static class withData<T> implements Serializable {
+
         private Timestamp timestamp;
         private String code;
         private String message;
@@ -47,6 +48,7 @@ public class ApiResponse<T> extends ResponseEntity<T> {
 
     @Getter
     public static class withCodeAndMessage implements Serializable {
+
         private Timestamp timestamp;
         private String code;
         private String message;

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberRankingInfoDTO {
+
     private Long year;
     private String name;
     private Long id;

@@ -3,17 +3,16 @@ package com.example.iptimeAPI.service.iptime;
 import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
-import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.service.exception.MacAddressValidateError;
 import com.example.iptimeAPI.service.exception.MacAddressValidateException;
+import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.web.dto.IpDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 @Service
 public class IptimeServiceImpl implements IptimeService {
@@ -70,11 +69,13 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
+    public List<Long> browseExistMembers(
+        List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
         return registeredMacAddresses.stream()
-                .filter(macAddressResponseDTO -> macAddressesList.contains(macAddressResponseDTO.getMacAddress()))
-                .map(MacAddress.MacAddressResponseDTO::getMemberId)
-                .collect(Collectors.toList());
+            .filter(macAddressResponseDTO -> macAddressesList.contains(
+                macAddressResponseDTO.getMacAddress()))
+            .map(MacAddress.MacAddressResponseDTO::getMemberId)
+            .collect(Collectors.toList());
     }
 
 }

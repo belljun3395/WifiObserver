@@ -1,7 +1,6 @@
 package com.example.iptimeAPI.domain.clubRoom;
 
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

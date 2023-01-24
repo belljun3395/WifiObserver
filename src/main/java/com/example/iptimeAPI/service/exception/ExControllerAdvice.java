@@ -2,6 +2,8 @@ package com.example.iptimeAPI.service.exception;
 
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -10,27 +12,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 @RestControllerAdvice
 public class ExControllerAdvice {
 
     private static void logger(Exception exception) {
         log.error(exception.getClass()
-                        .getSimpleName() + " = [{}][{}]",
-                exception.getClass(), exception.getMessage());
+                .getSimpleName() + " = [{}][{}]",
+            exception.getClass(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalStateException.class})
-    public ApiResponse<ApiResponse.FailureBody> illegalStateExHandler(IllegalStateException exception) {
+    public ApiResponse<ApiResponse.FailureBody> illegalStateExHandler(
+        IllegalStateException exception) {
         logger(exception);
         String defaultMessage = exception.getMessage();
-        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + "001",
-                exception.getClass()
-                        .getSimpleName(), defaultMessage);
+        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST,
+            HttpStatus.BAD_REQUEST.value() + "001",
+            exception.getClass()
+                .getSimpleName(), defaultMessage);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -39,25 +40,29 @@ public class ExControllerAdvice {
         logger(exception);
         List<ApiResponse<ApiResponse.FailureBody>> errorResults = new ArrayList<>();
         exception.getAllErrors()
-                .forEach(error -> {
-                    FieldError fieldError = (FieldError) error;
-                    String field = fieldError.getField();
-                    String defaultMessage = fieldError.getDefaultMessage();
-                    ApiResponse<ApiResponse.FailureBody> bindingException = ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + "001", exception.getClass()
-                            .getSimpleName(), field + " 필드 입력이 필요합니다. " + defaultMessage);
-                    errorResults.add(bindingException);
-                });
+            .forEach(error -> {
+                FieldError fieldError = (FieldError) error;
+                String field = fieldError.getField();
+                String defaultMessage = fieldError.getDefaultMessage();
+                ApiResponse<ApiResponse.FailureBody> bindingException = ApiResponseGenerator.fail(
+                    HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + "001",
+                    exception.getClass()
+                        .getSimpleName(), field + " 필드 입력이 필요합니다. " + defaultMessage);
+                errorResults.add(bindingException);
+            });
         return errorResults;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MacAddressValidateException.class})
-    public ApiResponse<ApiResponse.FailureBody> MacAddressValidateExHandler(MacAddressValidateException exception) {
+    public ApiResponse<ApiResponse.FailureBody> MacAddressValidateExHandler(
+        MacAddressValidateException exception) {
         logger(exception);
         String defaultMessage = exception.getMessage();
-        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + exception.getCode(),
-                exception.getClass()
-                        .getSimpleName(), defaultMessage);
+        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST,
+            HttpStatus.BAD_REQUEST.value() + exception.getCode(),
+            exception.getClass()
+                .getSimpleName(), defaultMessage);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -65,8 +70,9 @@ public class ExControllerAdvice {
     public ApiResponse<ApiResponse.FailureBody> exHandler(Exception exception) {
         logger(exception);
         String defaultMessage = exception.getMessage();
-        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value() + "000",
-                exception.getClass()
-                        .getSimpleName(), defaultMessage);
+        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST,
+            HttpStatus.BAD_REQUEST.value() + "000",
+            exception.getClass()
+                .getSimpleName(), defaultMessage);
     }
 }

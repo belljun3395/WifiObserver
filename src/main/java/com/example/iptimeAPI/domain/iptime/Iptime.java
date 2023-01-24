@@ -1,17 +1,16 @@
 package com.example.iptimeAPI.domain.iptime;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -33,9 +32,10 @@ public class Iptime {
 
         Document loginPageDocument = cookieValueResponse.parse();
         String bodyString = loginPageDocument.body()
-                .toString();
+            .toString();
         String findCookie = findBracketTextByPattern(findSetCookie, bodyString);
-        String cookieValue = findBracketTextByPattern(extractCookieName, findCookie).replaceAll("\'", "");
+        String cookieValue = findBracketTextByPattern(extractCookieName, findCookie).replaceAll(
+            "\'", "");
 
         return cookieValue;
     }
@@ -45,7 +45,7 @@ public class Iptime {
         Response listResponsePage = iptimeConnection.getList(cookieValue);
 
         Element body = listResponsePage.parse()
-                .body();
+            .body();
         Elements tbody = body.select(iptimeHTML.getTbody());
 
         List<Element> td = getTd(tbody);
@@ -71,11 +71,11 @@ public class Iptime {
         List<Element> tdElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements tr = tbody.get(i)
-                    .select(iptimeHTML.getTr());
+                .select(iptimeHTML.getTr());
             Elements td = tr.select(iptimeHTML.getTd());
             for (Element j : td) {
                 if (!j.toString()
-                        .contains(iptimeHTML.getStyle())) {
+                    .contains(iptimeHTML.getStyle())) {
                     tdElement.add(j);
                 }
 
@@ -88,7 +88,7 @@ public class Iptime {
         List<Element> inputElement = new ArrayList<>();
         for (int i = 0; i < tbody.size(); i++) {
             Elements input = tbody.get(i)
-                    .select(iptimeHTML.getInput());
+                .select(iptimeHTML.getInput());
             for (Element j : input) {
                 inputElement.add(j);
             }
@@ -100,8 +100,8 @@ public class Iptime {
         List<String> tdValue = new ArrayList<>();
         for (Element e : tdBefore) {
             tdValue.add(e.text()
-                    .replace("-", ":")
-                    .toLowerCase());
+                .replace("-", ":")
+                .toLowerCase());
         }
         return tdValue;
     }
@@ -110,7 +110,7 @@ public class Iptime {
         List<String> inputValue = new ArrayList<>();
         for (Element e : inputBefore) {
             inputValue.add(e.val()
-                    .toLowerCase());
+                .toLowerCase());
         }
         return inputValue;
     }
@@ -120,7 +120,7 @@ public class Iptime {
         for (int i = 0; i < inputValue.size(); i = i + 3) {
             if (tdValue.contains(inputValue.get(i))) {
                 result.add(inputValue.get(i)
-                        .toUpperCase());
+                    .toUpperCase());
             }
         }
         return result;

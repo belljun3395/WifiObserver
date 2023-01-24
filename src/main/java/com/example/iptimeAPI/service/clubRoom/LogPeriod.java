@@ -4,14 +4,14 @@ import java.time.LocalDate;
 
 public enum LogPeriod {
     YEAR("YEAR",
-            LocalDate.now()
-                    .minusYears(1L)),
+        LocalDate.now()
+            .minusYears(1L)),
     MONTH("MONTH",
-            LocalDate.now()
-                    .minusMonths(1L)),
+        LocalDate.now()
+            .minusMonths(1L)),
     WEEK("WEEK",
-            LocalDate.now()
-                    .minusWeeks(1L)),
+        LocalDate.now()
+            .minusWeeks(1L)),
     ;
 
     private String type;

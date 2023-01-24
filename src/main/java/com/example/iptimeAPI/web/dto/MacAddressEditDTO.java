@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MacAddressEditDTO {
+
     @ApiParam(example = "1")
     private Long id;
 

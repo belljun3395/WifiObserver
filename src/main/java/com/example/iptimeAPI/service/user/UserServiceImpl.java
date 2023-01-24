@@ -7,14 +7,14 @@ import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.service.user.exception.OuterServiceException;
 import com.example.iptimeAPI.service.user.exception.OuterServiceValidateException;
 import com.example.iptimeAPI.service.user.fegin.FeignUserInfo;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository repository;
     private final FeignUserInfo feignUserInfo;
 
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userByAccessToken = repository.findByAccessToken(accessToken);
         if (userByAccessToken.isPresent()) {
             return userByAccessToken.get()
-                    .getUserInfoVO();
+                .getUserInfoVO();
         }
 
         try {
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userByAccessToken = repository.findByUserId(userId);
         if (userByAccessToken.isPresent()) {
             return userByAccessToken.get()
-                    .getUserInfoVO();
+                .getUserInfoVO();
         }
 
         try {

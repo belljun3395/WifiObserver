@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberRankingDTO {
+
     private Integer ranking;
     private UserInfoVO userInfoVO;
 }

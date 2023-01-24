@@ -1,15 +1,21 @@
 package com.example.iptimeAPI.service.clubRoom;
 
-import com.example.iptimeAPI.domain.clubRoom.*;
+import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
+import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
+import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.domain.clubRoom.RankingsRepository;
+import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +28,8 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Override
     @Transactional
     public boolean save(Long memberId) {
-        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
+        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId,
+            LocalDate.now());
         if (byMemberId.isPresent()) {
             return false;
         }
@@ -95,12 +102,12 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Override
     public Long calcMemberRanking(Map<Long, List<Long>> rankings, Long memberId) {
         return rankings.entrySet()
-                .stream()
-                .filter(r -> r.getValue()
-                        .contains(memberId))
-                .findFirst()
-                .get()
-                .getKey();
+            .stream()
+            .filter(r -> r.getValue()
+                .contains(memberId))
+            .findFirst()
+            .get()
+            .getKey();
     }
 
     @Override

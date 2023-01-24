@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients
 @EnableAsync
 public class IptimeAPIApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(IptimeAPIApplication.class, args);
     }
