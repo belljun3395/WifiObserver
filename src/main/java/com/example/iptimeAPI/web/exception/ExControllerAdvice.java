@@ -1,5 +1,6 @@
 package com.example.iptimeAPI.web.exception;
 
+import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import java.util.ArrayList;
