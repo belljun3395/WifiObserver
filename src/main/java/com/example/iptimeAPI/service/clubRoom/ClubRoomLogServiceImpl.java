@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,12 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     private Map<Long, List<Long>> calcRanking(List<Long> memberIds, LogPeriod period) {
+        Map<Long, List<Long>> visitCountMemberIds = calcVisitCountMemberIds(memberIds, period);
+        return rankingOrderByVisitCount(visitCountMemberIds);
+    }
+
+    @Profile("test")
+    public Map<Long, List<Long>> calcRanking_test(List<Long> memberIds, LogPeriod period) {
         Map<Long, List<Long>> visitCountMemberIds = calcVisitCountMemberIds(memberIds, period);
         return rankingOrderByVisitCount(visitCountMemberIds);
     }

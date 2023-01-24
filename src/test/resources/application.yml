@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:mysql://localhost:3306/econo_forest?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: root@1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: econo_forest
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+
+  sql:
+    init:
+      mode: always
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+            loggerLevel: basic
+
+logging.level:
+  org.hibernate.SQL: debug
+#  org.springframework.transaction.interceptor : trace
+#  org.hibernate.type: trace
+#  org.hibernate.type.descriptor.sql: trace
+
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+      timeout: 1800
