@@ -68,14 +68,6 @@ public class IptimeHTTPConfig {
         return iptimeInfoConfig.getHosturl() + login_handler;
     }
 
-//    public String get_login_url() {
-//        return iptimeConfig.getHosturl() + login;
-//    }
-//
-//    public String get_login_referer() {
-//        return iptimeConfig.getHosturl() + login_handler;
-//    }
-
     public String get_list_url() {
         return iptimeInfoConfig.getHosturl() + login_timepro_query;
     }
