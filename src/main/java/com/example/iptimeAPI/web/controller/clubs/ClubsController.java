@@ -38,29 +38,52 @@ public class ClubsController {
 
         List<UserInfoVO> userInfoVOS = new ArrayList<>();
         for (Long memberId : members) {
-            userInfoVOS.add(userServiceImpl.getUserById(memberId));
+            userInfoVOS.add(
+                userServiceImpl.getUserById(memberId)
+            );
         }
 
-        return ApiResponseGenerator.success(userInfoVOS, HttpStatus.OK,
-            HttpStatus.OK.value() + "100", "exist members");
+        return
+            ApiResponseGenerator.success(
+                userInfoVOS,
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "100",
+                "exist members");
     }
 
     @PostMapping("/entrance")
-    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(IpDTO ipDTO,
-        @RequestHeader(value = "Authorization") String accessToken) throws IOException {
+    public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(
+        IpDTO ipDTO,
+        @RequestHeader(value = "Authorization") String accessToken
+    )
+        throws IOException {
 
-        if (!iptimeService.isInIptime(ipDTO)
-            .isIn()) {
-            return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100",
-                "enter ecnv");
+        if (!iptimeService
+            .isInIptime(ipDTO)
+            .isIn()
+        ) {
+            return
+                ApiResponseGenerator.success(
+                    HttpStatus.OK,
+                    HttpStatus.OK.value() + "100",
+                    "enter ecnv"
+                );
         }
 
-        Long memberId = userServiceImpl.getUserByToken(accessToken)
-            .getId();
+        Long memberId =
+            userServiceImpl
+                .getUserByToken(accessToken)
+                .getId();
+
         iptimeMacAddressFacade.validateExistMemberMacAddress(memberId);
+
         clubRoomLogService.save(memberId);
 
-        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "100",
-            "enter ecnv");
+        return
+            ApiResponseGenerator.success(
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "100",
+                "enter ecnv"
+            );
     }
 }

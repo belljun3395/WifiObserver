@@ -28,10 +28,13 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Override
     @Transactional
     public void save(Long memberId) {
-        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
+        Optional<ClubRoomLog> byMemberId =
+            repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
 
         if (byMemberId.isEmpty()) {
-            repository.save(new ClubRoomLog(memberId, LocalDate.now()));
+            repository.save(
+                new ClubRoomLog(memberId, LocalDate.now())
+            );
         }
 
         cacheEvicts.evictRankingCache();
@@ -41,10 +44,14 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     @Profile("test")
     @Transactional
     public String save_test(Long memberId) {
-        Optional<ClubRoomLog> byMemberId = repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
+        Optional<ClubRoomLog> byMemberId =
+            repository.findByMemberIdAndLocalDate(memberId, LocalDate.now());
 
         if (byMemberId.isEmpty()) {
-            repository.save(new ClubRoomLog(memberId, LocalDate.now()));
+            repository.save(
+                new ClubRoomLog(memberId, LocalDate.now())
+            );
+
             return "empty and save";
         }
 
@@ -82,7 +89,8 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
             );
     }
 
-    private Map<Long, List<Long>> memberIdsRankOrderByVisitCount(Map<Long, List<Long>> visitCountGroup) {
+    private Map<Long, List<Long>> memberIdsRankOrderByVisitCount(
+        Map<Long, List<Long>> visitCountGroup) {
         List<Long> orderedVisitCount =
             visitCountGroup.keySet().stream()
                 .sorted(Comparator.reverseOrder())

@@ -25,41 +25,70 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     @Transactional
     public void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO) {
-        Optional<MacAddress> byMemberId = repository.findByMemberId(
-            macAddressRegistDTO.getMemberId());
-        Optional<MacAddress> byMacAddress = repository.findByMacAddress(
-            macAddressRegistDTO.getMacAddress());
+        Optional<MacAddress> byMemberId =
+            repository.findByMemberId(macAddressRegistDTO.getMemberId());
 
-        validateMacAddress(byMacAddress, Optional::isPresent,
-            MacAddressValidateError.DUPLICATE_MACADDRESS);
+        Optional<MacAddress> byMacAddress =
+            repository.findByMacAddress(macAddressRegistDTO.getMacAddress());
+
+        validateMacAddress(
+            byMacAddress,
+            Optional::isPresent,
+            MacAddressValidateError.DUPLICATE_MACADDRESS
+        );
 
         if (byMemberId.isPresent()) {
-            validateMacAddress(byMemberId,
-                mac -> mac.get()
-                    .isSameMacAddress(macAddressRegistDTO.getMacAddress()),
-                MacAddressValidateError.DUPLICATE_MACADDRESS);
+            validateMacAddress(
+                byMemberId,
+                mac
+                    -> mac.get().isSameMacAddress(macAddressRegistDTO.getMacAddress()),
+                MacAddressValidateError.DUPLICATE_MACADDRESS
+            );
+
             MacAddress macAddress = byMemberId.get();
-            repository.save(new MacAddress(macAddress.getId(), macAddressRegistDTO.getMemberId(), macAddressRegistDTO.getMacAddress()));
+
+            repository.save(
+                new MacAddress(
+                    macAddress.getId(),
+                    macAddressRegistDTO.getMemberId(),
+                    macAddressRegistDTO.getMacAddress()
+                )
+            );
         }
+
         if (byMemberId.isEmpty()) {
-            repository.save(new MacAddress(macAddressRegistDTO.getMemberId(),
-                macAddressRegistDTO.getMacAddress()));
+            repository.save(
+                new MacAddress(
+                    macAddressRegistDTO.getMemberId(),
+                    macAddressRegistDTO.getMacAddress()
+                )
+            );
         }
     }
 
     @Override
     @Transactional
     public void editMacAddress(MacAddressEditDTO macAddressEditDTO) {
-        repository.save(new MacAddress(macAddressEditDTO.getId(), macAddressEditDTO.getMemberId(),
-            macAddressEditDTO.getMacAddress()));
+        repository.save(
+            new MacAddress(
+                macAddressEditDTO.getId(),
+                macAddressEditDTO.getMemberId(),
+                macAddressEditDTO.getMacAddress()
+            )
+        );
     }
 
     @Override
     public List<MacAddress.MacAddressResponseDTO> browseMacAddresses() {
         return repository.findAll()
             .stream()
-            .map(macAddress -> new MacAddress.MacAddressResponseDTO(macAddress.getId(),
-                macAddress.getMemberId(), macAddress.getMacAddress()))
+            .map(macAddress
+                    -> new MacAddress.MacAddressResponseDTO(
+                    macAddress.getId(),
+                    macAddress.getMemberId(),
+                    macAddress.getMacAddress()
+                )
+            )
             .collect(Collectors.toList());
     }
 
@@ -74,15 +103,26 @@ public class MacAddressServiceImpl implements MacAddressService {
     @Override
     public MacAddress.MacAddressResponseDTO findMemberMacAddress(Long memberId) {
         Optional<MacAddress> byMemberId = repository.findByMemberId(memberId);
-        validateMacAddress(byMemberId, Optional::isEmpty,
-            MacAddressValidateError.NOT_REGISTER_MEMBER);
+
+        validateMacAddress(
+            byMemberId,
+            Optional::isEmpty,
+            MacAddressValidateError.NOT_REGISTER_MEMBER
+        );
+
         MacAddress macAddress = byMemberId.get();
-        return new MacAddress.MacAddressResponseDTO(macAddress.getId(), macAddress.getMemberId(),
-            macAddress.getMacAddress());
+
+        return
+            new MacAddress.MacAddressResponseDTO(
+                macAddress.getId(),
+                macAddress.getMemberId(),
+                macAddress.getMacAddress()
+            );
     }
 
     private void validateMacAddress(Optional<MacAddress> macAddress,
         Predicate<Optional<MacAddress>> predicate, MacAddressValidateError error) {
+
         if (predicate.test(macAddress)) {
             throw new MacAddressValidateException(error);
         }

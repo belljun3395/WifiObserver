@@ -33,14 +33,21 @@ public class RankingController {
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(
         @ApiParam(example = "month") @RequestParam String period) {
-        Map<Long, Long> membersRanking = clubRoomLogService.calcRanking(
-            LogPeriod.valueOf(period.toUpperCase()));
 
-        List<MemberRankingDTO> memberRankingDTOS = shuffleAndMapDTO(
-            membersRanking);
+        Map<Long, Long> membersRanking =
+            clubRoomLogService
+                .calcRanking(
+                    LogPeriod.valueOf(period.toUpperCase())
+                );
 
-        return ApiResponseGenerator.success(memberRankingDTOS, HttpStatus.OK,
-            HttpStatus.OK.value() + "500", "ranking result period : " + period);
+        List<MemberRankingDTO> memberRankingDTOS = shuffleAndMapDTO(membersRanking);
+
+        return
+            ApiResponseGenerator.success(
+                memberRankingDTOS,
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "500",
+                "ranking result period : " + period);
     }
 
     private List<MemberRankingDTO> shuffleAndMapDTO(Map<Long, Long> membersRanking) {
@@ -49,31 +56,48 @@ public class RankingController {
         List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
         for (Long memberId : memberIds) {
             memberRankingDTOS.add(
-                new MemberRankingDTO(membersRanking.get(memberId),
-                    userService.getUserById(memberId)));
+                new MemberRankingDTO(
+                    membersRanking.get(memberId),
+                    userService.getUserById(memberId)
+                )
+            );
         }
 
         return memberRankingDTOS;
     }
 
-
     @GetMapping("/member")
     public ApiResponse<ApiResponse.withData> memberRankingCountInfo(
         @RequestHeader(value = "Authorization") String accessToken,
-        @ApiParam(example = "month") @RequestParam String period) {
+        @ApiParam(example = "month") @RequestParam String period
+    ) {
 
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
-        Map<Long, Long> membersRanking = clubRoomLogService.calcRanking(
-            LogPeriod.valueOf(period.toUpperCase()));
+
+        Map<Long, Long> membersRanking =
+            clubRoomLogService.calcRanking(LogPeriod.valueOf(period.toUpperCase()));
 
         UserInfoVO user = userService.getUserByToken(accessToken);
+
         Long memberRanking = membersRanking.get(user.getId());
+
         Long visitCount = clubRoomLogService.browseMemberVisitCount(user.getId(), periodType);
 
-        MemberRankingInfoDTO memberRankingInfoDTO = new MemberRankingInfoDTO(user.getYear(),
-            user.getName(), user.getId(), memberRanking, visitCount);
+        MemberRankingInfoDTO memberRankingInfoDTO =
+            new MemberRankingInfoDTO(
+                user.getYear(),
+                user.getName(),
+                user.getId(),
+                memberRanking,
+                visitCount
+            );
 
-        return ApiResponseGenerator.success(memberRankingInfoDTO, HttpStatus.OK,
-            HttpStatus.OK.value() + "500", "ranking result period : " + period);
+        return
+            ApiResponseGenerator.success(
+                memberRankingInfoDTO,
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "500",
+                "ranking result period : " + period
+            );
     }
 }

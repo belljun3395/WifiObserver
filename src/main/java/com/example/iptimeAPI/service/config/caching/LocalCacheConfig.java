@@ -15,7 +15,8 @@ public class LocalCacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        simpleCacheManager.setCaches(List.of(new ConcurrentMapCache("ranking"),new ConcurrentMapCache("memberVisitCount")));
+        simpleCacheManager.setCaches(
+            List.of(new ConcurrentMapCache("ranking"), new ConcurrentMapCache("memberVisitCount")));
         return simpleCacheManager;
     }
 }

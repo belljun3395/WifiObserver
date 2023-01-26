@@ -3,9 +3,9 @@ package com.example.iptimeAPI.service.iptime;
 import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
+import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateError;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
-import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import java.io.IOException;
 import java.util.List;
@@ -54,6 +54,7 @@ public class IptimeServiceImpl implements IptimeService {
     @Scheduled(fixedDelay = 60000 * 60)
     public void renewalList() throws IOException {
         List<String> latestMacAddressesList = this.getMacAddressesList();
+
         if (!macAddressesList.equals(latestMacAddressesList)) {
             this.macAddressesList = latestMacAddressesList;
         }
@@ -64,7 +65,9 @@ public class IptimeServiceImpl implements IptimeService {
         if (!list.isEmpty()) {
             return list;
         }
+
         this.cookieValue = iptime.getCookieValue();
+
         return iptime.getList(cookieValue);
     }
 
@@ -72,8 +75,10 @@ public class IptimeServiceImpl implements IptimeService {
     public List<Long> browseExistMembers(
         List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
         return registeredMacAddresses.stream()
-            .filter(macAddressResponseDTO -> macAddressesList.contains(
-                macAddressResponseDTO.getMacAddress()))
+            .filter(
+                macAddressResponseDTO
+                    -> macAddressesList.contains(macAddressResponseDTO.getMacAddress())
+            )
             .map(MacAddress.MacAddressResponseDTO::getMemberId)
             .collect(Collectors.toList());
     }

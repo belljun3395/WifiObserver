@@ -28,26 +28,45 @@ public class MacAddressController {
     @PostMapping
     public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(
         MacAddressRegistDTO macAddressRegistDTO) {
+
         macAddressService.registerMacAddress(macAddressRegistDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "600",
-            "success register");
+
+        return
+            ApiResponseGenerator.success(
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "600",
+                "success register"
+            );
     }
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> findMemberMacAddress(
         @RequestHeader(value = "Authorization") String accessToken) {
-        Long memberId = userServiceImpl.getUserByToken(accessToken)
-            .getId();
-        return ApiResponseGenerator.success(macAddressService.findMemberMacAddress(memberId),
-            HttpStatus.OK, HttpStatus.OK.value() + "600", "member's mac address info");
+        Long memberId =
+            userServiceImpl
+                .getUserByToken(accessToken)
+                .getId();
+
+        return
+            ApiResponseGenerator.success(
+                macAddressService.findMemberMacAddress(memberId),
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "600",
+                "member's mac address info"
+            );
     }
 
     @PutMapping
     public ApiResponse<ApiResponse.withCodeAndMessage> editMemberMacAddress(
         MacAddressEditDTO macAddressEditDTO) {
         macAddressService.editMacAddress(macAddressEditDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, HttpStatus.OK.value() + "600",
-            "success edit mac address info");
+
+        return
+            ApiResponseGenerator.success(
+                HttpStatus.OK,
+                HttpStatus.OK.value() + "600",
+                "success edit mac address info"
+            );
     }
 
 }
