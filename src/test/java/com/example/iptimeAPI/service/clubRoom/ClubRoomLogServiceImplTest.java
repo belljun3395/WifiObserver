@@ -1,148 +1,78 @@
 package com.example.iptimeAPI.service.clubRoom;
 
-import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import java.util.Collections;
-import java.util.List;
+
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-@Slf4j
 @SpringBootTest
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class ClubRoomLogServiceImplTest {
 
     @Autowired
     private ClubRoomLogServiceImpl clubRoomLogService;
 
-    @Autowired
-    private MacAddressService macAddressService;
+    @Test
+    void save_empty() {
+        String returnValue = clubRoomLogService.save_test(1L);
+
+        Assertions.assertThat(returnValue).isEqualTo("empty and save");
+    }
 
     @Test
-    void calcRanking_example() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.MONTH);
-        Set<Entry<Long, List<Long>>> entries = rankings.entrySet();
+    void save_present() {
+        clubRoomLogService.save_test(1L);
 
-        for (Entry<Long, List<Long>> entry : entries) {
-            Collections.shuffle(entry.getValue());
-            log.info("member ranking = {}  id = {}", entry.getKey(),
-                entry.getValue());
-        }
+        String returnValue = clubRoomLogService.save_test(1L);
+
+        Assertions.assertThat(returnValue).isEqualTo("present");
     }
 
     @Test
     void calcRanking_week() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.WEEK);
+        Map<Long, Long> rankings = clubRoomLogService.calcRanking(LogPeriod.WEEK);
 
-        List<Long> firstMembers = rankings.get(1L);
-        Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
-        List<Long> secondMembers = rankings.get(2L);
-        Assertions.assertThat(secondMembers.size()).isEqualTo(3L);
+        Assertions.assertThat(rankings.get(1L)).isEqualTo(1L);
+        Assertions.assertThat(rankings.get(2L)).isEqualTo(2L);
+        Assertions.assertThat(rankings.get(3L)).isEqualTo(2L);
+        Assertions.assertThat(rankings.get(4L)).isEqualTo(2L);
+
     }
 
     @Test
     void calcRanking_month() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.MONTH);
+        Map<Long, Long> rankings = clubRoomLogService.calcRanking(LogPeriod.MONTH);
 
-        List<Long> firstMembers = rankings.get(1L);
-        Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
-        List<Long> secondMembers = rankings.get(2L);
-        Assertions.assertThat(secondMembers.size()).isEqualTo(2L);
-        List<Long> thirdMembers = rankings.get(3L);
-        Assertions.assertThat(thirdMembers.size()).isEqualTo(1L);
+        Assertions.assertThat(rankings.get(1L)).isEqualTo(1L);
+        Assertions.assertThat(rankings.get(2L)).isEqualTo(2L);
+        Assertions.assertThat(rankings.get(3L)).isEqualTo(2L);
+        Assertions.assertThat(rankings.get(4L)).isEqualTo(3L);
+
     }
 
     @Test
     void calcRanking_year() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.YEAR);
+        Map<Long, Long> rankings = clubRoomLogService.calcRanking(LogPeriod.YEAR);
 
-        List<Long> firstMembers = rankings.get(1L);
-        Assertions.assertThat(firstMembers.size()).isEqualTo(1L);
-        List<Long> secondMembers = rankings.get(2L);
-        Assertions.assertThat(secondMembers.size()).isEqualTo(1L);
-        List<Long> thirdMembers = rankings.get(3L);
-        Assertions.assertThat(thirdMembers.size()).isEqualTo(1L);
-        List<Long> fourthMembers = rankings.get(3L);
-        Assertions.assertThat(fourthMembers.size()).isEqualTo(1L);
-    }
+        Assertions.assertThat(rankings.get(1L)).isEqualTo(1L);
+        Assertions.assertThat(rankings.get(2L)).isEqualTo(2L);
+        Assertions.assertThat(rankings.get(3L)).isEqualTo(3L);
+        Assertions.assertThat(rankings.get(4L)).isEqualTo(4L);
 
-    @Test
-    void calcMemberRanking_week() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.WEEK);
-
-        Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
-        Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
-
-        Long secondMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 2L);
-        Assertions.assertThat(secondMemberRanking).isEqualTo(2L);
-
-        Long thirdMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 3L);
-        Assertions.assertThat(thirdMemberRanking).isEqualTo(2L);
-
-        Long fourthMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 4L);
-        Assertions.assertThat(fourthMemberRanking).isEqualTo(2L);
-    }
-
-    @Test
-    void calcMemberRanking_month() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.MONTH);
-
-        Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
-        Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
-
-        Long secondMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 2L);
-        Assertions.assertThat(secondMemberRanking).isEqualTo(2L);
-
-        Long thirdMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 3L);
-        Assertions.assertThat(thirdMemberRanking).isEqualTo(2L);
-
-        Long fourthMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 4L);
-        Assertions.assertThat(fourthMemberRanking).isEqualTo(3L);
-    }
-
-    @Test
-    void calcMemberRanking_year() {
-        List<Long> members = macAddressService.browseMacAddressesMembers();
-        Map<Long, List<Long>> rankings = clubRoomLogService.calcRanking_test(members,
-            LogPeriod.YEAR);
-
-        Long firstMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 1L);
-        Assertions.assertThat(firstMemberRanking).isEqualTo(1L);
-
-        Long secondMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 2L);
-        Assertions.assertThat(secondMemberRanking).isEqualTo(2L);
-
-        Long thirdMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 3L);
-        Assertions.assertThat(thirdMemberRanking).isEqualTo(3L);
-
-        Long fourthMemberRanking = clubRoomLogService.calcMemberRanking(rankings, 4L);
-        Assertions.assertThat(fourthMemberRanking).isEqualTo(4L);
     }
 
     @Test
     void browseMemberVisitCount() {
-        Long weekCount = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.WEEK);
-        Long monthCount = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.MONTH);
-        Long yearCount = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.YEAR);
+        Long week = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.WEEK);
+        Long month = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.MONTH);
+        Long year = clubRoomLogService.browseMemberVisitCount(1L, LogPeriod.YEAR);
 
-        Assertions.assertThat(weekCount).isEqualTo(2L);
-        Assertions.assertThat(monthCount).isEqualTo(3L);
-        Assertions.assertThat(yearCount).isEqualTo(4L);
+        Assertions.assertThat(week).isEqualTo(2L);
+        Assertions.assertThat(month).isEqualTo(3L);
+        Assertions.assertThat(year).isEqualTo(4L);
     }
 }

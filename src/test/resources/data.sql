@@ -41,7 +41,7 @@ values (default, 'F2:06:CB:B6:3F:1E', 4);
 insert
 into club_arrival_departure_list
     (id, local_date, member_id)
-values (default, now(), 1);
+values (default, DATE_SUB(NOW(), INTERVAL 1 DAY), 1);
 
 insert
 into club_arrival_departure_list

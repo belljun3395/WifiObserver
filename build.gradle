@@ -27,8 +27,8 @@ dependencies {
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
 	implementation 'org.springframework.cloud:spring-cloud-dependencies:2021.0.5'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
     testImplementation 'org.projectlombok:lombok:1.18.22'
 
     compileOnly 'org.projectlombok:lombok'

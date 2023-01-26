@@ -1,7 +1,6 @@
 package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
-import com.example.iptimeAPI.domain.clubRoom.RankingsVO;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
@@ -12,10 +11,8 @@ import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,29 +33,26 @@ public class RankingController {
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(
         @ApiParam(example = "month") @RequestParam String period) {
-        RankingsVO rankingsVO = clubRoomLogService.browseRanking(
-            LogPeriod.valueOf(period.toUpperCase())).get();
+        Map<Long, Long> membersRanking = clubRoomLogService.calcRanking(
+            LogPeriod.valueOf(period.toUpperCase()));
 
-        // todo mapper 고민
         List<MemberRankingDTO> memberRankingDTOS = shuffleAndMapDTO(
-            rankingsVO);
+            membersRanking);
 
         return ApiResponseGenerator.success(memberRankingDTOS, HttpStatus.OK,
             HttpStatus.OK.value() + "500", "ranking result period : " + period);
     }
 
-    private List<MemberRankingDTO> shuffleAndMapDTO(RankingsVO rankingsVO) {
-        Set<Entry<Long, List<Long>>> rankingEntries = rankingsVO.getRankings().entrySet();
-        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
+    private List<MemberRankingDTO> shuffleAndMapDTO(Map<Long, Long> membersRanking) {
+        List<Long> memberIds = new ArrayList<>(membersRanking.keySet());
 
-        for (Entry<Long, List<Long>> rankingEntry : rankingEntries) {
-            List<Long> memberIds = rankingEntry.getValue();
-            Collections.shuffle(memberIds);
-            for (Long memberId : memberIds) {
-                memberRankingDTOS.add(
-                    new MemberRankingDTO(rankingEntry.getKey(), userService.getUserById(memberId)));
-            }
+        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
+        for (Long memberId : memberIds) {
+            memberRankingDTOS.add(
+                new MemberRankingDTO(membersRanking.get(memberId),
+                    userService.getUserById(memberId)));
         }
+
         return memberRankingDTOS;
     }
 
@@ -69,16 +63,16 @@ public class RankingController {
         @ApiParam(example = "month") @RequestParam String period) {
 
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
-        RankingsVO rankingsVO = clubRoomLogService.browseRanking(
-            LogPeriod.valueOf(period.toUpperCase())).get();
+        Map<Long, Long> membersRanking = clubRoomLogService.calcRanking(
+            LogPeriod.valueOf(period.toUpperCase()));
 
         UserInfoVO user = userService.getUserByToken(accessToken);
-        Long memberRanking = clubRoomLogService.calcMemberRanking(rankingsVO.getRankings(),
-            user.getId());
+        Long memberRanking = membersRanking.get(user.getId());
         Long visitCount = clubRoomLogService.browseMemberVisitCount(user.getId(), periodType);
 
         MemberRankingInfoDTO memberRankingInfoDTO = new MemberRankingInfoDTO(user.getYear(),
             user.getName(), user.getId(), memberRanking, visitCount);
+
         return ApiResponseGenerator.success(memberRankingInfoDTO, HttpStatus.OK,
             HttpStatus.OK.value() + "500", "ranking result period : " + period);
     }
