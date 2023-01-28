@@ -1,4 +1,14 @@
 # iptimeAPI
+![Group 42](https://user-images.githubusercontent.com/102807742/215243156-37ddcf58-3206-4a23-a79f-c8138cc26004.png)
+
++ 에코노베이션 발표영상
+  + [기획](https://youtu.be/wOqimi4O8H4?t=4433)(1:14:00)
+  + [프런트](https://youtu.be/wOqimi4O8H4?t=4624)(1:17:00)
+  + [백엔드](https://youtu.be/wOqimi4O8H4?t=5090)(1:25:00)
+  
++ [에코노베이션 발표자료](https://docs.google.com/presentation/d/1GNo1h4OH3nUJPK5yMVGnbbaw2W5vjCPE/edit?usp=share_link&ouid=110092230635164765269&rtpof=true&sd=true)
+
+
 
 ## iptimeAPI는?
 
