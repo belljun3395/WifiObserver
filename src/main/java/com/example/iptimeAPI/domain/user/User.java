@@ -20,19 +20,14 @@ public class User {
     private String id;
 
     @Indexed
-    private String accessToken;
-
-    private UserInfoVO userInfoVO;
-
-    @Indexed
     private Long userId;
 
+    private UserInfoVO userInfoVO;
 
     @TimeToLive
     private Long expiration = DEFAULT_TTL;
 
-    public User(String accessToken, UserInfoVO userInfoVO) {
-        this.accessToken = accessToken;
+    public User(UserInfoVO userInfoVO) {
         this.userInfoVO = userInfoVO;
         this.userId = userInfoVO.getId();
     }

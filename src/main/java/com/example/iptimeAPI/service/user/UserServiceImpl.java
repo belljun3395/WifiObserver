@@ -20,22 +20,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoVO getUserByToken(String accessToken) {
-        Optional<User> userByAccessToken = repository.findByAccessToken(accessToken);
-
-        if (userByAccessToken.isPresent()) {
-            return userByAccessToken
-                .get()
-                .getUserInfoVO();
-        }
-
         try {
-            UserInfoVO userInfoByToken = feignUserInfo.getUserInfoByToken(accessToken);
-
-            User user = new User(accessToken, userInfoByToken);
-
-            repository.save(user);
-
-            return userInfoByToken;
+            return feignUserInfo.getUserInfoByToken(accessToken);
         } catch (Exception e) {
             throw new OuterServiceValidateException(OuterServiceException.IDP_EXCEPTION);
         }
@@ -52,7 +38,13 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            return feignUserInfo.getUserInfo(userId);
+            UserInfoVO userInfo = feignUserInfo.getUserInfo(userId);
+
+            User user = new User(userInfo);
+
+            repository.save(user);
+
+            return userInfo;
         } catch (Exception e) {
             throw new OuterServiceValidateException(OuterServiceException.IDP_EXCEPTION);
         }
