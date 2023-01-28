@@ -12,9 +12,13 @@
 
 ### 1,2. 랭킹
 
++ #### 1,2차
 <img width="605" alt="스크린샷 2023-01-19 오후 9 32 52" src="https://user-images.githubusercontent.com/102807742/213443871-5a831442-590e-43ec-8ecd-42e62a683e74.png">
 
-우선 등록된 MAC 주소 리스트를 조회한다.
++ #### 3차
+<img width="406" alt="스크린샷 2023-01-28 오후 8 31 44" src="https://user-images.githubusercontent.com/102807742/215264201-8045d32f-1579-4199-b309-ce430281fa7d.png">
+
+~~우선 등록된 MAC 주소 리스트를 조회한다.~~ ( 이는 3차에서는 삭제되었다. 이유는 ClubRoomLog에 기록된 정보에 memberId가 있는데 이를 기반으로 등록된 사용자를 파악할 수 있기 때문이다. )
 
 이후 랭킹을 값을 계산하고 동점 값이 있다면 그 값을 무작위로 섞어준다.
 
@@ -22,7 +26,11 @@
 
 ### 3. 맴버별 랭킹과 방문횟수
 
++ #### 1,2차
 <img width="680" alt="스크린샷 2023-01-19 오후 10 04 34" src="https://user-images.githubusercontent.com/102807742/213450042-37a4266c-cb8b-454e-bdad-4983b1c6e2f7.png">
+
++ #### 3차
+<img width="484" alt="스크린샷 2023-01-28 오후 8 29 49" src="https://user-images.githubusercontent.com/102807742/215264116-b63798d3-6576-4864-8a99-cc6475c9b0bf.png">
 
 우선 등록된 MAC 주소 리스트를 조회한다.
 

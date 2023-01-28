@@ -25,7 +25,11 @@
 
 #### 시퀀스 다이어그램
 
++ #### 1,2차
 <img width="638" alt="스크린샷 2023-01-19 오후 9 31 59" src="https://user-images.githubusercontent.com/102807742/213443710-efce5602-fb34-428d-8341-d75ca0094617.png">
+
++ #### 3차
+<img width="767" alt="스크린샷 2023-01-28 오후 7 23 13" src="https://user-images.githubusercontent.com/102807742/215261483-0dd6fdd7-efbb-413e-b5b4-fb52a4d40aa8.png">
 
 우선 동방 와이파이를 통해 접속한 인원인지 파악한다.
 
@@ -43,11 +47,17 @@
 
 iptime이 MAC 주소를 갱신하는 시점과 타이밍이 맞지 않을 수 있다. ([해결링크](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
 
+
+
 ### 2. 현재 동방 인원
 
 #### 시퀀스 다이어그램
 
++ #### 1,2차
 <img width="590" alt="스크린샷 2023-01-19 오후 9 31 15" src="https://user-images.githubusercontent.com/102807742/213443576-9750633e-8f87-49bd-9b02-2501debaa36a.png">
+
++ #### 3차
+<img width="731" alt="스크린샷 2023-01-28 오후 8 25 49" src="https://user-images.githubusercontent.com/102807742/215263963-2448745e-8b2e-4595-b6c4-9a05f0d9bf22.png">
 
 서비스에 등록된 MAC 주소를 조회한다.
 
