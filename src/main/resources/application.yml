@@ -27,7 +27,7 @@ spring:
       mode: always
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: path_pattern_parser
 
   cloud:
     openfeign:
@@ -50,3 +50,9 @@ server:
     session:
       tracking-modes: cookie
       timeout: 1800
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
