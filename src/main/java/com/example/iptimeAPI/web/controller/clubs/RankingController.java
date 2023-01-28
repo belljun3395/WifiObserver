@@ -74,10 +74,10 @@ public class RankingController {
 
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
 
+        UserInfoVO user = userService.getUserByToken(accessToken);
+
         Map<Long, Long> membersRanking =
             clubRoomLogService.calcRanking(LogPeriod.valueOf(period.toUpperCase()));
-
-        UserInfoVO user = userService.getUserByToken(accessToken);
 
         Long memberRanking = membersRanking.get(user.getId());
 

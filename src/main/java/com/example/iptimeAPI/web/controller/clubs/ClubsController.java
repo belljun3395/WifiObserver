@@ -2,8 +2,8 @@ package com.example.iptimeAPI.web.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
+import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.facade.IptimeMacAddressFacade;
-import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
@@ -29,7 +29,7 @@ public class ClubsController {
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
     private final IptimeMacAddressFacade iptimeMacAddressFacade;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userServiceImpl;
 
 
     @GetMapping("/members")

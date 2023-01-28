@@ -66,6 +66,8 @@ public class IptimeServiceImpl implements IptimeService {
                     latestMacAddressesList
                 );
 
+            repository.deleteAll();
+
             repository.save(iptimeMacAddressLists);
         }
     }

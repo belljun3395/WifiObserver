@@ -1,7 +1,7 @@
 package com.example.iptimeAPI.web.controller.macAddress;
 
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
-import com.example.iptimeAPI.service.user.UserServiceImpl;
+import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MacAddressController {
 
     private final MacAddressService macAddressService;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userServiceImpl;
 
     @PostMapping
     public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(
