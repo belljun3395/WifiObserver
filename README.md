@@ -63,6 +63,9 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 + [Ranking](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/endpoint/Ranking.md)
 + [Mac](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/endpoint/Mac.md)
 
+## 아키텍처
+
+![아키텍처](https://user-images.githubusercontent.com/102807742/215266203-8751c0c3-ec30-4da8-8034-464fd2cccac4.png)
 
 
 ## 클래스 다이어그램
