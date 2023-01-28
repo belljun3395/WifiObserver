@@ -27,6 +27,10 @@ public class Iptime {
         return iptimeConnection.isConnect(ip);
     }
 
+    public String connectIpInfo() {
+        return iptimeConnection.connectedIp();
+    }
+
     public String getCookieValue() throws IOException {
         Response cookieValueResponse = iptimeConnection.getCookieValue();
 
@@ -56,13 +60,7 @@ public class Iptime {
 
         List<String> inputValue = getInputValue(input);
 
-//        List<String> result = getResult_ALL(tdValue, inputValue);
-
         List<String> result = getResult_Only_MAC(tdValue, inputValue);
-
-//        for (String r : result) {
-//            System.out.println(r);
-//        }
 
         return result;
     }

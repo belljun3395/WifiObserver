@@ -1,6 +1,8 @@
 package com.example.iptimeAPI.service.iptime;
 
 import com.example.iptimeAPI.domain.iptime.Iptime;
+import com.example.iptimeAPI.domain.iptime.IptimeMacAddressLists;
+import com.example.iptimeAPI.domain.iptime.IptimeMacAddressListsRepository;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.macAddress.MacAddress;
 import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
@@ -18,15 +20,21 @@ import org.springframework.stereotype.Service;
 public class IptimeServiceImpl implements IptimeService {
 
     private final Iptime iptime;
+
+    private final IptimeMacAddressListsRepository repository;
+
+    private final String serviceIp;
+
     private String cookieValue;
 
-    private List<String> macAddressesList;
+
 
     @Autowired
-    public IptimeServiceImpl(Iptime iptime) throws IOException {
+    public IptimeServiceImpl(Iptime iptime, IptimeMacAddressListsRepository repository) throws IOException {
         this.iptime = iptime;
+        this.serviceIp = iptime.connectIpInfo();
         this.cookieValue = iptime.getCookieValue();
-        this.macAddressesList = iptime.getList(cookieValue);
+        this.repository = repository;
     }
 
     @Override
@@ -44,43 +52,65 @@ public class IptimeServiceImpl implements IptimeService {
         }
     }
 
-    private void isContain(String macAddress) {
-        if (!macAddressesList.contains(macAddress)) {
-            throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
-        }
-    }
-
     //    @Scheduled(fixedDelay = 3000)
     @Scheduled(fixedDelay = 60000 * 60)
     public void renewalList() throws IOException {
-        List<String> latestMacAddressesList = this.getMacAddressesList();
+        List<String> latestMacAddressesList = this.getIptimeMacAddressList();
 
-        if (!macAddressesList.equals(latestMacAddressesList)) {
-            this.macAddressesList = latestMacAddressesList;
+        IptimeMacAddressLists currentIptimeMacAddressList = getCurrentIptimeMacAddressList();
+
+        if (!currentIptimeMacAddressList.isSameMacAddressList(latestMacAddressesList)) {
+            IptimeMacAddressLists iptimeMacAddressLists =
+                new IptimeMacAddressLists(
+                    serviceIp,
+                    latestMacAddressesList
+                );
+
+            repository.save(iptimeMacAddressLists);
         }
     }
 
-    private List<String> getMacAddressesList() throws IOException {
+    private IptimeMacAddressLists getCurrentIptimeMacAddressList() {
+        return repository.findByIp(serviceIp)
+            .orElseGet(() -> {
+                try {
+                    return new IptimeMacAddressLists(serviceIp, this.getIptimeMacAddressList());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+
+    private List<String> getIptimeMacAddressList() throws IOException {
         List<String> list = iptime.getList(cookieValue);
-        if (!list.isEmpty()) {
-            return list;
+
+        if (list.isEmpty()) {
+            this.cookieValue = iptime.getCookieValue();
+            this.iptime.getList(cookieValue);
         }
 
-        this.cookieValue = iptime.getCookieValue();
+        return list;
+    }
 
-        return iptime.getList(cookieValue);
+    private void isContain(String macAddress) {
+        IptimeMacAddressLists macAddressList = getCurrentIptimeMacAddressList();
+
+        if (!macAddressList.contain(macAddress)){
+            throw new MacAddressValidateException(MacAddressValidateError.NOT_EXIST_MACADDRESS);
+        }
     }
 
     @Override
     public List<Long> browseExistMembers(
         List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
+
         return registeredMacAddresses.stream()
             .filter(
                 macAddressResponseDTO
-                    -> macAddressesList.contains(macAddressResponseDTO.getMacAddress())
+                    -> getCurrentIptimeMacAddressList()
+                    .contain(macAddressResponseDTO.getMacAddress())
             )
             .map(MacAddress.MacAddressResponseDTO::getMemberId)
             .collect(Collectors.toList());
     }
-
 }

@@ -35,6 +35,10 @@ public class IptimeConnection {
             .equals(ip);
     }
 
+    public String connectedIp() {
+        return iptimeInfoConfig.getIp();
+    }
+
     public Response getCookieValue() throws IOException {
         return connect(iptimeHTTPConfig.get_cookie_value(), Method.POST, commonsetting,
             iptimeHTTPConfig.get_cookie_value_referer(), iptimeHTTPConfig.getContent_length(),
