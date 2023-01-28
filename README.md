@@ -79,6 +79,6 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 
 + [테스트](https://github.com/JNU-econovation/econo-forest-be-iptime/tree/main/docs/test)
 + 문제
-  + [랭킹관련 문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
+  + [랭킹관련 문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C(3%EC%B0%A8).md)
   + [출석 관련 문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
   + [외부 서비스 관련문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EC%99%B8%EB%B6%80%EC%84%9C%EB%B9%84%EC%8A%A4%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
