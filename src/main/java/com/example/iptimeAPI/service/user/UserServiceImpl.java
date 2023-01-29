@@ -9,6 +9,7 @@ import com.example.iptimeAPI.service.user.exception.OuterServiceValidateExceptio
 import com.example.iptimeAPI.service.user.fegin.FeignUserInfo;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,5 +49,10 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new OuterServiceValidateException(OuterServiceException.IDP_EXCEPTION);
         }
+    }
+
+    @Profile("dev")
+    public UserInfoVO getUserById_dev(Long userId) {
+        return new UserInfoVO(20L, "test" + userId, userId);
     }
 }

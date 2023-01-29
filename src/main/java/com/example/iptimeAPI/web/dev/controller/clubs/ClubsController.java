@@ -1,9 +1,10 @@
-package com.example.iptimeAPI.web.controller.clubs;
+package com.example.iptimeAPI.web.dev.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.facade.IptimeMacAddressFacade;
+import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.IpDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
@@ -19,9 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Profile("default")
+@Profile("dev")
 @Api(tags = {"Clubs API"})
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class ClubsController {
     private final ClubRoomLogService clubRoomLogService;
     private final IptimeService iptimeService;
     private final IptimeMacAddressFacade iptimeMacAddressFacade;
-    private final UserService userServiceImpl;
+    private final UserServiceImpl userServiceImpl;
 
 
     @GetMapping("/members")
@@ -41,7 +43,7 @@ public class ClubsController {
         List<UserInfoVO> userInfoVOS = new ArrayList<>();
         for (Long memberId : members) {
             userInfoVOS.add(
-                userServiceImpl.getUserById(memberId)
+                userServiceImpl.getUserById_dev(memberId)
             );
         }
 
@@ -56,7 +58,7 @@ public class ClubsController {
     @PostMapping("/entrance")
     public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(
         IpDTO ipDTO,
-        @RequestHeader(value = "Authorization") String accessToken
+        @RequestParam Long id
     )
         throws IOException {
 
@@ -74,7 +76,7 @@ public class ClubsController {
 
         Long memberId =
             userServiceImpl
-                .getUserByToken(accessToken)
+                .getUserById_dev(id)
                 .getId();
 
         iptimeMacAddressFacade.validateExistMemberMacAddress(memberId);

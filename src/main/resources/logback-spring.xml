@@ -43,9 +43,13 @@
     </appender>
 
     <springProfile name="dev">
-        <root level="DEBUG">
-            <appender-ref ref="STDOUT"/>
-        </root>
+        <logger name="jdbc" level="INFO"/>
+        <logger name="jdbc.connection" level="INFO"/>
+        <logger name="jdbc.sqlonly" level="INFO"/>
+        <logger name="jdbc.sqltiming" level="INFO"/>
+        <logger name="jdbc.audit" level="INFO"/>
+        <logger name="jdbc.resultset" level="INFO"/>
+        <logger name="jdbc.resultsettable" level="INFO"/>
     </springProfile>
 
 

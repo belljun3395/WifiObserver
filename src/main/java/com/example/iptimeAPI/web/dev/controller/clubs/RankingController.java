@@ -1,8 +1,9 @@
-package com.example.iptimeAPI.web.controller.clubs;
+package com.example.iptimeAPI.web.dev.controller.clubs;
 
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
+import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.web.dto.MemberRankingDTO;
 import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Profile("default")
+@Profile("dev")
 @Api(tags = {"Ranking API"})
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class RankingController {
 
     private final ClubRoomLogService clubRoomLogService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> rankings(
-        @ApiParam(example = "month") @RequestParam String period) {
+        @RequestParam String period) {
 
         Map<Long, Long> membersRanking =
             clubRoomLogService
@@ -60,7 +61,7 @@ public class RankingController {
             memberRankingDTOS.add(
                 new MemberRankingDTO(
                     membersRanking.get(memberId),
-                    userService.getUserById(memberId)
+                    userService.getUserById_dev(memberId)
                 )
             );
         }
@@ -70,13 +71,13 @@ public class RankingController {
 
     @GetMapping("/member")
     public ApiResponse<ApiResponse.withData> memberRankingCountInfo(
-        @RequestHeader(value = "Authorization") String accessToken,
-        @ApiParam(example = "month") @RequestParam String period
+        @RequestParam Long id,
+        @RequestParam String period
     ) {
 
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
 
-        UserInfoVO user = userService.getUserByToken(accessToken);
+        UserInfoVO user = userService.getUserById_dev(id);
 
         Map<Long, Long> membersRanking =
             clubRoomLogService.calcRanking(LogPeriod.valueOf(period.toUpperCase()));

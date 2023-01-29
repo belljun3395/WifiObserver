@@ -1,7 +1,8 @@
-package com.example.iptimeAPI.web.controller.macAddress;
+package com.example.iptimeAPI.web.dev.controller.macAddress;
 
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.domain.user.UserService;
+import com.example.iptimeAPI.service.user.UserServiceImpl;
 import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
 import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
 import com.example.iptimeAPI.web.response.ApiResponse;
@@ -15,9 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Profile("default")
+@Profile("dev")
 @Api(tags = {"MacAddress API"})
 @RestController
 @RequestMapping("/api/macs")
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MacAddressController {
 
     private final MacAddressService macAddressService;
-    private final UserService userServiceImpl;
+    private final UserServiceImpl userServiceImpl;
 
     @PostMapping
     public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(
@@ -43,10 +45,10 @@ public class MacAddressController {
 
     @GetMapping
     public ApiResponse<ApiResponse.withData> findMemberMacAddress(
-        @RequestHeader(value = "Authorization") String accessToken) {
+        @RequestParam Long id) {
         Long memberId =
             userServiceImpl
-                .getUserByToken(accessToken)
+                .getUserById_dev(id)
                 .getId();
 
         return
