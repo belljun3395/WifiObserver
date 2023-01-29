@@ -42,20 +42,10 @@
         </encoder>
     </appender>
 
-    <springProfile name="dev">
-        <logger name="jdbc" level="INFO"/>
-        <logger name="jdbc.connection" level="INFO"/>
-        <logger name="jdbc.sqlonly" level="INFO"/>
-        <logger name="jdbc.sqltiming" level="INFO"/>
-        <logger name="jdbc.audit" level="INFO"/>
-        <logger name="jdbc.resultset" level="INFO"/>
-        <logger name="jdbc.resultsettable" level="INFO"/>
-    </springProfile>
-
-
     <logger name="API_ACCESS_APPENDER" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="API_ACCESS_APPENDER"/>
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <logger name="jdbc" level="OFF"/>
@@ -69,5 +59,6 @@
     <logger name="ERROR_FILE_LOGGER" additivity="false">
         <level value="ERROR"/>
         <appender-ref ref="ERROR_FILE_APPENDER"/>
+        <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>
