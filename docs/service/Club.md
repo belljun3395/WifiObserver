@@ -1,39 +1,30 @@
 ## Club
 
+Club 서비스는 동방과 관련된 서비스다.
+
+Club 서비스의 기능 목록은 아래와 같다.
+
 ### 기능 목록
 
-1. 사용자는 모에숲에 출석할 수 있다.
-    + 사용자가 에코노베이션 wifi를 사용하고 있는지 확인한다.
-        + IptimeService#isInIptime(IpDTO): void
+1. 사용자는 모에숲(동방)에 출석할 수 있다.
+    + 사용자가 동방 wifi를 사용하고 있는지 확인한다.
     + 사용자 정보를 바탕으로 서비스에서 등록된 맥 주소를 확인한다.
-        + MacAddressService#findMemberMacAddress(memberId): MacAddress.MacAddressResponseDTO
     + iptime에서 조회한 맥 주소 리스트에 사용자의 맥 주소가 존재하는지 확인한다.
-        + IptimeService#isExistMacAddress(String macAddress): void
     + 사용자가 동방에 출석 하였다는 기록을 서비스에 남긴다.
-        + ClubRoomLogService#save(Long memberId): void
-
-
     
 2. 사용자는 모에숲의 우측에서 현재 동방 인원 목록을 확인할 수 있다.
     + iptime에서 조회한 맥 주소 리스트와 서비스에 등록된 맥 주소 리스트를 비교하여 일치한다.
-        + MacAddressService#browseMacAddresses(): List<MacAddress.MacAddressResponseDTO>
     + 일치하는 맥 주소를 바탕으로 서비스에 등록된 인원의 정보를 조회한 후 반환해준다.
-        + IptimeService#browseExistMembers(macAddresses): List<Long>
-
 
 ### 1. 출석
 
 #### 시퀀스 다이어그램
 
-+ #### 1,2차
-<img width="638" alt="스크린샷 2023-01-19 오후 9 31 59" src="https://user-images.githubusercontent.com/102807742/213443710-efce5602-fb34-428d-8341-d75ca0094617.png">
-
-+ #### 3차
 <img width="767" alt="스크린샷 2023-01-28 오후 7 23 13" src="https://user-images.githubusercontent.com/102807742/215261483-0dd6fdd7-efbb-413e-b5b4-fb52a4d40aa8.png">
 
 우선 동방 와이파이를 통해 접속한 인원인지 파악한다.
 
-이를 파악하는 이유는 동방 와이파이에서 접속하였다는 것을 동방에 출석하였다는 것으로 판단하기 때문이다.
+이를 파악하는 이유는 **동방 와이파이에서 접속**하였다는 것을 **동방에 출석하였다는 것**으로 판단하기 때문이다.
 
 그래서 동방 와이파이로 접속하였다면 idp 서버에 유저에 대한 정보를 요청한다.
 
@@ -53,14 +44,12 @@ iptime이 MAC 주소를 갱신하는 시점과 타이밍이 맞지 않을 수 �
 
 #### 시퀀스 다이어그램
 
-+ #### 1,2차
-<img width="590" alt="스크린샷 2023-01-19 오후 9 31 15" src="https://user-images.githubusercontent.com/102807742/213443576-9750633e-8f87-49bd-9b02-2501debaa36a.png">
-
-+ #### 3차
 <img width="731" alt="스크린샷 2023-01-28 오후 8 25 49" src="https://user-images.githubusercontent.com/102807742/215263963-2448745e-8b2e-4595-b6c4-9a05f0d9bf22.png">
 
 서비스에 등록된 MAC 주소를 조회한다.
 
 iptime에서 MAC 주소를 조회한다.
 
-두 가지 주소를 비교하여 일치하는 MAC 주소의 사용자 정보를 조회한다.
+두 가지 주소를 비교하여 일치하는 MAC 주소의 사용자 정보를 idp에 조회한다.
+
+유저 정보가 포함된 현재 동방 인원 정보를 반환해준다.

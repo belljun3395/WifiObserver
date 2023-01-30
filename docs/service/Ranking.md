@@ -1,5 +1,9 @@
 ## Ranking
 
+RANKING 서비스는 RANKING 주소와 관련된 서비스이다.
+
+RANKING 서비스의 기능 목록은 아래와 같다.
+
 ### 기능 목록
 
 1. 사용자는 모에숲의 홈페이지에서 상위 랭킹 인원을 확인할 수 있다.
@@ -12,31 +16,25 @@
 
 ### 1,2. 랭킹
 
-+ #### 1,2차
-<img width="605" alt="스크린샷 2023-01-19 오후 9 32 52" src="https://user-images.githubusercontent.com/102807742/213443871-5a831442-590e-43ec-8ecd-42e62a683e74.png">
-
-+ #### 3차
 <img width="406" alt="스크린샷 2023-01-28 오후 8 31 44" src="https://user-images.githubusercontent.com/102807742/215264201-8045d32f-1579-4199-b309-ce430281fa7d.png">
 
-~~우선 등록된 MAC 주소 리스트를 조회한다.~~ ( 이는 3차에서는 삭제되었다. 이유는 ClubRoomLog에 기록된 정보에 memberId가 있는데 이를 기반으로 등록된 사용자를 파악할 수 있기 때문이다. )
+동방 출석 기록을 바탕으로 서비스 사용자들의 랭킹을 계산 한다.
 
-이후 랭킹을 값을 계산하고 동점 값이 있다면 그 값을 무작위로 섞어준다.
+이때 동점인 인원들은 반환 순서를 무작위로 섞어준다.
 
-그리고 idp에서 유저 정보를 조회하여 랭킹을 반환한다.
+그리고 idp에서 각 유저 정보를 조회하여 유저 정보와 함께 랭킹을 반환한다.
 
 ### 3. 맴버별 랭킹과 방문횟수
 
-+ #### 1,2차
-<img width="680" alt="스크린샷 2023-01-19 오후 10 04 34" src="https://user-images.githubusercontent.com/102807742/213450042-37a4266c-cb8b-454e-bdad-4983b1c6e2f7.png">
-
-+ #### 3차
 <img width="484" alt="스크린샷 2023-01-28 오후 8 29 49" src="https://user-images.githubusercontent.com/102807742/215264116-b63798d3-6576-4864-8a99-cc6475c9b0bf.png">
 
-우선 등록된 MAC 주소 리스트를 조회한다.
+우선 idp 서버에서 유저에 대한 정보를 조회한다.
 
-이후 전체 랭킹을 조회하고 맴버의 랭킹을 계산한다.
+그리고 동방 출석 기록을 바탕으로 서비스 사용자들의 랭킹을 계산한다.
 
-그리고 유저의 방문 횟수를 계산한다.
+그 결과를 속에서 맴버의 랭킹을 조회한다.
+
+이후 맴버의 방문횟수를 조회하여 랭킹의 결과와 함께 반환한다.
 
 ### 예상되는 문제
 
@@ -44,4 +42,4 @@
 
 랭킹은 많이 변하지 않을 정보인데 매번 조회와 계산 과정을 거처야 하기에 비효율적일 것이라 판단된다.
 
-이를 해결하기 위해 랭킹을 저장하는 방안이 필요해 보인다. ([해결링크](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
+이를 해결하기 위해 랭킹을 캐싱하는 방안이 필요해 보인다. ([해결링크](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md))
