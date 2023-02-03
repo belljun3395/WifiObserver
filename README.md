@@ -32,21 +32,6 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 
 이를 바탕으로 기존 동방 wifi의 ip를 통해서는 알 수 없었던 동방에서 나가는 것을 파악할 수 있게 되었습니다.
 
-
-
-정리해보면 다음과 같은 기능이 필요할 것입니다.
-
-+ 사용자는 모에숲에 **출석**할 수 있다.
-+ 사용자는 모에숲의 우측에서 **현재 동방 인원 목록**을 확인할 수 있다.
-+ 사용자는 모에숲의 홈페이지에서 **상위 랭킹 인원**을 확인할 수 있다.
-+ 사용자는 모에숲의 랭킹 페이지에서 **랭킹**을 확인할 수 있다.
-+ 사용자는 모에숲의 랭킹 페이지에서 **자신의 랭킹과 방문 횟수**를 확인할 수 있다.
-+ 사용자는 자신의 **MAC 주소**를 모에숲 기기등록 페이지에서 **수정, 등록**할 수 있다.
-
-각 기능에 대한 구체적인 설명은 각 서비스에서 진행하겠습니다.
-
-
-
 ## 기술 스택
 
 + Java 11
@@ -55,27 +40,9 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 + Redis
 + Openfeign
 
-## 아키텍처
+## Swagger
+http://43.200.230.93/swagger-ui/#/
 
-![아키텍처](https://user-images.githubusercontent.com/102807742/215266203-8751c0c3-ec30-4da8-8034-464fd2cccac4.png)
+Econovation의 내부 서비스인 관계로 외부인은 요청을 보낼 수 없습니다.
 
-
-## 클래스 다이어그램
-
-![iptimeAPI](https://user-images.githubusercontent.com/102807742/215261278-a820a955-23c9-4f7e-9600-da826d7a4967.png)
-
-## 문서
-
-### 서비스
-
-+ [Club](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/endpoint/Club.md)
-+ [Ranking](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/endpoint/Ranking.md)
-+ [Mac](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/endpoint/Mac.md)
-
-### 기타
-
-+ [테스트](https://github.com/JNU-econovation/econo-forest-be-iptime/tree/main/docs/test)
-+ 문제
-  + [랭킹관련 문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EB%9E%AD%ED%82%B9%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C(3%EC%B0%A8).md)
-  + [출석 관련 문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EC%B6%9C%EC%84%9D%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
-  + [외부 서비스 관련문제](https://github.com/JNU-econovation/econo-forest-be-iptime/blob/main/docs/problem/%EC%99%B8%EB%B6%80%EC%84%9C%EB%B9%84%EC%8A%A4%EA%B4%80%EB%A0%A8%EB%AC%B8%EC%A0%9C.md)
+추후 Swagger 수정을 통해 외부인도 요청 기대값을 알 수 있도록 조치하도록 하겠습니다. 
