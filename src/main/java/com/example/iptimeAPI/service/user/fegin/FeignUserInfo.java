@@ -1,6 +1,6 @@
 package com.example.iptimeAPI.service.user.fegin;
 
-import com.example.iptimeAPI.service.user.dto.UserInfoVO;
+import com.example.iptimeAPI.domain.user.UserInfoVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;

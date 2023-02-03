@@ -14,9 +14,11 @@ public enum LogPeriod {
             .minusWeeks(1L)),
     ;
 
+
     private String type;
 
     private LocalDate beforeLocalDate;
+
 
     LogPeriod(String type, LocalDate beforeLocalDate) {
         this.type = type;
@@ -30,4 +32,5 @@ public enum LogPeriod {
     public LocalDate getBeforeLocalDate() {
         return beforeLocalDate;
     }
+
 }

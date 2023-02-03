@@ -21,7 +21,7 @@ spring:
       mode: always
   mvc:
     pathmatch:
-      matching-strategy: path_pattern_parser
+      matching-strategy: ant_path_matcher
 
   cloud:
     openfeign:

@@ -7,12 +7,9 @@ import org.springframework.stereotype.Component;
 public class CacheEvicts {
 
     @CacheEvict(value = "ranking", allEntries = true)
-    public void evictRankingCache() {
-
-    }
+    public void evictRankingCache() {}
 
     @CacheEvict(value = "memberVisitCount", allEntries = true)
-    public void evictMemberVisitCountCache() {
+    public void evictMemberVisitCountCache() {}
 
-    }
 }

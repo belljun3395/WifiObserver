@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +22,7 @@ public class MacAddress {
 
     private String macAddress;
 
+
     public MacAddress(Long memberId, String macAddress) {
         this.memberId = memberId;
         this.macAddress = macAddress;
@@ -35,19 +34,9 @@ public class MacAddress {
         this.macAddress = macAddress;
     }
 
-    public boolean isSameMacAddress(String macAddress) {
-        return this.macAddress.equals(macAddress);
-    }
 
-    @Data
-    @AllArgsConstructor
-    public static class MacAddressResponseDTO {
-
-        private Long id;
-
-        private Long memberId;
-
-        private String macAddress;
+    public boolean isMacAddress(String compareMacAddress) {
+        return macAddress.equals(compareMacAddress);
     }
 
 }

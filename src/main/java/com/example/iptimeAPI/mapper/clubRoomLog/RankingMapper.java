@@ -1,15 +1,15 @@
-package com.example.iptimeAPI.service.clubRoom;
+package com.example.iptimeAPI.mapper.clubRoomLog;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.experimental.UtilityClass;
+import org.springframework.stereotype.Component;
 
-@UtilityClass
-public class RankingConverter {
+@Component
+public class RankingMapper {
 
-    public static Map<Long, Long> groupByMemberId(Map<Long, List<Long>> groupByVisitCountRanking) {
+    public Map<Long, Long> groupByMemberId(Map<Long, List<Long>> groupByVisitCountRanking) {
         Set<Long> longs = groupByVisitCountRanking.keySet();
 
         Map<Long, Long> groupByMemberId = new HashMap<>();

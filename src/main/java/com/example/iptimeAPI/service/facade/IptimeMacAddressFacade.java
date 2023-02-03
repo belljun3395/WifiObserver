@@ -1,7 +1,7 @@
 package com.example.iptimeAPI.service.facade;
 
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
-import com.example.iptimeAPI.domain.macAddress.MacAddress.MacAddressResponseDTO;
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import java.io.IOException;
 import java.util.List;
@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 public class IptimeMacAddressFacade {
 
     private final IptimeService iptimeService;
+
     private final MacAddressService macAddressService;
 
+
     public List<Long> browseExistMembers() {
-        List<MacAddressResponseDTO> macAddresses = macAddressService.browseMacAddresses();
+        List<MacAddressDTO> macAddresses = macAddressService.browseMacAddresses();
 
         return iptimeService.browseExistMembers(macAddresses);
     }

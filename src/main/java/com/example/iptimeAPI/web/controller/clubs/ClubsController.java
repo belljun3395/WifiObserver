@@ -4,13 +4,12 @@ import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.facade.IptimeMacAddressFacade;
-import com.example.iptimeAPI.service.user.dto.UserInfoVO;
-import com.example.iptimeAPI.web.dto.IpDTO;
+import com.example.iptimeAPI.domain.user.UserInfoVO;
+import com.example.iptimeAPI.web.dto.IpInfoRequest;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -29,41 +28,35 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClubsController {
 
     private final ClubRoomLogService clubRoomLogService;
+
     private final IptimeService iptimeService;
+
     private final IptimeMacAddressFacade iptimeMacAddressFacade;
-    private final UserService userServiceImpl;
+
+    private final UserService userService;
 
 
     @GetMapping("/members")
     public ApiResponse<ApiResponse.withData> browseExistMember() {
         List<Long> members = iptimeMacAddressFacade.browseExistMembers();
 
-        List<UserInfoVO> userInfoVOS = new ArrayList<>();
-        for (Long memberId : members) {
-            userInfoVOS.add(
-                userServiceImpl.getUserById(memberId)
-            );
-        }
+        List<UserInfoVO> userInfoVOS = userService.getUsersById(members);
 
         return
             ApiResponseGenerator.success(
                 userInfoVOS,
                 HttpStatus.OK,
                 HttpStatus.OK.value() + "100",
-                "exist members");
+                "exist members"
+            );
     }
 
     @PostMapping("/entrance")
     public ApiResponse<ApiResponse.withCodeAndMessage> enterClub(
-        IpDTO ipDTO,
-        @RequestHeader(value = "Authorization") String accessToken
-    )
-        throws IOException {
-
-        if (!iptimeService
-            .isInIptime(ipDTO)
-            .isIn()
-        ) {
+                                                                    IpInfoRequest ipInfoRequest,
+                                                                    @RequestHeader(value = "Authorization") String accessToken
+                                                                ) throws IOException {
+        if (!iptimeService.isInIptime(ipInfoRequest)) {
             return
                 ApiResponseGenerator.success(
                     HttpStatus.OK,
@@ -72,10 +65,8 @@ public class ClubsController {
                 );
         }
 
-        Long memberId =
-            userServiceImpl
-                .getUserByToken(accessToken)
-                .getId();
+        Long memberId = userService.getUserByToken(accessToken)
+                                    .getId();
 
         iptimeMacAddressFacade.validateExistMemberMacAddress(memberId);
 
@@ -88,4 +79,5 @@ public class ClubsController {
                 "enter ecnv"
             );
     }
+
 }

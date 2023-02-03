@@ -60,6 +60,7 @@ public class IptimeHTTPConfig {
     @Value("${http.captcha.on}")
     private String captcha_on;
 
+
     public String get_cookie_value_referer() {
         return iptimeInfoConfig.getHosturl() + login_session;
     }
@@ -75,4 +76,5 @@ public class IptimeHTTPConfig {
     public String get_list_referer() {
         return iptimeInfoConfig.getHosturl() + login_handler;
     }
+
 }

@@ -1,18 +1,18 @@
 package com.example.iptimeAPI.domain.iptime;
 
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
-import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
-import com.example.iptimeAPI.web.dto.IpDTO;
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.IpInfoRequest;
 import java.io.IOException;
 import java.util.List;
 
 public interface IptimeService {
 
-    IpResponseDTO isInIptime(IpDTO ipDTO);
+    boolean isInIptime(IpInfoRequest ipDTO);
 
     void isExistMacAddress(String macAddress) throws IOException;
 
-    List<Long> browseExistMembers(List<MacAddress.MacAddressResponseDTO> registeredMacAddresses);
+    List<Long> browseExistMembers(List<MacAddressDTO> registeredMacAddresses);
 
-    public void renewalList() throws IOException;
+    void renewalList() throws IOException;
+
 }

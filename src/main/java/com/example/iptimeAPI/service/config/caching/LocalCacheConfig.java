@@ -19,4 +19,5 @@ public class LocalCacheConfig {
             List.of(new ConcurrentMapCache("ranking"), new ConcurrentMapCache("memberVisitCount")));
         return simpleCacheManager;
     }
+
 }

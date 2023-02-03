@@ -23,4 +23,5 @@ public class ApiResponseGenerator {
         final String code, final String error, final String message) {
         return new ApiResponse<>(new ApiResponse.FailureBody(code, error, message), status);
     }
+
 }

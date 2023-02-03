@@ -27,4 +27,10 @@ public class IptimeInfoConfigECNV implements IptimeInfoConfig {
 
     @Value("${ecnv.ip}")
     private String ip;
+
+
+    public boolean isIp(String ip) {
+        return this.ip.equals(ip);
+    }
+
 }

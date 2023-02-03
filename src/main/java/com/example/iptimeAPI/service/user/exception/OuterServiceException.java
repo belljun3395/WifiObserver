@@ -5,8 +5,11 @@ public enum OuterServiceException {
     IDP_EXCEPTION("701", "there are something problem at IDP"),
     ;
 
+
     private String message;
+
     private String code;
+
 
     OuterServiceException(String code, String message) {
         this.code = code;
@@ -20,4 +23,5 @@ public enum OuterServiceException {
     public String getCode() {
         return code;
     }
+
 }

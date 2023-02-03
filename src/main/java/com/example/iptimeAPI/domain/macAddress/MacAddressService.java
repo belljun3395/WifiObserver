@@ -1,20 +1,21 @@
 package com.example.iptimeAPI.domain.macAddress;
 
-import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
-import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressEditRequest;
+import com.example.iptimeAPI.web.dto.MacAddressRegistRequest;
 import java.util.List;
 
 public interface MacAddressService {
 
-    void registerMacAddress(MacAddressRegistDTO macAddressRegistDTO);
+    void registerMacAddress(MacAddressRegistRequest macAddressRegistDTO);
 
-    void editMacAddress(MacAddressEditDTO macAddressEditDTO);
+    void editMacAddress(MacAddressEditRequest macAddressEditDTO);
 
-    List<MacAddress.MacAddressResponseDTO> browseMacAddresses();
+    List<MacAddressDTO> browseMacAddresses();
 
     List<Long> browseMacAddressesMembers();
 
-    MacAddress.MacAddressResponseDTO findMemberMacAddress(Long memberId);
+    MacAddressDTO findMemberMacAddress(Long memberId);
 
 }
 

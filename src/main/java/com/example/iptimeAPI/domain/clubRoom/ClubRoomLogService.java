@@ -10,4 +10,5 @@ public interface ClubRoomLogService {
     Map<Long, Long> calcRanking(LogPeriod logPeriod);
 
     Long browseMemberVisitCount(Long memberId, LogPeriod type);
+
 }

@@ -6,11 +6,15 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MacAddressRegistDTO {
+public class MacAddressEditRequest {
 
-    @ApiParam(example = "5")
+    @ApiParam(example = "1")
+    private Long id;
+
+    @ApiParam(example = "1")
     private Long memberId;
 
-    @ApiParam(example = "6A:3C:48:3A:22:60")
+    @ApiParam(example = "90:32:4B:18:00:1B")
     private String macAddress;
+
 }

@@ -3,10 +3,12 @@ package com.example.iptimeAPI.service.user;
 import com.example.iptimeAPI.domain.user.User;
 import com.example.iptimeAPI.domain.user.UserRepository;
 import com.example.iptimeAPI.domain.user.UserService;
-import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import com.example.iptimeAPI.service.user.exception.OuterServiceException;
 import com.example.iptimeAPI.service.user.exception.OuterServiceValidateException;
 import com.example.iptimeAPI.service.user.fegin.FeignUserInfo;
+import com.example.iptimeAPI.domain.user.UserInfoVO;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+
     private final FeignUserInfo feignUserInfo;
+
 
     @Override
     public UserInfoVO getUserByToken(String accessToken) {
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
         try {
             UserInfoVO userInfo = feignUserInfo.getUserInfo(userId);
 
-            User user = new User(userInfo);
+            User user = User.create(userInfo);
 
             repository.save(user);
 
@@ -51,8 +55,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public List<UserInfoVO> getUsersById(List<Long> userIds) {
+        List<UserInfoVO> userInfoVOS = new ArrayList<>();
+        for (Long userId : userIds) {
+            userInfoVOS.add(
+                getUserById(userId)
+            );
+        }
+        return userInfoVOS;
+    }
+
     @Profile("dev")
     public UserInfoVO getUserById_dev(Long userId) {
         return new UserInfoVO(20L, "test" + userId, userId);
     }
+
 }

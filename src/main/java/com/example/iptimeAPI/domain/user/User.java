@@ -1,6 +1,5 @@
 package com.example.iptimeAPI.domain.user;
 
-import com.example.iptimeAPI.service.user.dto.UserInfoVO;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +14,7 @@ public class User {
 
     private static final Long DEFAULT_TTL = 30L;
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -27,8 +27,14 @@ public class User {
     @TimeToLive
     private Long expiration = DEFAULT_TTL;
 
-    public User(UserInfoVO userInfoVO) {
+
+    private User(UserInfoVO userInfoVO) {
         this.userInfoVO = userInfoVO;
         this.userId = userInfoVO.getId();
     }
+
+    public static User create(UserInfoVO userInfoVO) {
+        return new User(userInfoVO);
+    }
+
 }

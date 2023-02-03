@@ -8,4 +8,5 @@ public interface UserRepository extends CrudRepository<User, String> {
     Optional<User> findByAccessToken(String accessToken);
 
     Optional<User> findByUserId(Long userId);
+
 }

@@ -2,8 +2,10 @@ package com.example.iptimeAPI.web.controller.macAddress;
 
 import com.example.iptimeAPI.domain.macAddress.MacAddressService;
 import com.example.iptimeAPI.domain.user.UserService;
-import com.example.iptimeAPI.web.dto.MacAddressEditDTO;
-import com.example.iptimeAPI.web.dto.MacAddressRegistDTO;
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
+import com.example.iptimeAPI.web.dto.MacAddressEditRequest;
+import com.example.iptimeAPI.web.dto.MacAddressRegistRequest;
+import com.example.iptimeAPI.web.dto.MacAddressResponse;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -25,13 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MacAddressController {
 
     private final MacAddressService macAddressService;
+
     private final UserService userServiceImpl;
 
-    @PostMapping
-    public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(
-        MacAddressRegistDTO macAddressRegistDTO) {
 
-        macAddressService.registerMacAddress(macAddressRegistDTO);
+    @PostMapping
+    public ApiResponse<ApiResponse.withCodeAndMessage> registerMacAddress(MacAddressRegistRequest macAddressRegistRequest) {
+
+        macAddressService.registerMacAddress(macAddressRegistRequest);
 
         return
             ApiResponseGenerator.success(
@@ -42,16 +45,19 @@ public class MacAddressController {
     }
 
     @GetMapping
-    public ApiResponse<ApiResponse.withData> findMemberMacAddress(
-        @RequestHeader(value = "Authorization") String accessToken) {
+    public ApiResponse<ApiResponse.withData> findMemberMacAddress(@RequestHeader(value = "Authorization") String accessToken) {
         Long memberId =
             userServiceImpl
                 .getUserByToken(accessToken)
                 .getId();
 
+        MacAddressDTO memberMacAddress = macAddressService.findMemberMacAddress(memberId);
+
+        MacAddressResponse macAddressResponse = new MacAddressResponse(memberMacAddress);
+
         return
             ApiResponseGenerator.success(
-                macAddressService.findMemberMacAddress(memberId),
+                macAddressResponse,
                 HttpStatus.OK,
                 HttpStatus.OK.value() + "600",
                 "member's mac address info"
@@ -59,9 +65,8 @@ public class MacAddressController {
     }
 
     @PutMapping
-    public ApiResponse<ApiResponse.withCodeAndMessage> editMemberMacAddress(
-        MacAddressEditDTO macAddressEditDTO) {
-        macAddressService.editMacAddress(macAddressEditDTO);
+    public ApiResponse<ApiResponse.withCodeAndMessage> editMemberMacAddress(MacAddressEditRequest macAddressEditRequest) {
+        macAddressService.editMacAddress(macAddressEditRequest);
 
         return
             ApiResponseGenerator.success(

@@ -23,6 +23,7 @@ public class ClubRoomLog {
 
     private LocalDate localDate;
 
+
     public ClubRoomLog(Long memberId, LocalDate localDate) {
         this.memberId = memberId;
         this.localDate = localDate;

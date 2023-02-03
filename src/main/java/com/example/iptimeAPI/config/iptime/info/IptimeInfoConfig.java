@@ -13,4 +13,7 @@ public interface IptimeInfoConfig {
     String getUsername();
 
     String getIp();
+
+    boolean isIp(String ip);
+
 }

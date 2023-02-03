@@ -3,9 +3,9 @@ package com.example.iptimeAPI.web.controller.clubs;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
 import com.example.iptimeAPI.domain.user.UserService;
 import com.example.iptimeAPI.service.clubRoom.LogPeriod;
-import com.example.iptimeAPI.service.user.dto.UserInfoVO;
-import com.example.iptimeAPI.web.dto.MemberRankingDTO;
-import com.example.iptimeAPI.web.dto.MemberRankingInfoDTO;
+import com.example.iptimeAPI.domain.user.UserInfoVO;
+import com.example.iptimeAPI.web.dto.MemberRankingResponse;
+import com.example.iptimeAPI.web.dto.MemberRankingCountResponse;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import io.swagger.annotations.Api;
@@ -30,11 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class RankingController {
 
     private final ClubRoomLogService clubRoomLogService;
+
     private final UserService userService;
 
+
     @GetMapping
-    public ApiResponse<ApiResponse.withData> rankings(
-        @ApiParam(example = "month") @RequestParam String period) {
+    public ApiResponse<ApiResponse.withData> rankings(@ApiParam(example = "month") @RequestParam String period) {
 
         Map<Long, Long> membersRanking =
             clubRoomLogService
@@ -42,7 +43,7 @@ public class RankingController {
                     LogPeriod.valueOf(period.toUpperCase())
                 );
 
-        List<MemberRankingDTO> memberRankingDTOS = shuffleAndMapDTO(membersRanking);
+        List<MemberRankingResponse> memberRankingDTOS = shuffleAndMapDTO(membersRanking);
 
         return
             ApiResponseGenerator.success(
@@ -52,44 +53,38 @@ public class RankingController {
                 "ranking result period : " + period);
     }
 
-    private List<MemberRankingDTO> shuffleAndMapDTO(Map<Long, Long> membersRanking) {
+    private List<MemberRankingResponse> shuffleAndMapDTO(Map<Long, Long> membersRanking) {
         List<Long> memberIds = new ArrayList<>(membersRanking.keySet());
 
-        List<MemberRankingDTO> memberRankingDTOS = new ArrayList<>();
-        for (Long memberId : memberIds) {
-            memberRankingDTOS.add(
-                new MemberRankingDTO(
-                    membersRanking.get(memberId),
-                    userService.getUserById(memberId)
-                )
-            );
+        List<UserInfoVO> userInfoVOS = userService.getUsersById(memberIds);
+
+        List<MemberRankingResponse> memberRankingDTOS = new ArrayList<>();
+
+        for (int i = 0; i < memberIds.size(); i++) {
+            memberRankingDTOS.add(new MemberRankingResponse(membersRanking.get(i), userInfoVOS.get(i)));
         }
 
         return memberRankingDTOS;
     }
 
     @GetMapping("/member")
-    public ApiResponse<ApiResponse.withData> memberRankingCountInfo(
-        @RequestHeader(value = "Authorization") String accessToken,
-        @ApiParam(example = "month") @RequestParam String period
-    ) {
+    public ApiResponse<ApiResponse.withData> memberRankingCountInfo(@RequestHeader(value = "Authorization") String accessToken,
+                                                                    @ApiParam(example = "month") @RequestParam String period
+                                                                    ) {
 
         LogPeriod periodType = LogPeriod.valueOf(period.toUpperCase());
 
         UserInfoVO user = userService.getUserByToken(accessToken);
 
-        Map<Long, Long> membersRanking =
-            clubRoomLogService.calcRanking(LogPeriod.valueOf(period.toUpperCase()));
+        Map<Long, Long> membersRanking = clubRoomLogService.calcRanking(LogPeriod.valueOf(period.toUpperCase()));
 
         Long memberRanking = membersRanking.get(user.getId());
 
         Long visitCount = clubRoomLogService.browseMemberVisitCount(user.getId(), periodType);
 
-        MemberRankingInfoDTO memberRankingInfoDTO =
-            new MemberRankingInfoDTO(
-                user.getYear(),
-                user.getName(),
-                user.getId(),
+        MemberRankingCountResponse memberRankingInfoDTO =
+            new MemberRankingCountResponse(
+                user,
                 memberRanking,
                 visitCount
             );
@@ -102,4 +97,5 @@ public class RankingController {
                 "ranking result period : " + period
             );
     }
+
 }

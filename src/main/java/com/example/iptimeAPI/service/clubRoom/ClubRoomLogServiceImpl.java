@@ -1,8 +1,10 @@
 package com.example.iptimeAPI.service.clubRoom;
 
+import com.example.iptimeAPI.mapper.clubRoomLog.RankingMapper;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLog;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogRepository;
 import com.example.iptimeAPI.domain.clubRoom.ClubRoomLogService;
+import com.example.iptimeAPI.repository.clubRoom.MemberVisitCountVO;
 import com.example.iptimeAPI.service.config.caching.CacheEvicts;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -23,7 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
     private final ClubRoomLogRepository repository;
+
     private final CacheEvicts cacheEvicts;
+
+    private final RankingMapper rankingMapper;
+
 
     @Override
     @Transactional
@@ -73,7 +79,7 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
 
         Map<Long, List<Long>> visitCountGroup = groupByVisitCount(memberVisitCountVOS);
 
-        return RankingConverter.groupByMemberId(memberIdsRankOrderByVisitCount(visitCountGroup));
+        return rankingMapper.groupByMemberId(memberIdsRankOrderByVisitCount(visitCountGroup));
     }
 
     private Map<Long, List<Long>> groupByVisitCount(List<MemberVisitCountVO> memberVisitCountVOS) {
@@ -114,4 +120,5 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
             type.getBeforeLocalDate(),
             LocalDate.now());
     }
+
 }

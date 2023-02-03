@@ -7,8 +7,11 @@ public enum MacAddressValidateError {
     DUPLICATE_MACADDRESS("603", "already registered mac address"),
     ;
 
+
     private String message;
+
     private String code;
+
 
     MacAddressValidateError(String code, String message) {
         this.code = code;
@@ -22,4 +25,5 @@ public enum MacAddressValidateError {
     public String getCode() {
         return code;
     }
+
 }

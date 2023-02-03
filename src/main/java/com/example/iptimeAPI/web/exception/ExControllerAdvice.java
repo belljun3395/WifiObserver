@@ -1,6 +1,7 @@
 package com.example.iptimeAPI.web.exception;
 
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
+import com.example.iptimeAPI.service.user.exception.OuterServiceValidateException;
 import com.example.iptimeAPI.web.response.ApiResponse;
 import com.example.iptimeAPI.web.response.ApiResponseGenerator;
 import java.util.ArrayList;
@@ -67,6 +68,18 @@ public class ExControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({OuterServiceValidateException.class})
+    public ApiResponse<ApiResponse.FailureBody> OuterServiceValidateExHandler(
+        OuterServiceValidateException exception) {
+        logger(exception);
+        String defaultMessage = exception.getMessage();
+        return ApiResponseGenerator.fail(HttpStatus.BAD_REQUEST,
+            HttpStatus.BAD_REQUEST.value() + exception.getCode(),
+            exception.getClass()
+                .getSimpleName(), defaultMessage);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ApiResponse<ApiResponse.FailureBody> exHandler(Exception exception) {
         logger(exception);
@@ -76,4 +89,5 @@ public class ExControllerAdvice {
             exception.getClass()
                 .getSimpleName(), defaultMessage);
     }
+
 }

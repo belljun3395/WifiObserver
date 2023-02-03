@@ -1,14 +1,13 @@
 package com.example.iptimeAPI.service.iptime;
 
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
 import com.example.iptimeAPI.domain.iptime.Iptime;
 import com.example.iptimeAPI.domain.iptime.IptimeMacAddressLists;
 import com.example.iptimeAPI.domain.iptime.IptimeMacAddressListsRepository;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
-import com.example.iptimeAPI.domain.macAddress.MacAddress;
-import com.example.iptimeAPI.service.iptime.dto.IpResponseDTO;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateError;
 import com.example.iptimeAPI.service.macAddress.exception.MacAddressValidateException;
-import com.example.iptimeAPI.web.dto.IpDTO;
+import com.example.iptimeAPI.web.dto.IpInfoRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,25 +20,18 @@ public class IptimeServiceImpl implements IptimeService {
 
     private final Iptime iptime;
 
-    private final IptimeMacAddressListsRepository repository;
-
-    private final String serviceIp;
-
-    private String cookieValue;
-
+    private final IptimeMacAddressListsRepository iptimeMacAddressListsRepository;
 
 
     @Autowired
-    public IptimeServiceImpl(Iptime iptime, IptimeMacAddressListsRepository repository) throws IOException {
+    public IptimeServiceImpl(Iptime iptime, IptimeMacAddressListsRepository iptimeMacAddressListsRepository) {
         this.iptime = iptime;
-        this.serviceIp = iptime.connectIpInfo();
-        this.cookieValue = iptime.getCookieValue();
-        this.repository = repository;
+        this.iptimeMacAddressListsRepository = iptimeMacAddressListsRepository;
     }
 
     @Override
-    public IpResponseDTO isInIptime(IpDTO ipDTO) {
-        return new IpResponseDTO(iptime.isIn(ipDTO.getIp()));
+    public boolean isInIptime(IpInfoRequest ipDTO) {
+        return iptime.isIn(ipDTO.getIp());
     }
 
     @Override
@@ -47,36 +39,36 @@ public class IptimeServiceImpl implements IptimeService {
         try {
             isContain(macAddress);
         } catch (MacAddressValidateException macAddressValidateException) {
-            this.renewalList();
-            this.isContain(macAddress);
+            renewalList();
+            isContain(macAddress);
         }
     }
 
     //    @Scheduled(fixedDelay = 3000)
     @Scheduled(fixedDelay = 60000 * 60)
     public void renewalList() throws IOException {
-        List<String> latestMacAddressesList = this.getIptimeMacAddressList();
+        List<String> latestMacAddressesList = getIptimeMacAddressList();
 
         IptimeMacAddressLists currentIptimeMacAddressList = getCurrentIptimeMacAddressList();
 
         if (!currentIptimeMacAddressList.isSameMacAddressList(latestMacAddressesList)) {
             IptimeMacAddressLists iptimeMacAddressLists =
                 new IptimeMacAddressLists(
-                    serviceIp,
+                    iptime.getValueOfIp(),
                     latestMacAddressesList
                 );
 
-            repository.deleteAll();
+            iptimeMacAddressListsRepository.deleteAll();
 
-            repository.save(iptimeMacAddressLists);
+            iptimeMacAddressListsRepository.save(iptimeMacAddressLists);
         }
     }
 
     private IptimeMacAddressLists getCurrentIptimeMacAddressList() {
-        return repository.findByIp(serviceIp)
+        return iptimeMacAddressListsRepository.findByIp(iptime.getValueOfIp())
             .orElseGet(() -> {
                 try {
-                    return new IptimeMacAddressLists(serviceIp, this.getIptimeMacAddressList());
+                    return new IptimeMacAddressLists(iptime.getValueOfIp(), getIptimeMacAddressList());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -84,11 +76,10 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     private List<String> getIptimeMacAddressList() throws IOException {
-        List<String> list = iptime.getList(cookieValue);
+        List<String> list = iptime.queryMacAddressList(iptime.queryCookieValue());
 
         if (list.isEmpty()) {
-            this.cookieValue = iptime.getCookieValue();
-            this.iptime.getList(cookieValue);
+            iptime.queryMacAddressList(iptime.queryCookieValue());
         }
 
         return list;
@@ -104,7 +95,7 @@ public class IptimeServiceImpl implements IptimeService {
 
     @Override
     public List<Long> browseExistMembers(
-        List<MacAddress.MacAddressResponseDTO> registeredMacAddresses) {
+        List<MacAddressDTO> registeredMacAddresses) {
 
         return registeredMacAddresses.stream()
             .filter(
@@ -112,7 +103,8 @@ public class IptimeServiceImpl implements IptimeService {
                     -> getCurrentIptimeMacAddressList()
                     .contain(macAddressResponseDTO.getMacAddress())
             )
-            .map(MacAddress.MacAddressResponseDTO::getMemberId)
+            .map(MacAddressDTO::getMemberId)
             .collect(Collectors.toList());
     }
+
 }

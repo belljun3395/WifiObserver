@@ -1,15 +1,15 @@
 package com.example.iptimeAPI.web.dto;
 
+import com.example.iptimeAPI.domain.user.UserInfoVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MemberRankingInfoDTO {
+public class MemberRankingResponse {
 
-    private Long year;
-    private String name;
-    private Long id;
     private Long ranking;
-    private Long visitCount;
+
+    private UserInfoVO userInfo;
+
 }

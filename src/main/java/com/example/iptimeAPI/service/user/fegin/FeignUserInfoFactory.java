@@ -13,4 +13,5 @@ public class FeignUserInfoFactory implements FallbackFactory<FeignUserInfo> {
         log.error("error = [{}][{}]", cause.getCause(), cause.getMessage());
         return null;
     }
+
 }

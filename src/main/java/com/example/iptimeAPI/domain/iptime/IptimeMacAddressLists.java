@@ -34,4 +34,5 @@ public class IptimeMacAddressLists {
     public boolean contain(String macAddress) {
         return this.macAddressesList.contains(macAddress);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.iptimeAPI.domain.iptime;
+package com.example.iptimeAPI.config.iptime;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 @PropertySource("classpath:iptime-html.properties")
-public class IptimeHTML {
+public class IptimeHTMLConfig {
 
     @Value("${tag.tbody}")
     private String tbody;
