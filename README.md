@@ -40,6 +40,9 @@ iptimeAPI는 [모여봐요 에코노숲]()(이하 모에숲)의 동방 출석, �
 + Redis
 + Openfeign
 
+## Docs
++ [docs](https://github.com/JNU-econovation/econo-forest-be-iptime/tree/main/docs)
+
 ## Swagger
 http://43.200.230.93/swagger-ui/#/
 
