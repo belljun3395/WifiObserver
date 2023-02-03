@@ -17,12 +17,21 @@ public class IptimeMacAddressFacade {
     private final MacAddressService macAddressService;
 
 
+    /**
+     *
+     * @return
+     */
     public List<Long> browseExistMembers() {
         List<MacAddressDTO> macAddresses = macAddressService.browseMacAddresses();
 
         return iptimeService.browseExistMembers(macAddresses);
     }
 
+    /**
+     *
+     * @param memberId
+     * @throws IOException
+     */
     public void validateExistMemberMacAddress(Long memberId) throws IOException {
         String macAddress =
             macAddressService

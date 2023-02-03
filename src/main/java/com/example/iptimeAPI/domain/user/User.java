@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
+/**
+ * IDP 서버에서 조회한 유저정보를 캐싱하기 위한 엔티티입니다.
+ */
 @Getter
 @RedisHash(value = "user")
 public class User {
@@ -33,6 +36,11 @@ public class User {
         this.userId = userInfoVO.getId();
     }
 
+    /**
+     * User는 UserInfoVO를 반드시 가지고 생성되어야 합니다.
+     * @param userInfoVO IDP에서 조회한 User의 정보를 담은 객체
+     * @return UserInfo를 포함한 User 객체를 반환합니다.
+     */
     public static User create(UserInfoVO userInfoVO) {
         return new User(userInfoVO);
     }

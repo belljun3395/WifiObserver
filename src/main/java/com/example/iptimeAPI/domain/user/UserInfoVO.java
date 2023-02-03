@@ -1,10 +1,10 @@
 package com.example.iptimeAPI.domain.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+/**
+ * IDP에서 조회한 User의 정보를 담은 객체입니다.
+ */
 @Getter
 public class UserInfoVO {
 

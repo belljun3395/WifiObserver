@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * iptime 설정페이지에 보내는 HTTP 요청에 필요한 요소를 설정하는 클래스입니다.
+ */
 @Getter
 @Component
 @RequiredArgsConstructor

@@ -24,17 +24,17 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     private final MacAddressRepository repository;
 
-    private final MacAddressMapper converter;
+    private final MacAddressMapper mapper;
 
 
     @Override
     @Transactional
-    public void registerMacAddress(MacAddressRegistRequest macAddressRegistDTO) {
+    public void registerMacAddress(MacAddressRegistRequest macAddressRegistRequest) {
         Optional<MacAddress> byMemberId =
-            repository.findByMemberId(macAddressRegistDTO.getMemberId());
+            repository.findByMemberId(macAddressRegistRequest.getMemberId());
 
         Optional<MacAddress> byMacAddress =
-            repository.findByMacAddress(macAddressRegistDTO.getMacAddress());
+            repository.findByMacAddress(macAddressRegistRequest.getMacAddress());
 
         validateMacAddress(
             byMacAddress,
@@ -46,7 +46,7 @@ public class MacAddressServiceImpl implements MacAddressService {
             validateMacAddress(
                 byMemberId,
                 mac
-                    -> mac.get().isMacAddress(macAddressRegistDTO.getMacAddress()),
+                    -> mac.get().isMacAddress(macAddressRegistRequest.getMacAddress()),
                 MacAddressValidateError.DUPLICATE_MACADDRESS
             );
 
@@ -55,8 +55,8 @@ public class MacAddressServiceImpl implements MacAddressService {
             repository.save(
                 new MacAddress(
                     macAddress.getId(),
-                    macAddressRegistDTO.getMemberId(),
-                    macAddressRegistDTO.getMacAddress()
+                    macAddressRegistRequest.getMemberId(),
+                    macAddressRegistRequest.getMacAddress()
                 )
             );
         }
@@ -64,8 +64,8 @@ public class MacAddressServiceImpl implements MacAddressService {
         if (byMemberId.isEmpty()) {
             repository.save(
                 new MacAddress(
-                    macAddressRegistDTO.getMemberId(),
-                    macAddressRegistDTO.getMacAddress()
+                    macAddressRegistRequest.getMemberId(),
+                    macAddressRegistRequest.getMacAddress()
                 )
             );
         }
@@ -73,13 +73,13 @@ public class MacAddressServiceImpl implements MacAddressService {
 
     @Override
     @Transactional
-    public void editMacAddress(MacAddressEditRequest macAddressEditDTO) {
+    public void editMacAddress(MacAddressEditRequest macAddressEditRequest) {
         // todo 검증 로직
         repository.save(
             new MacAddress(
-                macAddressEditDTO.getId(),
-                macAddressEditDTO.getMemberId(),
-                macAddressEditDTO.getMacAddress()
+                macAddressEditRequest.getId(),
+                macAddressEditRequest.getMemberId(),
+                macAddressEditRequest.getMacAddress()
             )
         );
     }
@@ -88,7 +88,7 @@ public class MacAddressServiceImpl implements MacAddressService {
     public List<MacAddressDTO> browseMacAddresses() {
         return repository.findAll()
             .stream()
-            .map(converter::from)
+            .map(mapper::from)
             .collect(Collectors.toList());
     }
 
@@ -112,7 +112,7 @@ public class MacAddressServiceImpl implements MacAddressService {
 
         MacAddress macAddress = byMemberId.get();
 
-        return converter.from(macAddress);
+        return mapper.from(macAddress);
     }
 
     private void validateMacAddress(Optional<MacAddress> macAddress,

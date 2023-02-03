@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Slf4j
 @SpringBootTest
-class IptimeMacAddressFacadeTest {
+class IptimeConnectionMacAddressFacadeTest {
 
     @Autowired
     private IptimeMacAddressFacade iptimeMacAddressFacade;

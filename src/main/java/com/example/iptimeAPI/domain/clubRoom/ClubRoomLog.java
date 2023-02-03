@@ -9,6 +9,9 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 동방 출석 기록을 관리하기 위한 엔티티입니다.
+ */
 @Entity
 @Getter
 @NoArgsConstructor

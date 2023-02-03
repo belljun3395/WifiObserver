@@ -6,6 +6,9 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * iptime 설정페이지에서 로그인을 위한 정보를 설정하는 클래스 입ㄴ디ㅏ.
+ */
 @Component
 @RequiredArgsConstructor
 public class IptimeAdminConfig {

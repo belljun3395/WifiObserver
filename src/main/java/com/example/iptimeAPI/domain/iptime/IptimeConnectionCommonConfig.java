@@ -5,6 +5,9 @@ import com.example.iptimeAPI.config.iptime.info.IptimeInfoConfig;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+/**
+ * iptime 설정페이지에 연결할 때 공통설정을 위한 클래스입니다.
+ */
 @Getter
 @Component
 public class IptimeConnectionCommonConfig {

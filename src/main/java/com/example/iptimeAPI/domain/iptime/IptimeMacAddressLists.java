@@ -8,6 +8,9 @@ import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+/**
+ * iptime에서 조회한 MAC 주소 리스트를 캐싱하기 위한 엔티티입니다.
+ */
 @Getter
 @RedisHash(value = "iptimeListMacAddressLists")
 public class IptimeMacAddressLists {
@@ -27,6 +30,11 @@ public class IptimeMacAddressLists {
         this.ip = ip;
     }
 
+    /**
+     * 캐싱된 MAC 주소 리스트와 iptime 설정페이지에서 조회한 MAC 주소 리스트가 동일한지 판단하는 메서드입니다.
+     * @param latestMacAddressesList iptime 설정페이지에서 조회한 MAC 주소 리스트입니다.
+     * @return 캐싱된 MAC 주소 리스트와 iptime 설정페이지에서 조회한 MAC 주소 리스트가 동일하면 true
+     */
     public boolean isSameMacAddressList(List<String> latestMacAddressesList) {
         return this.macAddressesList.equals(latestMacAddressesList);
     }

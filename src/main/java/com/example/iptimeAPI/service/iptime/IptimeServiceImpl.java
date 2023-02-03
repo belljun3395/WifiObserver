@@ -1,7 +1,8 @@
 package com.example.iptimeAPI.service.iptime;
 
-import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
 import com.example.iptimeAPI.domain.iptime.Iptime;
+import com.example.iptimeAPI.domain.iptime.IptimeConnection;
+import com.example.iptimeAPI.mapper.macAddress.MacAddressDTO;
 import com.example.iptimeAPI.domain.iptime.IptimeMacAddressLists;
 import com.example.iptimeAPI.domain.iptime.IptimeMacAddressListsRepository;
 import com.example.iptimeAPI.domain.iptime.IptimeService;
@@ -64,6 +65,10 @@ public class IptimeServiceImpl implements IptimeService {
         }
     }
 
+    /**
+     * 연결된 ip 정보를 기반으로 현재 캐싱된 MAC 주소 리스트를 조회하는 메서드입니다.
+     * @return 캐싱된 MAC 주소 리스트를 반환합니다.
+     */
     private IptimeMacAddressLists getCurrentIptimeMacAddressList() {
         return iptimeMacAddressListsRepository.findByIp(iptime.getValueOfIp())
             .orElseGet(() -> {
@@ -75,6 +80,11 @@ public class IptimeServiceImpl implements IptimeService {
             });
     }
 
+    /**
+     * iptime 설정페이지에 MAC 주소 리스트를 조회하는 메서드입니다.
+     * @return iptime 설정페이지에서 조회한 MAC 주소 리스트입니다.
+     * @throws IOException
+     */
     private List<String> getIptimeMacAddressList() throws IOException {
         List<String> list = iptime.queryMacAddressList(iptime.queryCookieValue());
 
@@ -85,6 +95,10 @@ public class IptimeServiceImpl implements IptimeService {
         return list;
     }
 
+    /**
+     * 캐싱된 MAC 주소 리스트에 MAC 주소가 포함되어 있는지 확인하는 메서드입니다.
+     * @param macAddress MAC 주소 값입니다.
+     */
     private void isContain(String macAddress) {
         IptimeMacAddressLists macAddressList = getCurrentIptimeMacAddressList();
 
