@@ -62,19 +62,19 @@ public class IptimeHTTPConfig {
 
 
     public String get_cookie_value_referer() {
-        return iptimeInfoConfig.getHosturl() + login_session;
+        return iptimeInfoConfig.getHostUrl() + login_session;
     }
 
     public String get_cookie_value() {
-        return iptimeInfoConfig.getHosturl() + login_handler;
+        return iptimeInfoConfig.getHostUrl() + login_handler;
     }
 
     public String get_list_url() {
-        return iptimeInfoConfig.getHosturl() + login_timepro_query;
+        return iptimeInfoConfig.getHostUrl() + login_timepro_query;
     }
 
     public String get_list_referer() {
-        return iptimeInfoConfig.getHosturl() + login_handler;
+        return iptimeInfoConfig.getHostUrl() + login_handler;
     }
 
 }

@@ -2,7 +2,7 @@ package com.example.iptimeAPI.config.iptime.info;
 
 public interface IptimeInfoConfig {
 
-    String getHosturl();
+    String getHostUrl();
 
     String getHost();
 

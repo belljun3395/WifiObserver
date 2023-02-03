@@ -7,25 +7,25 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-@PropertySource("classpath:iptime-ecnv.properties")
+@PropertySource("classpath:iptime.properties")
 public class IptimeInfoConfigECNV implements IptimeInfoConfig {
 
-    @Value("${ecnv.host.url}")
-    private String hosturl;
+    @Value("${iptime.host.url}")
+    private String hostUrl;
 
-    @Value("${ecnv.host}")
+    @Value("${iptime.host}")
     private String host;
 
-    @Value("${ecnv.origin}")
+    @Value("${iptime.origin}")
     private String origin;
 
-    @Value("${ecnv.passwd}")
+    @Value("${iptime.passwd}")
     private String passwd;
 
-    @Value("${ecnv.username}")
+    @Value("${iptime.username}")
     private String username;
 
-    @Value("${ecnv.ip}")
+    @Value("${iptime.ip}")
     private String ip;
 
 
