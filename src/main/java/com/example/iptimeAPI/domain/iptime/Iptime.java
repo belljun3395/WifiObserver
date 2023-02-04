@@ -8,7 +8,7 @@ import org.jsoup.Connection.Response;
 import org.springframework.stereotype.Component;
 
 /**
- * iptime 설정페이지 값들을 조회할 수 있는 클래스입니다.
+ * iptime 설정페이지의 값을 조회할 수 있는 클래스입니다.
  */
 @Component
 @RequiredArgsConstructor
@@ -20,16 +20,14 @@ public class Iptime {
 
 
     /**
-     * 조회하는 ip가 연결된 iptime 설정페이지의 ip와 동일한지 확인하는 기능을 하는 메서드입니다.
-     * @param ip 조회하는 ip 값입니다.
-     * @return 조회하는 ip가 연결도니 iptime 설정페이지 ip와 일치하면 true
+     * @param ip ip
+     * @return ip가 연결된 iptime 설정페이지 ip와 일치하면 true
      */
     public boolean isIn(String ip) {
         return iptimeConnection.isConnect(ip);
     }
 
     /**
-     * 연결된 iptime 설정페이지의 ip 값을 조회하는 메서드입니다.
      * @return 연결된 iptime 설정페이지의 ip 입니다.
      */
     public String getValueOfIp() {
@@ -37,19 +35,16 @@ public class Iptime {
     }
 
     /**
-     * 연결된 iptime 설정페이지의 쿠키 값을 조회하는 메서드입니다.
      * @return 연결된 iptime 설정페이지의 쿠키 값입니다.
      * @throws IOException
      */
-    // todo cache
     public String queryCookieValue() throws IOException {
         Response response = iptimeConnection.queryCookieValue();
         return iptimeParser.parseCookieValueQueryResponse(response);
     }
 
     /**
-     * 연결된 iptime 설정페이지의 연결된 MAC 주소 리스트입니다.
-     * @param cookieValue iptime 설정페이지에서 MAC 주소 리스트를 조회하기 위해 필요한 쿠키 값입니다.
+     * @param cookieValue 쿠키 값
      * @return iptime 설정페이지에서 MAC 주소 리스트입니다.
      * @throws IOException
      */

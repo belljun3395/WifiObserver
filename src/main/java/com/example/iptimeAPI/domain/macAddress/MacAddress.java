@@ -38,9 +38,8 @@ public class MacAddress {
     }
 
     /**
-     * 기존의 MAC 주소와 비교하는 MAC 주소가 일치하는지 확인하는 메서드입니다.
-      * @param compareMacAddress 비교할 MAC 주소입니다.
-     * @return 기존의 MAC 주소와 비교할 MAC 주소가 일치하면 true
+      * @param compareMacAddress MAC 주소
+     * @return 가지고있는 MAC 주소와 MAC 주소가 일치하면 true
      */
     public boolean isMacAddress(String compareMacAddress) {
         return macAddress.equals(compareMacAddress);

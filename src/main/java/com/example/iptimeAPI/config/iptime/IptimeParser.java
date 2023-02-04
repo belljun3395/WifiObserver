@@ -12,6 +12,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+/**
+ * iptime 설정페이지에 요청해서 받아온 응답에서 원하는 값을 얻기 위해 파싱하기 위한 클래스입니다.
+ */
 @Component
 @RequiredArgsConstructor
 public class IptimeParser {
@@ -24,6 +27,11 @@ public class IptimeParser {
     private final IptimeHTMLConfig iptimeHTMLConfig;
 
 
+    /**
+     * @param connectResponse iptime 설정페이지에 쿠키를 얻기 위해 요청의 응답
+     * @return 쿠기 값
+     * @throws IOException
+     */
     public String parseCookieValueQueryResponse(Response connectResponse) throws IOException {
 
         Document loginPageDocument = connectResponse.parse();
@@ -32,6 +40,11 @@ public class IptimeParser {
         return findBracketTextByPattern(extractCookieName, findCookie).replaceAll("\'", "");
     }
 
+    /**
+     * @param connectResponse iptime 설정페이지에 MAC 주소 리스트를 얻기 위해 요청의 응답
+     * @return MAC 주소 리스트
+     * @throws IOException
+     */
     public List<String> parseMacAddressListQueryResponse(Response connectResponse)
         throws IOException {
 

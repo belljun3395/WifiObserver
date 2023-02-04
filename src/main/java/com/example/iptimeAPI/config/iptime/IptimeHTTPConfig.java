@@ -64,19 +64,19 @@ public class IptimeHTTPConfig {
     private String captcha_on;
 
 
-    public String get_cookie_value_referer() {
+    public String getValueOfCookieValueReferer() {
         return iptimeInfoConfig.getHostUrl() + login_session;
     }
 
-    public String get_cookie_value() {
+    public String getValueOfCookieValue() {
         return iptimeInfoConfig.getHostUrl() + login_handler;
     }
 
-    public String get_list_url() {
+    public String getValueOfListUrl() {
         return iptimeInfoConfig.getHostUrl() + login_timepro_query;
     }
 
-    public String get_list_referer() {
+    public String getValueOfListReferer() {
         return iptimeInfoConfig.getHostUrl() + login_handler;
     }
 

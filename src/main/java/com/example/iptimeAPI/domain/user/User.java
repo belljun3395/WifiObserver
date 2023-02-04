@@ -37,8 +37,7 @@ public class User {
     }
 
     /**
-     * User는 UserInfoVO를 반드시 가지고 생성되어야 합니다.
-     * @param userInfoVO IDP에서 조회한 User의 정보를 담은 객체
+     * @param userInfoVO IDP에서 조회한 User의 정보
      * @return UserInfo를 포함한 User 객체를 반환합니다.
      */
     public static User create(UserInfoVO userInfoVO) {

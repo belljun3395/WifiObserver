@@ -18,8 +18,7 @@ public class IptimeMacAddressFacade {
 
 
     /**
-     *
-     * @return
+     * @return 현재 동방에 존재하는 member를 반환합니다.
      */
     public List<Long> browseExistMembers() {
         List<MacAddressDTO> macAddresses = macAddressService.browseMacAddresses();
@@ -28,8 +27,8 @@ public class IptimeMacAddressFacade {
     }
 
     /**
-     *
-     * @param memberId
+     * 현재 동방에 존재하는 member인지 MAC 주소를 기반으로 검증하는 기능입니다.
+     * @param memberId memeber의 id
      * @throws IOException
      */
     public void validateExistMemberMacAddress(Long memberId) throws IOException {

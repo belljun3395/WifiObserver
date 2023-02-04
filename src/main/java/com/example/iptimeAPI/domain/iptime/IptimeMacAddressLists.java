@@ -31,14 +31,17 @@ public class IptimeMacAddressLists {
     }
 
     /**
-     * 캐싱된 MAC 주소 리스트와 iptime 설정페이지에서 조회한 MAC 주소 리스트가 동일한지 판단하는 메서드입니다.
-     * @param latestMacAddressesList iptime 설정페이지에서 조회한 MAC 주소 리스트입니다.
-     * @return 캐싱된 MAC 주소 리스트와 iptime 설정페이지에서 조회한 MAC 주소 리스트가 동일하면 true
+     * @param latestMacAddressesList MAC 주소 리스트
+     * @return 가지고있는 MAC 주소 리스트와 MAC 주소 리스트가 동일하면 true
      */
     public boolean isSameMacAddressList(List<String> latestMacAddressesList) {
         return this.macAddressesList.equals(latestMacAddressesList);
     }
 
+    /**
+     * @param macAddress MAC 주소
+     * @return 가지고있는 MAC 주소 리스트에 MAC 주소가 포함되어 있다면 true
+     */
     public boolean contain(String macAddress) {
         return this.macAddressesList.contains(macAddress);
     }

@@ -83,9 +83,8 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     /**
-     * 멤버들을 방문 기록을 기준으로 그룹으로 묶어주는 메서드입니다.
-     * @param memberVisitCountVOS 멤버들의 방문기록
-     * @return 방문 기록을 기준으로 동일한 멤버들이 그룹으로 묶인 값
+     * @param memberVisitCountVOS member의 방문기록
+     * @return 방문 기록을 기준으로 동일한 member가 하나의 그룹으로 묶인 값을 반환합니다.
      */
     private Map<Long, List<Long>> groupByVisitCount(List<MemberVisitCountVO> memberVisitCountVOS) {
         return memberVisitCountVOS.stream()
@@ -101,9 +100,8 @@ public class ClubRoomLogServiceImpl implements ClubRoomLogService {
     }
 
     /**
-     * 방문횟수를 기준으로 멤버들의 랭킹을 계산하는 메서드입니다.
-     * @param visitCountGroup 방문횟수를 기준으로 멤버들을 그룹으로 묶은 정보
-     * @return 랭킹에 따라 멤버들이 그룹으로 묶인 값
+     * @param visitCountGroup 방문횟수를 기준으로 member을 그룹으로 묶은 정보
+     * @return 랭킹에 따라 멤버들이 그룹으로 묶인 값을 반환합니다.
      */
     private Map<Long, List<Long>> memberIdsRankOrderByVisitCount(Map<Long, List<Long>> visitCountGroup) {
         List<Long> orderedVisitCount =

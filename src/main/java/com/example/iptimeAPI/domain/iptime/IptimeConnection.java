@@ -37,10 +37,10 @@ public class IptimeConnection {
 
     public Response queryCookieValue() throws IOException {
         return connect(
-            iptimeHTTPConfig.get_cookie_value(),
+            iptimeHTTPConfig.getValueOfCookieValue(),
             Method.POST,
             iptimeConnectionCommonConfig,
-            iptimeHTTPConfig.get_cookie_value_referer(),
+            iptimeHTTPConfig.getValueOfCookieValueReferer(),
             iptimeHTTPConfig.getContent_length(),
             iptimeHTTPConfig.getContent_type()
         );
@@ -49,10 +49,10 @@ public class IptimeConnection {
 
     public Response queryMacAddressList(String cookie_value) throws IOException {
         return connect(
-            iptimeHTTPConfig.get_list_url(),
+            iptimeHTTPConfig.getValueOfListUrl(),
             Method.GET,
             iptimeConnectionCommonConfig,
-            iptimeHTTPConfig.get_list_referer(),
+            iptimeHTTPConfig.getValueOfListReferer(),
             cookie_value
         );
 
@@ -75,7 +75,7 @@ public class IptimeConnection {
             .header("Referer", referer)
             .header("Content-Length", content_length)
             .header("Content-Type", content_type)
-            .data(iptimeAdminConfig.getLoginData())
+            .data(iptimeAdminConfig.getValueOfLoginData())
             .execute();
     }
 
@@ -95,7 +95,7 @@ public class IptimeConnection {
 
             .header("Referer", referer)
             .cookie("efm_session_id", cookie_value)
-            .data(iptimeAdminConfig.getLoginData())
+            .data(iptimeAdminConfig.getValueOfLoginData())
             .execute();
     }
 
