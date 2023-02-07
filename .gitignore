@@ -220,3 +220,6 @@ $RECYCLE.BIN/
 /.idea/sonarlint.xml
 /.idea/sonarlint-state.xml
 /.idea/vcs.xml
+/.gradle/
+/build/
+/.gradle/
