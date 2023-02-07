@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:log4jdbc:mysql://localhost:3306/econo_forest?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: root
-    password: root@1234
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
 
   jpa:
@@ -19,6 +19,7 @@ spring:
   sql:
     init:
       mode: always
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
