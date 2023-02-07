@@ -35,7 +35,10 @@ public class IptimeMacAddressLists {
      * @return 가지고있는 MAC 주소 리스트와 MAC 주소 리스트가 동일하면 true
      */
     public boolean isSameMacAddressList(List<String> latestMacAddressesList) {
-        return this.macAddressesList.equals(latestMacAddressesList);
+        if (macAddressesList == null) {
+            return false;
+        }
+        return macAddressesList.equals(latestMacAddressesList);
     }
 
     /**
@@ -43,7 +46,7 @@ public class IptimeMacAddressLists {
      * @return 가지고있는 MAC 주소 리스트에 MAC 주소가 포함되어 있다면 true
      */
     public boolean contain(String macAddress) {
-        return this.macAddressesList.contains(macAddress);
+        return macAddressesList.contains(macAddress);
     }
 
 }
