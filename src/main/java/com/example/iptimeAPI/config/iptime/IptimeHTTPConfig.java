@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @PropertySource("classpath:iptime-http.properties")
 public class IptimeHTTPConfig {
-
     private final IptimeInfoConfig iptimeInfoConfig;
 
     @Value("${http.useragent}")
@@ -79,5 +78,4 @@ public class IptimeHTTPConfig {
     public String getValueOfListReferer() {
         return iptimeInfoConfig.getHostUrl() + login_handler;
     }
-
 }

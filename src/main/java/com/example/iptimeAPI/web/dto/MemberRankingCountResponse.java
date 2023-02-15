@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberRankingCountResponse {
-
     private Long year;
 
     private String name;
@@ -19,7 +18,8 @@ public class MemberRankingCountResponse {
     private Long visitCount;
 
 
-    public MemberRankingCountResponse(UserInfoVO userInfoVO,
+    public MemberRankingCountResponse(
+                                        UserInfoVO userInfoVO,
                                         Long ranking,
                                         Long visitCount) {
 
@@ -29,5 +29,4 @@ public class MemberRankingCountResponse {
         this.ranking = ranking;
         this.visitCount = visitCount;
     }
-
 }

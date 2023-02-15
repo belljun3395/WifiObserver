@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class MemberVisitCountVO {
-
     private Long memberId;
 
     private Long visitCount;
@@ -14,5 +13,4 @@ public class MemberVisitCountVO {
         this.memberId = memberId;
         this.visitCount = visitCount;
     }
-
 }

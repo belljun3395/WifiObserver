@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/clubs")
 public class ClubsController {
-
     private final ClubRoomLogService clubRoomLogService;
 
     private final IptimeService iptimeService;
@@ -79,5 +78,4 @@ public class ClubsController {
                 "enter ecnv"
             );
     }
-
 }

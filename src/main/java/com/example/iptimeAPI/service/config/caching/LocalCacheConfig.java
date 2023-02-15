@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableCaching
 @Configuration
 public class LocalCacheConfig {
-
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
@@ -19,5 +18,4 @@ public class LocalCacheConfig {
             List.of(new ConcurrentMapCache("ranking"), new ConcurrentMapCache("memberVisitCount")));
         return simpleCacheManager;
     }
-
 }

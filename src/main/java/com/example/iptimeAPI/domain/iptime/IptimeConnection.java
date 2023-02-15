@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IptimeConnection {
-
     private final IptimeInfoConfig iptimeInfoConfig;
 
     private final IptimeHTTPConfig iptimeHTTPConfig;
@@ -58,8 +57,14 @@ public class IptimeConnection {
 
     }
 
-    private Response connect(String url, Method method, IptimeConnectionCommonConfig commonSetting, String referer,
-        String content_length, String content_type) throws IOException {
+    private Response connect(
+                                String url,
+                                Method method,
+                                IptimeConnectionCommonConfig commonSetting,
+                                String referer,
+                                String content_length,
+                                String content_type
+                            ) throws IOException {
         return Jsoup.connect(url)
             .userAgent(commonSetting.getAgent())
             .header("Accept", commonSetting.getAccept())
@@ -79,8 +84,13 @@ public class IptimeConnection {
             .execute();
     }
 
-    private Response connect(String url, Method method, IptimeConnectionCommonConfig commonSetting, String referer,
-        String cookie_value) throws IOException {
+    private Response connect(
+                                String url,
+                                Method method,
+                                IptimeConnectionCommonConfig commonSetting,
+                                String referer,
+                                String cookie_value
+                            ) throws IOException {
         return Jsoup.connect(url)
             .userAgent(commonSetting.getAgent())
             .header("Accept", commonSetting.getAccept())
@@ -98,5 +108,4 @@ public class IptimeConnection {
             .data(iptimeAdminConfig.getValueOfLoginData())
             .execute();
     }
-
 }

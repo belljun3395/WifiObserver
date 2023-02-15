@@ -32,5 +32,4 @@ public enum LogPeriod {
     public LocalDate getBeforeLocalDate() {
         return beforeLocalDate;
     }
-
 }

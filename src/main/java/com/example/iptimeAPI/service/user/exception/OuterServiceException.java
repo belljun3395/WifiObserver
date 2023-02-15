@@ -1,7 +1,6 @@
 package com.example.iptimeAPI.service.user.exception;
 
 public enum OuterServiceException {
-
     IDP_EXCEPTION("701", "there are something problem at IDP"),
     ;
 
@@ -23,5 +22,4 @@ public enum OuterServiceException {
     public String getCode() {
         return code;
     }
-
 }

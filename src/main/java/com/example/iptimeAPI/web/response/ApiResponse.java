@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class ApiResponse<T> extends ResponseEntity<T> {
-
     public ApiResponse(T body, HttpStatus status) {
         super(body, status);
     }
@@ -22,7 +21,11 @@ public class ApiResponse<T> extends ResponseEntity<T> {
         private String error;
         private String message;
 
-        public FailureBody(final String code, final String error, final String message) {
+        public FailureBody(
+                            final String code,
+                            final String error,
+                            final String message
+                        ) {
             this.timestamp = new Timestamp(System.currentTimeMillis());
             this.code = code;
             this.error = error;
@@ -38,7 +41,11 @@ public class ApiResponse<T> extends ResponseEntity<T> {
         private String message;
         private T data;
 
-        public withData(T data, String code, String message) {
+        public withData(
+                        T data,
+                        String code,
+                        String message
+                    ) {
             this.timestamp = new Timestamp(System.currentTimeMillis());
             this.code = code;
             this.message = message;
@@ -59,5 +66,4 @@ public class ApiResponse<T> extends ResponseEntity<T> {
             this.message = message;
         }
     }
-
 }

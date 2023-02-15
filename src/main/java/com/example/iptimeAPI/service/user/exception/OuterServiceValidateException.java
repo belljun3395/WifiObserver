@@ -4,12 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class OuterServiceValidateException extends RuntimeException {
-
     private final String code;
 
     public OuterServiceValidateException(OuterServiceException outerServiceException) {
         super(outerServiceException.getMessage());
         this.code = outerServiceException.getCode();
     }
-
 }

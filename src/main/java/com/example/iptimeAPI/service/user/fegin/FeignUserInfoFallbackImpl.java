@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FeignUserInfoFallbackImpl implements FeignUserInfo {
-
     @Override
     public UserInfoVO getUserInfo(Long userId) {
         return null;
@@ -15,5 +14,4 @@ public class FeignUserInfoFallbackImpl implements FeignUserInfo {
     public UserInfoVO getUserInfoByToken(String accessToken) {
         return null;
     }
-
 }

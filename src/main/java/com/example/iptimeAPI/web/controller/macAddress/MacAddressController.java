@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/macs")
 @RequiredArgsConstructor
 public class MacAddressController {
-
     private final MacAddressService macAddressService;
 
     private final UserService userServiceImpl;
@@ -75,5 +74,4 @@ public class MacAddressController {
                 "success edit mac address info"
             );
     }
-
 }

@@ -9,14 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ClubRoomLogRepository extends JpaRepository<ClubRoomLog, Long> {
-
     /**
      * @param memberId member의 id
      * @param startDate 시작 날짜
      * @param endDate 끝 날짜
      * @return 조회한 기간 사이의 member의 동방 방문횟수
      */
-    Long countByMemberIdAndLocalDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
+    Long countByMemberIdAndLocalDateBetween(Long memberId,
+                                            LocalDate startDate,
+                                            LocalDate endDate);
 
     /**
      * @param memberId member의 id
@@ -35,5 +36,4 @@ public interface ClubRoomLogRepository extends JpaRepository<ClubRoomLog, Long> 
             + "from ClubRoomLog c "
             + "where c.localDate between :startDate and :endDate GROUP BY c.memberId")
     List<MemberVisitCountVO> countMemberVisitCountLocalDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
 }

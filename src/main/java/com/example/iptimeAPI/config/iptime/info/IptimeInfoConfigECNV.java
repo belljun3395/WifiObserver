@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:iptime.properties")
 public class IptimeInfoConfigECNV implements IptimeInfoConfig {
-
     @Value("${iptime.host.url}")
     private String hostUrl;
 
@@ -32,5 +31,4 @@ public class IptimeInfoConfigECNV implements IptimeInfoConfig {
     public boolean isIp(String ip) {
         return this.ip.equals(ip);
     }
-
 }

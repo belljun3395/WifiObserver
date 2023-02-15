@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class IptimeMacAddressFacade {
-
     private final IptimeService iptimeService;
 
     private final MacAddressService macAddressService;
@@ -39,5 +38,4 @@ public class IptimeMacAddressFacade {
 
         iptimeService.isExistMacAddress(macAddress);
     }
-
 }

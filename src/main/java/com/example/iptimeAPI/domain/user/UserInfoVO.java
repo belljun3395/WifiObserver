@@ -7,7 +7,6 @@ import lombok.Getter;
  */
 @Getter
 public class UserInfoVO {
-
     private Long year;
 
     private String name;
@@ -15,10 +14,13 @@ public class UserInfoVO {
     private Long id;
 
 
-    public UserInfoVO(Long year, String name, Long id) {
+    public UserInfoVO(
+                        Long year,
+                        String name,
+                        Long id
+                    ) {
         this.year = year;
         this.name = name;
         this.id = id;
     }
-
 }

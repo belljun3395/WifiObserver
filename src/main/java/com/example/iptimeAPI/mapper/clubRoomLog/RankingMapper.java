@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RankingMapper {
-
     public Map<Long, Long> groupByMemberId(Map<Long, List<Long>> groupByVisitCountRanking) {
         Set<Long> longs = groupByVisitCountRanking.keySet();
 
@@ -24,5 +23,4 @@ public class RankingMapper {
 
         return groupByMemberId;
     }
-
 }

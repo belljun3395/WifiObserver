@@ -9,7 +9,6 @@ import java.util.List;
  * iptime과 관련된 서비스를 위한 서비스입니다.
  */
 public interface IptimeService {
-
     /**
      * @param ipInfoRequest ip
      * @return ip가 iptime 설정페이지의 ip와 동일하다면 true
@@ -34,5 +33,4 @@ public interface IptimeService {
      * @throws IOException
      */
     void renewalList() throws IOException;
-
 }

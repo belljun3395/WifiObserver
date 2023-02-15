@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IptimeParser {
-
     private final Pattern findSetCookie = Pattern.compile("setCookie\\(\'[^\\(\\)]+\'\\)");
     private final Pattern extractCookieName = Pattern.compile("([^\\(\\)]+)");
     private final String VOID = "";

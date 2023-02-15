@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository repository;
 
     private final FeignUserInfo feignUserInfo;
@@ -70,5 +69,4 @@ public class UserServiceImpl implements UserService {
     public UserInfoVO getUserById_dev(Long userId) {
         return new UserInfoVO(20L, "test" + userId, userId);
     }
-
 }

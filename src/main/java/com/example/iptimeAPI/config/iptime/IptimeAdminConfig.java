@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IptimeAdminConfig {
-
     private final IptimeHTTPConfig iptimeHTTPConfig;
     private final IptimeInfoConfig iptimeInfoConfig;
 
@@ -25,5 +24,4 @@ public class IptimeAdminConfig {
         data.put("passwd", iptimeInfoConfig.getPasswd());
         return data;
     }
-
 }

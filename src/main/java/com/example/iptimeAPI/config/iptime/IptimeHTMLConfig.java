@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:iptime-html.properties")
 public class IptimeHTMLConfig {
-
     @Value("${tag.tbody}")
     private String tbody;
 
@@ -27,5 +26,4 @@ public class IptimeHTMLConfig {
 
     @Value("${tag.style}")
     private String style;
-
 }

@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "member_mac_address_list")
 public class MacAddress {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +30,11 @@ public class MacAddress {
         this.macAddress = macAddress;
     }
 
-    public MacAddress(Long id, Long memberId, String macAddress) {
+    public MacAddress(
+                        Long id,
+                        Long memberId,
+                        String macAddress
+                    ) {
         this.id = id;
         this.memberId = memberId;
         this.macAddress = macAddress;
@@ -44,5 +47,4 @@ public class MacAddress {
     public boolean isMacAddress(String compareMacAddress) {
         return macAddress.equals(compareMacAddress);
     }
-
 }

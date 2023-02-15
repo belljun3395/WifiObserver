@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MacAddressMapper {
-
     public MacAddressDTO from(MacAddress macAddress) {
         return
             new MacAddressDTO(
@@ -15,5 +14,4 @@ public class MacAddressMapper {
                 macAddress.getMacAddress()
             );
     }
-
 }

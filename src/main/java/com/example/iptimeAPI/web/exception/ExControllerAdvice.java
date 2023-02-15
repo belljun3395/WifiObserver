@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j(topic = "ERROR_FILE_LOGGER")
 @RestControllerAdvice
 public class ExControllerAdvice {
-
     private static void logger(Exception exception) {
         log.error(exception.getClass()
                 .getSimpleName() + " = [{}][{}]",
@@ -89,5 +88,4 @@ public class ExControllerAdvice {
             exception.getClass()
                 .getSimpleName(), defaultMessage);
     }
-
 }

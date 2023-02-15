@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class MacAddressValidateException extends RuntimeException {
-
     private final String code;
 
 
@@ -12,5 +11,4 @@ public class MacAddressValidateException extends RuntimeException {
         super(macAddressValidateError.getMessage());
         this.code = macAddressValidateError.getCode();
     }
-
 }

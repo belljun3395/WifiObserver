@@ -6,7 +6,6 @@ import com.example.iptimeAPI.web.dto.MacAddressRegistRequest;
 import java.util.List;
 
 public interface MacAddressService {
-
     /**
      * MAC 주소 정보를 등록하기 위한 메서드입니다.
      * @param macAddressRegistRequest MAC 주소 정보를 등록하기 위한 정보
@@ -34,6 +33,5 @@ public interface MacAddressService {
      * @return member의 id를 기준으로 조회한 등록된 MAC 주소 정보를 반환합니다.
      */
     MacAddressDTO findMemberMacAddress(Long memberId);
-
 }
 

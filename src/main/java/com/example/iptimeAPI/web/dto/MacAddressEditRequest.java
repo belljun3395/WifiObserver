@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MacAddressEditRequest {
-
     @ApiParam(example = "1")
     private Long id;
 
@@ -16,5 +15,4 @@ public class MacAddressEditRequest {
 
     @ApiParam(example = "90:32:4B:18:00:1B")
     private String macAddress;
-
 }

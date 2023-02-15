@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class IptimeConnectionCommonConfig {
-
     private String agent;
     private String accept;
     private String accept_encoding;
@@ -34,5 +33,4 @@ public class IptimeConnectionCommonConfig {
         this.origin = iptimeInfoConfig.getOrigin();
         this.upgrade_insecure_request = iptimeHTTPConfig.getUpgrade_insecure_request();
     }
-
 }

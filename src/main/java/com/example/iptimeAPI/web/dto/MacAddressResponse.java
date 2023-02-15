@@ -15,5 +15,4 @@ public class MacAddressResponse {
         this.memberId = macAddressDTO.getMemberId();
         this.macAddress = macAddressDTO.getMacAddress();
     }
-
 }

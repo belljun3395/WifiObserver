@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @Getter
 @RedisHash(value = "user")
 public class User {
-
     private static final Long DEFAULT_TTL = 30L;
 
 
@@ -43,5 +42,4 @@ public class User {
     public static User create(UserInfoVO userInfoVO) {
         return new User(userInfoVO);
     }
-
 }

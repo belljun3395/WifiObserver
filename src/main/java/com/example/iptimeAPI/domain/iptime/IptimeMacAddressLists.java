@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @Getter
 @RedisHash(value = "iptimeListMacAddressLists")
 public class IptimeMacAddressLists {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -48,5 +47,4 @@ public class IptimeMacAddressLists {
     public boolean contain(String macAddress) {
         return macAddressesList.contains(macAddress);
     }
-
 }

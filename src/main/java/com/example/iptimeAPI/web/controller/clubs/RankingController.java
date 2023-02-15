@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/rankings")
 public class RankingController {
-
     private final ClubRoomLogService clubRoomLogService;
 
     private final UserService userService;
@@ -68,7 +67,8 @@ public class RankingController {
     }
 
     @GetMapping("/member")
-    public ApiResponse<ApiResponse.withData> memberRankingCountInfo(@RequestHeader(value = "Authorization") String accessToken,
+    public ApiResponse<ApiResponse.withData> memberRankingCountInfo(
+                                                                    @RequestHeader(value = "Authorization") String accessToken,
                                                                     @ApiParam(example = "month") @RequestParam String period
                                                                     ) {
 
@@ -97,5 +97,4 @@ public class RankingController {
                 "ranking result period : " + period
             );
     }
-
 }

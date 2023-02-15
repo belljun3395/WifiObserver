@@ -3,7 +3,6 @@ package com.example.iptimeAPI.domain.user;
 import java.util.List;
 
 public interface UserService {
-
     /**
      * @param accessToken IDP 서버에 조회할 accessToken
      * @return IDP 서버에서 조회한 UserInfo를 반환합니다.
@@ -21,5 +20,4 @@ public interface UserService {
      * @return IDP 서버에서 조회한 다수의 UserInfo를 반환합니다.
      */
     List<UserInfoVO> getUsersById(List<Long> userIds);
-
 }

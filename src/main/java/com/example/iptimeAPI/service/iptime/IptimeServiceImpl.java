@@ -17,14 +17,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class IptimeServiceImpl implements IptimeService {
-
     private final Iptime iptime;
 
     private final IptimeMacAddressListsRepository iptimeMacAddressListsRepository;
 
 
     @Autowired
-    public IptimeServiceImpl(Iptime iptime, IptimeMacAddressListsRepository iptimeMacAddressListsRepository) {
+    public IptimeServiceImpl(
+                                Iptime iptime,
+                                IptimeMacAddressListsRepository iptimeMacAddressListsRepository
+                           ) {
         this.iptime = iptime;
         this.iptimeMacAddressListsRepository = iptimeMacAddressListsRepository;
     }
@@ -105,8 +107,7 @@ public class IptimeServiceImpl implements IptimeService {
     }
 
     @Override
-    public List<Long> browseExistMembers(
-        List<MacAddressDTO> registeredMacAddresses) {
+    public List<Long> browseExistMembers(List<MacAddressDTO> registeredMacAddresses) {
 
         return registeredMacAddresses.stream()
             .filter(
@@ -117,5 +118,4 @@ public class IptimeServiceImpl implements IptimeService {
             .map(MacAddressDTO::getMemberId)
             .collect(Collectors.toList());
     }
-
 }

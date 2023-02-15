@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MacAddressServiceImpl implements MacAddressService {
-
     private final MacAddressRepository repository;
 
     private final MacAddressMapper mapper;
@@ -115,12 +114,14 @@ public class MacAddressServiceImpl implements MacAddressService {
         return mapper.from(macAddress);
     }
 
-    private void validateMacAddress(Optional<MacAddress> macAddress,
-        Predicate<Optional<MacAddress>> predicate, MacAddressValidateError error) {
+    private void validateMacAddress(
+                                    Optional<MacAddress> macAddress,
+                                    Predicate<Optional<MacAddress>> predicate,
+                                    MacAddressValidateError error
+                                    ) {
 
         if (predicate.test(macAddress)) {
             throw new MacAddressValidateException(error);
         }
     }
-
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class Iptime {
-
     private final IptimeConnection iptimeConnection;
 
     private final IptimeParser iptimeParser;
@@ -53,6 +52,5 @@ public class Iptime {
 
         return iptimeParser.parseMacAddressListQueryResponse(response);
     }
-
 }
 

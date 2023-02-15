@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "club_arrival_departure_list")
 public class ClubRoomLog {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,5 +30,4 @@ public class ClubRoomLog {
         this.memberId = memberId;
         this.localDate = localDate;
     }
-
 }

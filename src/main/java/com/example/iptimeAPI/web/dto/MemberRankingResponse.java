@@ -7,9 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberRankingResponse {
-
     private Long ranking;
 
     private UserInfoVO userInfo;
-
 }

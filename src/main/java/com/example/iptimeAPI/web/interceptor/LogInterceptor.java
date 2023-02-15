@@ -9,7 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j(topic = "API_ACCESS_APPENDER")
 public class LogInterceptor implements HandlerInterceptor {
-
     public static final String LOG_ID = "logId";
 
     @Override
@@ -38,5 +37,4 @@ public class LogInterceptor implements HandlerInterceptor {
             log.error("afterCompletion error!!", ex);
         }
     }
-
 }
