@@ -1,0 +1,10 @@
+demo:
+  infra:
+    flyway:
+      url: jdbc:mysql://localhost:13306/demodb?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+      user: root
+      password: root
+      locations: classpath:db/migration/entity
+      sql-migration-suffixes: sql
+      baseline-on-migrate: true
+      baseline-version: 0

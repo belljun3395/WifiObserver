@@ -1,0 +1,8 @@
+rootProject.name = 'demo'
+include 'data'
+include 'data:mysql'
+findProject(':data:mysql')?.name = 'mysql'
+include 'infra'
+include 'infra:flyway'
+findProject(':infra:flyway')?.name = 'flyway'
+include 'app'

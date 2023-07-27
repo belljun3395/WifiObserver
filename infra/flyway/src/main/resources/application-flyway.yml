@@ -1,0 +1,10 @@
+demo:
+  infra:
+    flyway:
+      url: ${DB_HOSTNAME}/demodb?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      user: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      locations: classpath:db/migration/entity
+      sql-migration-suffixes: sql
+      baseline-on-migrate: true
+      baseline-version: 0

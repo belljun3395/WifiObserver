@@ -1,0 +1,7 @@
+spring:
+  config:
+    use-legacy-processing: true
+  profiles:
+    include:
+      - flyway
+      - mysql

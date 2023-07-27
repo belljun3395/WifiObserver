@@ -1,0 +1,11 @@
+dependencies {
+    // set project dependency
+    implementation project(':data:mysql')
+    implementation project(':infra:flyway')
+
+    // web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+}
