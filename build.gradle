@@ -29,6 +29,8 @@ plugins {
     id 'jacoco'
 }
 
+apply from: './tasks/install-git-hooks.gradle'
+
 allprojects {
     plugins.apply("com.diffplug.spotless")
 
