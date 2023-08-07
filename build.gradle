@@ -63,7 +63,7 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
-    group = 'com.example'
+    group = 'com.wifi.observer'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '11'
 

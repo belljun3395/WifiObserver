@@ -1,9 +1,9 @@
-demo:
+wifiobs:
   data:
     mysql:
       entity:
         datasource:
-          jdbcUrl: jdbc:mysql://localhost:13306/demodb?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+          jdbcUrl: jdbc:mysql://localhost:13306/wifiobs?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
           username: root
           password: root
           driver-class-name: com.mysql.cj.jdbc.Driver

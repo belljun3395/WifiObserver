@@ -1,4 +1,4 @@
-rootProject.name = 'demo'
+rootProject.name = 'wifiobs'
 include 'data'
 include 'data:mysql'
 findProject(':data:mysql')?.name = 'mysql'
