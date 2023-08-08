@@ -1,6 +1,8 @@
 package com.wifi.obs.infra.flyway.config;
 
 import static com.wifi.obs.infra.batch.config.BatchDataSourceConfig.DATASOURCE_NAME;
+import static com.wifi.obs.infra.flyway.FlywayConfig.BEAN_NAME_PREFIX;
+import static com.wifi.obs.infra.flyway.FlywayConfig.PROPERTY_PREFIX;
 
 import com.wifi.obs.infra.batch.config.BatchDataSourceConfig;
 import javax.sql.DataSource;
@@ -18,22 +20,18 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Import({BatchDataSourceConfig.class})
 public class BatchFlywayConfig {
-	private static final String SERVICE_NAME = "wifiobs";
-	private static final String MODULE_NAME = "infra";
-
 	// base property prefix for flyway
-	public static final String BASE_PROPERTY_PREFIX =
-			SERVICE_NAME + "." + MODULE_NAME + ".flyway.batch";
+	public static final String BASE_PROPERTY_PREFIX = PROPERTY_PREFIX + ".batch";
+	private static final String BASE_BEAN_NAME_PREFIX = BEAN_NAME_PREFIX + "Batch";
 
 	// bean name for flyway configuration
-	private static final String BEAN_PROPERTY_PREFIX = "wifiobsbatch";
-	private static final String FLYWAY = BEAN_PROPERTY_PREFIX + "Flyway";
-	private static final String FLYWAY_PROPERTIES = BEAN_PROPERTY_PREFIX + "FlywayProperties";
+	private static final String FLYWAY = BASE_BEAN_NAME_PREFIX;
+	private static final String FLYWAY_PROPERTIES = BASE_BEAN_NAME_PREFIX + "Properties";
 	private static final String FLYWAY_MIGRATION_INITIALIZER =
-			BEAN_PROPERTY_PREFIX + "FlywayMigrationInitializer";
+			BASE_BEAN_NAME_PREFIX + "MigrationInitializer";
 	private static final String FLYWAY_VALIDATE_INITIALIZER =
-			BEAN_PROPERTY_PREFIX + "FlywayValidateInitializer";
-	private static final String FLYWAY_CONFIGURATION = BEAN_PROPERTY_PREFIX + "FlywayConfiguration";
+			BASE_BEAN_NAME_PREFIX + "ValidateInitializer";
+	private static final String FLYWAY_CONFIGURATION = BASE_BEAN_NAME_PREFIX + "Configuration";
 
 	@Bean(name = FLYWAY)
 	public Flyway flyway(

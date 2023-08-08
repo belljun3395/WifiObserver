@@ -1,5 +1,8 @@
 package com.wifi.obs.data.mysql.config;
 
+import static com.wifi.obs.data.mysql.MysqlConfig.BEAN_NAME_PREFIX;
+import static com.wifi.obs.data.mysql.MysqlConfig.PROPERTY_PREFIX;
+
 import com.wifi.obs.data.mysql.MysqlConfig;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
@@ -33,25 +36,23 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		entityManagerFactoryRef = JpaDataSourceConfig.ENTITY_MANAGER_FACTORY_NAME)
 public class JpaDataSourceConfig {
 
-	public static final String BASE_PACKAGE = MysqlConfig.BASE_PACKAGE;
-	private static final String MODULE_NAME = "data";
-	private static final String SERVICE_NAME = "wifiobs";
-	private static final String REPOSITORY_DRIVER = "mysql";
-
-	// base property prefix for jpa datasource
-	private static final String BASE_PROPERTY_PREFIX =
-			SERVICE_NAME + "." + MODULE_NAME + "." + REPOSITORY_DRIVER + ".entity";
+	private static final String BASE_PROPERTY_PREFIX = PROPERTY_PREFIX + ".entity";
 
 	// bean name for jpa datasource configuration
-	public static final String ENTITY_MANAGER_FACTORY_NAME = SERVICE_NAME + "EntityManagerFactory";
-	public static final String TRANSACTION_MANAGER_NAME = SERVICE_NAME + "TransactionManager";
-	public static final String DATASOURCE_NAME = SERVICE_NAME + "DataSource";
-	private static final String JPA_PROPERTIES_NAME = SERVICE_NAME + "JpaProperties";
-	private static final String HIBERNATE_PROPERTIES_NAME = SERVICE_NAME + "HibernateProperties";
-	private static final String JPA_VENDOR_ADAPTER_NAME = SERVICE_NAME + "JpaVendorAdapter";
-	private static final String PERSIST_UNIT = SERVICE_NAME + "PersistenceUnit";
+	public static final String ENTITY_BEAN_NAME_PREFIX = BEAN_NAME_PREFIX + "Entity";
+	public static final String ENTITY_MANAGER_FACTORY_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "ManagerFactory";
+	public static final String TRANSACTION_MANAGER_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "TransactionManager";
+	public static final String DATASOURCE_NAME = ENTITY_BEAN_NAME_PREFIX + "DataSource";
+	private static final String JPA_PROPERTIES_NAME = ENTITY_BEAN_NAME_PREFIX + "JpaProperties";
+	private static final String HIBERNATE_PROPERTIES_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "HibernateProperties";
+	private static final String JPA_VENDOR_ADAPTER_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "JpaVendorAdapter";
+	private static final String PERSIST_UNIT = ENTITY_BEAN_NAME_PREFIX + "PersistenceUnit";
 	private static final String ENTITY_MANAGER_FACTORY_BUILDER_NAME =
-			SERVICE_NAME + "EntityManagerFactoryBuilder";
+			ENTITY_BEAN_NAME_PREFIX + "ManagerFactoryBuilder";
 
 	@Bean(name = DATASOURCE_NAME)
 	@ConfigurationProperties(prefix = BASE_PROPERTY_PREFIX + ".datasource")
@@ -98,7 +99,7 @@ public class JpaDataSourceConfig {
 				.dataSource(dataSource)
 				.properties(hibernatePropertyMap)
 				.persistenceUnit(PERSIST_UNIT)
-				.packages(BASE_PACKAGE)
+				.packages(MysqlConfig.BASE_PACKAGE)
 				.build();
 	}
 

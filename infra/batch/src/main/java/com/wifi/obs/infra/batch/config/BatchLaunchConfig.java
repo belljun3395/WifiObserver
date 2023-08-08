@@ -37,7 +37,8 @@ public class BatchLaunchConfig {
 			JobLauncher jobLauncher,
 			JobExplorer jobExplorer,
 			JobRepository jobRepository,
-			BatchProperties properties) {
+			@Qualifier(value = PROPERTY_BEAN_NAME) BatchProperties properties) {
+
 		JobLauncherApplicationRunner runner =
 				new JobLauncherApplicationRunner(jobLauncher, jobExplorer, jobRepository);
 		String jobNames = properties.getJob().getNames();

@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @EnableAutoConfiguration(exclude = {BatchAutoConfiguration.class})
 public class BatchConfig {
-
 	public static final String BASE_PACKAGE = "com.wifi.obs.infra.batch";
-	public static final String BEAN_NAME_PREFIX = "wifiobsbatch";
+	public static final String SERVICE_NAME = "wifiobs";
+	public static final String MODULE_NAME = "batch";
+	public static final String BEAN_NAME_PREFIX = SERVICE_NAME + MODULE_NAME;
+	public static final String PROPERTY_PREFIX = SERVICE_NAME + "." + MODULE_NAME;
 }

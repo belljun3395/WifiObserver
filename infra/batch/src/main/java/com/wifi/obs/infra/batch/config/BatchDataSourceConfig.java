@@ -1,9 +1,8 @@
 package com.wifi.obs.infra.batch.config;
 
-import static com.wifi.obs.infra.batch.BatchConfig.BEAN_NAME_PREFIX;
-
 import com.wifi.obs.infra.batch.BatchConfig;
 import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,35 +14,40 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class BatchDataSourceConfig {
 
 	public static final String BASE_PACKAGE = BatchConfig.BASE_PACKAGE;
-	private static final String MODULE_NAME = "batch";
-	private static final String SERVICE_NAME = "wifiobs";
-	private static final String REPOSITORY_DRIVER = "batch";
 
 	// base property prefix for jpa datasource
-	private static final String BASE_PROPERTY_PREFIX = SERVICE_NAME + "." + MODULE_NAME;
+	private static final String BASE_PROPERTY_PREFIX = BatchConfig.PROPERTY_PREFIX;
 
 	// bean name for jpa datasource configuration
+	public static final String ENTITY_BEAN_NAME_PREFIX = BatchConfig.BEAN_NAME_PREFIX;
 	public static final String ENTITY_MANAGER_FACTORY_NAME =
-			BEAN_NAME_PREFIX + "EntityManagerFactory";
-	public static final String DATASOURCE_NAME = BEAN_NAME_PREFIX + "DataSource";
-	private static final String JPA_PROPERTIES_NAME = BEAN_NAME_PREFIX + "JpaProperties";
-	private static final String HIBERNATE_PROPERTIES_NAME = BEAN_NAME_PREFIX + "HibernateProperties";
-	private static final String JPA_VENDOR_ADAPTER_NAME = BEAN_NAME_PREFIX + "JpaVendorAdapter";
-	private static final String PERSIST_UNIT = BEAN_NAME_PREFIX + "PersistenceUnit";
+			ENTITY_BEAN_NAME_PREFIX + "ManagerFactory";
+	public static final String TRANSACTION_MANAGER_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "TransactionManager";
+	public static final String DATASOURCE_NAME = ENTITY_BEAN_NAME_PREFIX + "DataSource";
+	private static final String JPA_PROPERTIES_NAME = ENTITY_BEAN_NAME_PREFIX + "JpaProperties";
+	private static final String HIBERNATE_PROPERTIES_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "HibernateProperties";
+	private static final String JPA_VENDOR_ADAPTER_NAME =
+			ENTITY_BEAN_NAME_PREFIX + "JpaVendorAdapter";
+	private static final String PERSIST_UNIT = ENTITY_BEAN_NAME_PREFIX + "PersistenceUnit";
 	private static final String ENTITY_MANAGER_FACTORY_BUILDER_NAME =
-			BEAN_NAME_PREFIX + "EntityManagerFactoryBuilder";
+			ENTITY_BEAN_NAME_PREFIX + "ManagerFactoryBuilder";
 
 	@Bean(name = DATASOURCE_NAME)
 	@ConfigurationProperties(prefix = BASE_PROPERTY_PREFIX + ".datasource")
+	// @BatchDataSource
 	public DataSource dataSource() {
 		return DataSourceBuilder.create().build();
 	}
@@ -89,5 +93,11 @@ public class BatchDataSourceConfig {
 				.persistenceUnit(PERSIST_UNIT)
 				.packages(BASE_PACKAGE)
 				.build();
+	}
+
+	@Bean(name = TRANSACTION_MANAGER_NAME)
+	public PlatformTransactionManager transactionManager(
+			@Qualifier(ENTITY_MANAGER_FACTORY_NAME) EntityManagerFactory emf) {
+		return new JpaTransactionManager(emf);
 	}
 }

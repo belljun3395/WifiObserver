@@ -17,4 +17,8 @@ import org.springframework.context.annotation.Configuration;
 		})
 public class MysqlConfig {
 	public static final String BASE_PACKAGE = "com.wifi.obs.data.mysql";
+	public static final String SERVICE_NAME = "wifiobs";
+	public static final String MODULE_NAME = "mysql";
+	public static final String BEAN_NAME_PREFIX = SERVICE_NAME + MODULE_NAME;
+	public static final String PROPERTY_PREFIX = SERVICE_NAME + "." + MODULE_NAME;
 }
