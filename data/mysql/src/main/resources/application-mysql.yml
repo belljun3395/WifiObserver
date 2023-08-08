@@ -1,18 +1,17 @@
 wifiobs:
-  data:
-    mysql:
-      entity:
-        datasource:
-          jdbcUrl: ${DB_HOSTNAME}/wifiobs?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-          user: ${DB_USERNAME}
-          password: ${DB_PASSWORD}
-          driver-class-name: com.mysql.cj.jdbc.Driver
-        jpa:
+  mysql:
+    entity:
+      datasource:
+        jdbcUrl: ${DB_HOSTNAME}/wifiobs?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+        user: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      jpa:
+        hibernate:
+          ddl-auto: validate
+        properties:
           hibernate:
-            ddl-auto: validate
-          properties:
-            hibernate:
-              format_sql: true
+            format_sql: true
 
 logging:
   level:
