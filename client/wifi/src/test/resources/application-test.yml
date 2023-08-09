@@ -1,0 +1,16 @@
+spring:
+  config:
+    use-legacy-processing: true
+  profiles:
+    include:
+      - client-wifi
+      - client-thread-local
+      - client-jsoup-local
+
+test:
+  host: ${WIFI_TEST_HOST}
+  userName: ${WIFI_TEST_USERNAME}
+  password: ${WIFI_TEST_PASSWORD}
+  hosts: ${WIFI_TEST_HOSTS}
+  userNames: ${WIFI_TEST_USERNAMES}
+  passwords: ${WIFI_TEST_PASSWORDS}
