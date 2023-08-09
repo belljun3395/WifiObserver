@@ -1,0 +1,26 @@
+iptime:
+  http:
+    login:
+      query: /sess-bin/login.cgi?
+      session: /sess-bin/login_session.cgi
+      handler: /sess-bin/login_handler.cgi
+      timepro:
+        query: /sess-bin/timepro.cgi?tmenu=iframe&smenu=lan_pcinfo_status
+    init:
+      status: '1'
+    upgrade:
+      insecure:
+        request: '1'
+    content:
+      type: application/x-www-form-urlencoded
+      length: '196'
+    accept:
+      language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+      encoding: gzip, deflate
+      nodeValue: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    captcha:
+      'on': '0'
+    connection: keep-alive
+    cache:
+      control: max-age=0
+    useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
