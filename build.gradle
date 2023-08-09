@@ -9,6 +9,7 @@ buildscript {
         asciidoctorVersion = '3.3.2'
         epagesRestDocsApiSpecVersion = '0.16.0'
         sonarqubeVersion = '4.0.0.2929'
+        set('springCloudVersion', "2021.0.1")
 
         // dependencies
         flywayVersion = '9.16.0'
@@ -98,6 +99,8 @@ subprojects {
 
         // test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
     }
 
     test {
