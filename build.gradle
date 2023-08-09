@@ -36,27 +36,8 @@ plugins {
 apply from: './tasks/install-git-hooks.gradle'
 
 allprojects {
-    plugins.apply("com.diffplug.spotless")
-
-    spotless {
-        java {
-            importOrder()
-            removeUnusedImports()
-            trimTrailingWhitespace()
-            googleJavaFormat('1.12.0')
-            indentWithTabs(2)
-            endWithNewline()
-            target 'src/*/java/**/*.java'
-        }
-
-        format 'misc', {
-            target '**/*.gradle', '**/*.md', '**/.gitignore'
-            targetExclude '.release/*.*'
-            indentWithSpaces()
-            trimTrailingWhitespace()
-            endWithNewline()
-        }
-    }
+    apply plugin: 'com.diffplug.spotless'
+    apply from: rootProject.rootDir.toString() + '/tasks/formatting-task.gradle'
 
     repositories {
         mavenCentral()
