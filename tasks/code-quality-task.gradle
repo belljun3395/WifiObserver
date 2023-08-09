@@ -15,11 +15,7 @@ sonarqube {
                         "**/support/**, " +
                         "**/exception/**, " +
                         "**/dto/**, " +
-                        "**/handler/**, " +
-                        "**/config/**, " +
-                        "**/*Query.java, " +
-                        "**/*Command.java, " +
-                        "**/*Generator.java"
+                        "**/config/**"
         property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 
     }
@@ -39,7 +35,8 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "" // TODO: Add exclusions
+                    "**/property/**",
+                    "**/dto/**",
             ])
         }))
     }
