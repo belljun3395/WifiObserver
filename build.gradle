@@ -68,6 +68,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply from: rootProject.rootDir.toString() + '/tasks/code-quality-task.gradle'
 
     group = 'com.wifi.observer'
     version = '0.0.1-SNAPSHOT'
@@ -109,5 +110,6 @@ subprojects {
             events "failed"
             exceptionFormat "full"
         }
+        finalizedBy jacocoTestReport
     }
 }
