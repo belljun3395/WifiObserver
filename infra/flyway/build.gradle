@@ -7,7 +7,9 @@ jar {
 }
 
 dependencies {
+    // set project dependency
     implementation project(':data:mysql')
+    implementation project(':infra:batch')
 
     // flyway
     implementation "org.flywaydb:flyway-core:${flywayVersion}"

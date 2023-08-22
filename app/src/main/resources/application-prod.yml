@@ -5,3 +5,4 @@ spring:
     include:
       - flyway-prod
       - mysql-prod
+      - batch-prod

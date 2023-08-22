@@ -1,0 +1,11 @@
+wifiobs:
+  batch:
+    datasource:
+      jdbcUrl: jdbc:mysql://localhost:13306/batch?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: ${job.name:NONE}

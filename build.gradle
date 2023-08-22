@@ -14,6 +14,7 @@ buildscript {
         flywayVersion = '9.16.0'
         apacheCommonsLangVersion = '3.12.0'
         apacheCommonsCollectionsVersion = '4.4'
+        quartzVersion = '2.3.0'
     }
 }
 

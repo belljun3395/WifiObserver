@@ -1,0 +1,16 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // set project dependency
+    implementation project(':data:mysql')
+
+    // batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation "org.quartz-scheduler:quartz:${quartzVersion}"
+}

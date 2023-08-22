@@ -2,6 +2,7 @@ dependencies {
     // set project dependency
     implementation project(':data:mysql')
     implementation project(':infra:flyway')
+    implementation project(':infra:batch')
 
     // web
     implementation 'org.springframework.boot:spring-boot-starter-web'

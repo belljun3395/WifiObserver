@@ -6,3 +6,8 @@ wifiobs:
         sql-migration-suffixes: sql
         baseline-on-migrate: true
         baseline-version: 0
+      batch:
+        locations: classpath:db/migration/batch
+        sql-migration-suffixes: sql
+        baseline-on-migrate: true
+        baseline-version: 0
