@@ -7,6 +7,10 @@ spring:
       - client-thread-local
       - client-jsoup-local
 
+logging:
+  level:
+    com.wifi.observer.client: debug
+
 test:
   host: ${WIFI_TEST_HOST}
   userName: ${WIFI_TEST_USERNAME}
