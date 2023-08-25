@@ -4,13 +4,11 @@ import static com.wifi.observer.client.wifi.support.log.WifiLogProperties.WIFI_T
 
 import com.wifi.observer.client.wifi.support.log.HostLogAble;
 import com.wifi.observer.client.wifi.support.log.WifiClientTrace;
-import com.wifi.observer.client.wifi.support.log.WifiLogProperties;
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -30,22 +28,18 @@ public class WifiClientTraceLogAspect {
 	public void clientTracePointCut() {}
 
 	@Before("clientTracePointCut()")
-	public void setMDCLog(JoinPoint joinPoint) {
+	public void clientTraceLog(JoinPoint joinPoint) {
 		Object source = getSourceRequest(joinPoint);
 
 		if (source instanceof HostLogAble) {
-			setWifiHealthRequestLog((HostLogAble) source);
+			HostLogAble hostLog = (HostLogAble) source;
+			String traceId = MDC.get(WIFI_TRACEID.getKey());
+			log.debug(
+					"{} {} to {}",
+					traceId,
+					getClassName(joinPoint) + "." + getMethodName(joinPoint),
+					hostLog.getHost());
 		}
-	}
-
-	@After(value = "clientTracePointCut()")
-	public void getMDCLog(JoinPoint joinPoint) {
-		String traceId = MDC.get(WIFI_TRACEID.getKey());
-		log.info(
-				"{} {} to {}",
-				traceId,
-				getClassName(joinPoint) + "." + getMethodName(joinPoint),
-				MDC.get(WifiLogProperties.HOST.getKey()));
 	}
 
 	private Object getSourceRequest(JoinPoint joinPoint) {
@@ -58,10 +52,6 @@ public class WifiClientTraceLogAspect {
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 		Method method = methodSignature.getMethod();
 		return Integer.parseInt(method.getAnnotation(WifiClientTrace.class).index());
-	}
-
-	private void setWifiHealthRequestLog(HostLogAble source) {
-		MDC.put(WifiLogProperties.HOST.getKey(), source.getHost());
 	}
 
 	private String getMethodName(JoinPoint joinPoint) {
