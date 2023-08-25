@@ -36,7 +36,7 @@ public class DocumentResource {
 			try {
 				ClassPathResource onConnectResource = new ClassPathResource(ONCONNECT_RESOURCE);
 				onConnectSource = Jsoup.parse(onConnectResource.getFile());
-				log.info("연결 html 준비 완료");
+				log.debug("연결 html 준비 완료");
 				return onConnectSource;
 			} catch (IOException e) {
 				log.error("연결 html 준비 실패");

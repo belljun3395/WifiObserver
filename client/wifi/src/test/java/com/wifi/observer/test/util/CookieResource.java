@@ -36,7 +36,7 @@ public class CookieResource {
 							IptimeAuthRequest.builder().host(host).userName(userName).password(password).build());
 			if (cookieResponse.getResponse().isPresent()) {
 				cookie = cookieResponse.getResponse().get().getInfo();
-				log.info("쿠키 값 획득 : {}", cookie);
+				log.debug("쿠키 값 획득 : {}", cookie);
 			} else {
 				throw new WifiConnectionException("쿠키 값 획득 실패");
 			}
