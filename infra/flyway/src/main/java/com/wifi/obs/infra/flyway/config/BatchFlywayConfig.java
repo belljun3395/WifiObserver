@@ -40,7 +40,7 @@ public class BatchFlywayConfig {
 		return new Flyway(configuration);
 	}
 
-	@Profile({"!local"})
+	@Profile({"!local && !new"})
 	@Bean(name = FLYWAY_VALIDATE_INITIALIZER)
 	public FlywayMigrationInitializer flywayValidateInitializer(
 			@Qualifier(value = FLYWAY) Flyway flyway) {
