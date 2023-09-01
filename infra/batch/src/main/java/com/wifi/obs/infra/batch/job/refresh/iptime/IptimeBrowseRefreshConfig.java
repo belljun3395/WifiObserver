@@ -3,6 +3,7 @@ package com.wifi.obs.infra.batch.job.refresh.iptime;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.history.ConnectHistoryEntity;
 import com.wifi.obs.infra.batch.job.refresh.iptime.step.IptimeBrowseRefreshWriter;
+import com.wifi.obs.infra.batch.support.listener.StepSlackLoggingListener;
 import com.wifi.obs.infra.batch.support.param.TimeStamper;
 import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class IptimeBrowseRefreshConfig {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final TimeStamper timeStamper;
+	private final StepSlackLoggingListener stepSlackLoggingListener;
 
 	private final IptimeBrowseRefreshWriter iptimeBrowseRefreshWriter;
 
@@ -69,6 +71,7 @@ public class IptimeBrowseRefreshConfig {
 				.reader(iptimeBrowseRefreshReader())
 				.writer(iptimeBrowseRefreshWriter)
 				.transactionManager(transactionManager)
+				.listener(stepSlackLoggingListener)
 				.build();
 	}
 
