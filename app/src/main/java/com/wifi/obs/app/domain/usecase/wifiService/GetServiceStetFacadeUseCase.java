@@ -51,52 +51,68 @@ public class GetServiceStetFacadeUseCase {
 		List<DeviceEntity> devices = browseDeviceService.execute(service);
 
 		if (type.equals(StetType.MONTH)) {
-			for (DeviceEntity device : devices) {
-				Optional<ConnectHistoryMetaEntity> monthStet =
-						connectHistoryMetaRepository.findTopByDeviceAndMonthOrderByIdDesc(
-								device, (long) now.getMonth().getValue());
-
-				if (monthStet.isEmpty()) {
-					DeviceStetInfo stetInfo =
-							DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
-					deviceStetInfos.add(stetInfo);
-					continue;
-				}
-
-				DeviceStetInfo stetInfo =
-						DeviceStetInfo.builder()
-								.id(device.getId())
-								.mac(device.getMac())
-								.time(monthStet.get().getConnectedTimeOnMonth())
-								.build();
-				deviceStetInfos.add(stetInfo);
-			}
-			return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
+			return getMonthServiceDeviceStetInfos(devices, deviceStetInfos, serviceId, now);
 		}
 
 		if (type.equals(StetType.DAY)) {
-			for (DeviceEntity device : devices) {
-				Optional<ConnectHistoryMetaEntity> dayStet =
-						connectHistoryMetaRepository.findTopByDeviceAndDayAndMonthOrderByIdDesc(
-								device, (long) now.getDayOfMonth(), (long) now.getMonth().getValue());
-
-				if (dayStet.isEmpty()) {
-					DeviceStetInfo stetInfo =
-							DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
-					deviceStetInfos.add(stetInfo);
-				}
-
-				DeviceStetInfo stetInfo =
-						DeviceStetInfo.builder()
-								.id(device.getId())
-								.mac(device.getMac())
-								.time(dayStet.get().getConnectedTimeOnDay())
-								.build();
-				deviceStetInfos.add(stetInfo);
-			}
-			return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
+			return getDayServiceDeviceStetInfos(devices, deviceStetInfos, serviceId, now);
 		}
 
 		throw new RuntimeException("잘못된 요청입니다.");
+	}
+
+	private ServiceDeviceStetInfos getMonthServiceDeviceStetInfos(
+			List<DeviceEntity> devices,
+			List<DeviceStetInfo> deviceStetInfos,
+			Long serviceId,
+			LocalDateTime now) {
+		for (DeviceEntity device : devices) {
+			Optional<ConnectHistoryMetaEntity> monthStet =
+					connectHistoryMetaRepository.findTopByDeviceAndMonthOrderByIdDesc(
+							device, (long) now.getMonth().getValue());
+
+			if (monthStet.isEmpty()) {
+				DeviceStetInfo stetInfo =
+						DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
+				deviceStetInfos.add(stetInfo);
+				continue;
+			}
+
+			DeviceStetInfo stetInfo =
+					DeviceStetInfo.builder()
+							.id(device.getId())
+							.mac(device.getMac())
+							.time(monthStet.get().getConnectedTimeOnMonth())
+							.build();
+			deviceStetInfos.add(stetInfo);
+		}
+		return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
+	}
+
+	private ServiceDeviceStetInfos getDayServiceDeviceStetInfos(
+			List<DeviceEntity> devices,
+			List<DeviceStetInfo> deviceStetInfos,
+			Long serviceId,
+			LocalDateTime now) {
+		for (DeviceEntity device : devices) {
+			Optional<ConnectHistoryMetaEntity> dayStet =
+					connectHistoryMetaRepository.findTopByDeviceAndDayAndMonthOrderByIdDesc(
+							device, (long) now.getDayOfMonth(), (long) now.getMonth().getValue());
+
+			if (dayStet.isEmpty()) {
+				DeviceStetInfo stetInfo =
+						DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
+				deviceStetInfos.add(stetInfo);
+			}
+
+			DeviceStetInfo stetInfo =
+					DeviceStetInfo.builder()
+							.id(device.getId())
+							.mac(device.getMac())
+							.time(dayStet.get().getConnectedTimeOnDay())
+							.build();
+			deviceStetInfos.add(stetInfo);
+		}
+		return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
 	}
 }
