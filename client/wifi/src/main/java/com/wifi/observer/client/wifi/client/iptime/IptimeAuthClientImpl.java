@@ -1,5 +1,7 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
+import com.wifi.obs.infra.slack.config.SlackChannel;
+import com.wifi.obs.infra.slack.service.SlackService;
 import com.wifi.observer.client.wifi.client.WifiAuthClient;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiAuthClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiAuthClientRequest;
@@ -30,6 +32,8 @@ public class IptimeAuthClientImpl implements WifiAuthClient<IptimeAuthRequest, A
 	private final CookieResolver cookieResolver;
 	private final AuthClientCommand authClientCommand;
 
+	private final SlackService slackService;
+
 	@Override
 	public ClientResponse<AuthInfo> command(IptimeAuthRequest request) {
 
@@ -38,6 +42,9 @@ public class IptimeAuthClientImpl implements WifiAuthClient<IptimeAuthRequest, A
 		Optional<Document> response = authClientCommand.command(command);
 
 		if (response.isEmpty()) {
+			slackService.sendSlackMessage(
+					"iptime auth client response is empty!!! host : " + request.getHost(),
+					SlackChannel.ERROR);
 			return IptimeAuthResponse.fail(request.getHost());
 		}
 

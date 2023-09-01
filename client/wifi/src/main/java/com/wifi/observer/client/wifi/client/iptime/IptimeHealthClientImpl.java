@@ -1,5 +1,7 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
+import com.wifi.obs.infra.slack.config.SlackChannel;
+import com.wifi.obs.infra.slack.service.SlackService;
 import com.wifi.observer.client.wifi.client.WifiHealthClient;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiHealthClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiBulkHealthRequest;
@@ -24,12 +26,20 @@ public class IptimeHealthClientImpl implements WifiHealthClient {
 	private final IptimeWifiHealthConverter iptimeWifiHealthClientConverter;
 	private final HealthClientQuery healthClientQuery;
 
+	private final SlackService slackService;
+
 	@Override
 	@WifiClientTrace
 	public CommonHealthStatusResponse query(CommonWifiHealthRequest request) {
 		IptimeWifiHealthClientDto queryDto = getDto(request);
 
 		HttpStatus status = healthClientQuery.query(queryDto);
+
+		if (status != HttpStatus.OK) {
+			slackService.sendSlackMessage(
+					"iptime health client response is empty!!! host : " + request.getHost(),
+					SlackChannel.ERROR);
+		}
 
 		return iptimeWifiHealthClientConverter.from(status, request.getHost());
 	}

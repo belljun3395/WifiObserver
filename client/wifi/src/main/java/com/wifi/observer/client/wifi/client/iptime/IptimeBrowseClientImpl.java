@@ -1,5 +1,7 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
+import com.wifi.obs.infra.slack.config.SlackChannel;
+import com.wifi.obs.infra.slack.service.SlackService;
 import com.wifi.observer.client.wifi.client.WifiBrowseClient;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiBrowseClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiBrowseRequest;
@@ -31,6 +33,8 @@ public class IptimeBrowseClientImpl
 	private final IptimeUsersOnConnectFilterDecorator iptimeUsersOnConnectFilterDecorator;
 	private final BrowseClientQuery browseClientQuery;
 
+	private final SlackService slackService;
+
 	@Override
 	public IptimeOnConnectUserInfosResponse query(IptimeBrowseRequest request)
 			throws WifiRuntimeException {
@@ -40,6 +44,9 @@ public class IptimeBrowseClientImpl
 		Optional<Document> response = browseClientQuery.query(query);
 
 		if (response.isEmpty()) {
+			slackService.sendSlackMessage(
+					"iptime browse client response is empty!!! host : " + request.getHost(),
+					SlackChannel.ERROR);
 			return IptimeOnConnectUserInfosResponse.fail(request.getHost());
 		}
 
