@@ -6,3 +6,7 @@ spring:
       - flyway
       - mysql
       - batch
+      - security
+      - client-jsoup
+      - client-thread
+      - client-wifi

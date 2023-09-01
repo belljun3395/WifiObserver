@@ -6,3 +6,7 @@ spring:
       - flyway-prod
       - mysql-prod
       - batch-prod
+      - security-prod
+      - client-jsoup-prod
+      - client-thread-prod
+      - client-wifi

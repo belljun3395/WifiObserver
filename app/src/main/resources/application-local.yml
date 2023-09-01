@@ -6,3 +6,7 @@ spring:
       - flyway-local
       - mysql-local
       - batch-local
+      - security-local
+      - client-jsoup-local
+      - client-thread-local
+      - client-wifi
