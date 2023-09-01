@@ -10,6 +10,7 @@ dependencies {
     // set project dependency
     implementation project(':data:mysql')
     implementation project(':client:wifi')
+    implementation project(':infra:slack')
 
     // batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
