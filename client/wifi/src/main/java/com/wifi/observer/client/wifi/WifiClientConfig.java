@@ -1,12 +1,15 @@
 package com.wifi.observer.client.wifi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wifi.obs.infra.slack.SlackConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = {WifiClientConfig.BASE_PACKAGE})
+@Import(value = {SlackConfig.class})
 public class WifiClientConfig {
 	public static final String BASE_PACKAGE = "com.wifi.observer.client.wifi";
 	public static final String SERVICE_NAME = "wifiobs";
