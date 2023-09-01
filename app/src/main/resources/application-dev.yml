@@ -10,3 +10,4 @@ spring:
       - client-jsoup-dev
       - client-thread-dev
       - client-wifi
+      - slack
