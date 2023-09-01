@@ -1,0 +1,15 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+
+    // slack
+    implementation 'com.slack.api:bolt:1.18.0'
+    implementation 'com.slack.api:bolt-servlet:1.18.0'
+    implementation 'com.slack.api:bolt-jetty:1.18.0'
+}
