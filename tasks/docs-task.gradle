@@ -1,6 +1,6 @@
 /*convert snippet to swagger*/
 openapi3 {
-    servers = [ { url = "https://api.hiit.com" } , { url = "http://localhost:8080" }]
+    servers = [ { url = "${projectBaseUrl}" } , { url = "http://localhost:8080" }]
     title = "${projectName}"
     version = "${projectVersion}"
     format = 'yaml'
@@ -12,7 +12,7 @@ openapi3 {
 postman {
     title = "${projectName}"
     version = "${projectVersion}"
-    baseUrl = 'http://localhost:8080'
+    baseUrl = "${projectBaseUrl}"
     outputDirectory = "src/main/resources/static/"
     outputFileNamePrefix = 'postman'
 }

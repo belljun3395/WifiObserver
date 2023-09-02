@@ -1,7 +1,8 @@
 buildscript {
     ext {
         // plugins
-        projectName = 'demo'
+        projectName = 'wifiobs'
+        projectBaseUrl = 'http://api.wifiobs.store:8080'
         projectVersion = '1.0.1'
         springBootVersion = '2.7.5'
         dependencyManagementVersion = '1.0.15.RELEASE'
