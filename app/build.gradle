@@ -1,3 +1,6 @@
+apply from: '../integration-test.gradle'
+apply from: '../tasks/docs-task.gradle'
+
 dependencies {
     // set project dependency
     implementation project(':data:mysql')
