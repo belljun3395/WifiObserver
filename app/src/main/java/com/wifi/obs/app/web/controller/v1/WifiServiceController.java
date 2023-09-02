@@ -65,7 +65,6 @@ public class WifiServiceController {
 			@RequestParam("sid") Long sid, @RequestParam(value = "ft", required = false) Boolean ft) {
 		Long memberId = MemberIdAuditHolder.get();
 		OnConnectUserInfos res = getUsersFacadeUseCase.execute(memberId, sid, Optional.ofNullable(ft));
-
 		return ApiResponseGenerator.success(res, HttpStatus.OK);
 	}
 
