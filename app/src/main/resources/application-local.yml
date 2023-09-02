@@ -11,3 +11,16 @@ spring:
       - client-thread-local
       - client-wifi
       - slack-local
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    com:
+      wifi:
+        obs: DEBUG
