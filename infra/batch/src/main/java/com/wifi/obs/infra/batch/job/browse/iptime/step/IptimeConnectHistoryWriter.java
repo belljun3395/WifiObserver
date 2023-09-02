@@ -85,7 +85,7 @@ public class IptimeConnectHistoryWriter implements ItemWriter<IptimeOnConnectUse
 
 			log.debug("=== saveIfFilteredConnectedDeviceHasNoHistory ===");
 			for (DeviceEntity device : filteredConnectedDevices) {
-				saveIfFilteredConnectedDeviceHasNoHistory(hasConnectHistoryDevices, service, device);
+				saveIfFilteredConnectedDeviceHasNoHistory(device, hasConnectHistoryDevices, service);
 			}
 
 			List<ConnectHistoryEntity> disConnectDevicesHistories =
@@ -133,11 +133,13 @@ public class IptimeConnectHistoryWriter implements ItemWriter<IptimeOnConnectUse
 	}
 
 	private void saveIfFilteredConnectedDeviceHasNoHistory(
-			List<DeviceEntity> hasConnectHistoryDevices, WifiServiceEntity service, DeviceEntity device) {
-		if (!hasConnectHistoryDevices.contains(device)) {
+			DeviceEntity filteredConnectedDevice,
+			List<DeviceEntity> hasConnectHistoryDevices,
+			WifiServiceEntity service) {
+		if (!hasConnectHistoryDevices.contains(filteredConnectedDevice)) {
 			connectHistoryRepository.save(
 					ConnectHistoryEntity.builder()
-							.device(device)
+							.device(filteredConnectedDevice)
 							.wifiService(service)
 							.startTime(LocalDateTime.now())
 							.build());
