@@ -47,7 +47,7 @@ public class GetIptimeUsersService {
 
 		List<UserInfo> userInfos =
 				usersInfo.stream()
-						.map(u -> UserInfo.builder().mac(u.getUser()).build())
+						.map(userInfo -> UserInfo.builder().mac(userInfo.getUser()).build())
 						.collect(Collectors.toList());
 
 		return new OnConnectUserInfos(userInfos);
