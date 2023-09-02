@@ -10,4 +10,4 @@ spring:
       - client-jsoup-local
       - client-thread-local
       - client-wifi
-      - slack
+      - slack-local
