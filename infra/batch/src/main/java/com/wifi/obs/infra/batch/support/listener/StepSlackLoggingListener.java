@@ -31,7 +31,7 @@ public class StepSlackLoggingListener implements StepExecutionListener {
 					"step failed : " + stepExecution.getStepName(), SlackChannel.ERROR);
 		}
 
-		if (pendingMessageList.size() == 6) {
+		if (pendingMessageList.size() == 6 || LocalDateTime.now().getMinute() == 0) {
 			addStepCompleteMessage(stepExecution);
 			sendPendingMessages();
 		} else {
