@@ -103,6 +103,7 @@ public class GetServiceStetFacadeUseCase {
 				DeviceStetInfo stetInfo =
 						DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
 				deviceStetInfos.add(stetInfo);
+				continue;
 			}
 
 			DeviceStetInfo stetInfo =
