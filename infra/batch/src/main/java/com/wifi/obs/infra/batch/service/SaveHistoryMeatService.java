@@ -81,7 +81,7 @@ public class SaveHistoryMeatService {
 			// 해당 달의 최근 접속 기록을 바탕으로 당일 접속 기록 메타 데이터 생성
 			connectHistoryMetaRepository.save(
 					ConnectHistoryMetaEntity.builder()
-							.connectedTimeOnDay(history.getConnectedTimeOnDay() + durationTime)
+							.connectedTimeOnDay(durationTime)
 							.connectedTimeOnMonth(history.getConnectedTimeOnMonth() + durationTime)
 							.month(history.getMonth())
 							.day((long) now.getDayOfMonth())
