@@ -5,7 +5,7 @@ import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeAuthProcessor;
 import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeBrowseProcessor;
 import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeConnectHistoryWriter;
-import com.wifi.obs.infra.batch.support.listener.StepSlackLoggingListener;
+import com.wifi.obs.infra.batch.support.listener.BrowseStepSlackLoggingListener;
 import com.wifi.obs.infra.batch.support.param.TimeStamper;
 import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import java.util.List;
@@ -40,7 +40,7 @@ public class IptimeBrowseConfig {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final TimeStamper timeStamper;
-	private final StepSlackLoggingListener stepSlackLoggingListener;
+	private final BrowseStepSlackLoggingListener browseStepSlackLoggingListener;
 
 	private final IptimeAuthProcessor iptimeAuthProcessor;
 	private final IptimeBrowseProcessor iptimeBrowseProcessor;
@@ -81,7 +81,7 @@ public class IptimeBrowseConfig {
 				.processor(iptimeClientProcessor())
 				.writer(iptimeConnectHistoryWriter)
 				.transactionManager(transactionManager)
-				.listener(stepSlackLoggingListener)
+				.listener(browseStepSlackLoggingListener)
 				.build();
 	}
 

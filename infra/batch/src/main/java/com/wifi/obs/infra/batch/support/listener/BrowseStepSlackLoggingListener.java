@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class StepSlackLoggingListener implements StepExecutionListener {
+public class BrowseStepSlackLoggingListener implements StepExecutionListener {
 
-	private static List<String> pendingMessageList = new ArrayList<>();
+	private static List<String> borwseStepPendingMessageList = new ArrayList<>();
 
 	private final SlackService slackService;
 
@@ -31,28 +31,31 @@ public class StepSlackLoggingListener implements StepExecutionListener {
 					"step failed : " + stepExecution.getStepName(), SlackChannel.ERROR);
 		}
 
-		if (pendingMessageList.size() == 6 || LocalDateTime.now().getMinute() == 0) {
-			addStepCompleteMessage(stepExecution);
+		addStepCompleteMessage(stepExecution);
+		if (LocalDateTime.now().getMinute() == 0) {
 			sendPendingMessages();
-		} else {
-			addStepCompleteMessage(stepExecution);
 		}
 
 		return stepExecution.getExitStatus();
 	}
 
-	private void addStepCompleteMessage(StepExecution stepExecution) {
+	private String getStepCompleteMessage(StepExecution stepExecution) {
 		LocalDateTime now = LocalDateTime.now();
 		String stepCompleteMessage =
 				String.format(
 						"[%d:%d] %s is completed.",
 						now.getHour(), now.getMinute(), stepExecution.getStepName());
-		pendingMessageList.add(stepCompleteMessage);
+		return stepCompleteMessage;
+	}
+
+	private void addStepCompleteMessage(StepExecution stepExecution) {
+		String stepCompleteMessage = getStepCompleteMessage(stepExecution);
+		borwseStepPendingMessageList.add(stepCompleteMessage);
 	}
 
 	private void sendPendingMessages() {
-		String content = String.join("\n", pendingMessageList);
+		String content = String.join("\n", borwseStepPendingMessageList);
 		slackService.sendSlackMessage(content, SlackChannel.BATCH);
-		pendingMessageList.clear();
+		borwseStepPendingMessageList.clear();
 	}
 }
