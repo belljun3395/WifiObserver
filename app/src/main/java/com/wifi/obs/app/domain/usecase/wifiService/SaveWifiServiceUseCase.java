@@ -12,9 +12,7 @@ import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.repository.wifi.auth.WifiAuthRepository;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
-import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -102,13 +100,8 @@ public class SaveWifiServiceUseCase {
 
 	private void validateRequestAuthProcess(SaveServiceRequest request) {
 		if (request.getType().equals(ServiceType.IPTIME)) {
-			Optional<AuthInfo> authInfo =
-					postIptimeAuthService.execute(
-							request.getHost(), request.getCertification(), request.getPassword());
-
-			if (authInfo.isEmpty()) {
-				throw new RuntimeException("인증에 실패하였습니다.");
-			}
+			postIptimeAuthService.execute(
+					request.getHost(), request.getCertification(), request.getPassword());
 		}
 	}
 }
