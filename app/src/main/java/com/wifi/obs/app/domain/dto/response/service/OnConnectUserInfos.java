@@ -1,12 +1,10 @@
 package com.wifi.obs.app.domain.dto.response.service;
 
 import java.util.List;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
-@Getter
-@ToString
+@Data // beta 때문에 추가
 @RequiredArgsConstructor
 public class OnConnectUserInfos {
 
