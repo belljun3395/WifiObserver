@@ -16,6 +16,7 @@ import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.app.web.dto.request.device.DeleteDeviceRequest;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.app.web.dto.request.device.SaveDeviceRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,14 +42,16 @@ public class DeviceController {
 	private final GetDeviceStetFacadeUseCase getDeviceStetFacadeUseCase;
 
 	@PostMapping
-	public ApiResponse<ApiResponse.SuccessBody<Void>> save(@RequestBody SaveDeviceRequest request) {
+	public ApiResponse<ApiResponse.SuccessBody<Void>> save(
+			@RequestBody @Valid SaveDeviceRequest request) {
 		Long memberId = MemberIdAuditHolder.get();
 		saveDeviceUseCase.execute(memberId, request);
 		return ApiResponseGenerator.success(HttpStatus.CREATED);
 	}
 
 	@PatchMapping
-	public ApiResponse<ApiResponse.SuccessBody<Void>> edit(@RequestBody PatchDeviceRequest request) {
+	public ApiResponse<ApiResponse.SuccessBody<Void>> edit(
+			@RequestBody @Valid PatchDeviceRequest request) {
 		Long memberId = MemberIdAuditHolder.get();
 		patchDeviceUseCase.execute(memberId, request);
 		return ApiResponseGenerator.success(HttpStatus.CREATED);
@@ -56,7 +59,7 @@ public class DeviceController {
 
 	@DeleteMapping
 	public ApiResponse<ApiResponse.SuccessBody<Void>> delete(
-			@RequestBody DeleteDeviceRequest request) {
+			@RequestBody @Valid DeleteDeviceRequest request) {
 		Long memberId = MemberIdAuditHolder.get();
 		deleteDeviceUseCase.execute(memberId, request);
 		return ApiResponseGenerator.success(HttpStatus.NO_CONTENT);

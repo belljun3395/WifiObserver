@@ -16,6 +16,7 @@ import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.app.web.dto.request.service.DeleteServiceRequest;
 import com.wifi.obs.app.web.dto.request.service.SaveServiceRequest;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,8 @@ public class WifiServiceController {
 	private final GetServiceStetFacadeUseCase getServiceStetFacadeUseCase;
 
 	@PostMapping
-	public ApiResponse<ApiResponse.SuccessBody<Void>> save(@RequestBody SaveServiceRequest request) {
+	public ApiResponse<ApiResponse.SuccessBody<Void>> save(
+			@RequestBody @Valid SaveServiceRequest request) {
 		Long memberId = MemberIdAuditHolder.get();
 		saveWifiServiceUseCase.execute(memberId, request);
 		return ApiResponseGenerator.success(HttpStatus.CREATED);
@@ -47,7 +49,7 @@ public class WifiServiceController {
 
 	@DeleteMapping
 	public ApiResponse<ApiResponse.SuccessBody<Void>> delete(
-			@RequestBody DeleteServiceRequest request) {
+			@RequestBody @Valid DeleteServiceRequest request) {
 		Long memberId = MemberIdAuditHolder.get();
 		deleteWifiServiceUseCase.execute(memberId, request);
 		return ApiResponseGenerator.success(HttpStatus.OK);

@@ -7,6 +7,7 @@ import com.wifi.obs.app.support.ApiResponse;
 import com.wifi.obs.app.support.ApiResponseGenerator;
 import com.wifi.obs.app.support.context.MemberIdAuditHolder;
 import com.wifi.obs.app.web.dto.request.member.SaveMemberRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ public class MemberController {
 
 	@PostMapping
 	public ApiResponse<ApiResponse.SuccessBody<SavedMemberInfo>> save(
-			@RequestBody SaveMemberRequest request) {
+			@RequestBody @Valid SaveMemberRequest request) {
 		SavedMemberInfo res = saveMemberUseCase.execute(request);
 		return ApiResponseGenerator.success(res, HttpStatus.CREATED);
 	}
