@@ -73,6 +73,7 @@ class WifiServiceControllerTest {
 						.type(ServiceType.IPTIME)
 						.cycle(10L)
 						.host("192.168.0.1")
+						.port(8080L)
 						.certification("id")
 						.password("password")
 						.build();
