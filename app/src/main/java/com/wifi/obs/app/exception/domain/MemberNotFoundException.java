@@ -1,7 +1,6 @@
-package com.wifi.obs.app.exception;
+package com.wifi.obs.app.exception.domain;
 
-/** accessToken 의 memberId 로 회원 조회 실패시 발생하는 예외 */
-public class MemberNotFoundException extends RuntimeException {
+public class MemberNotFoundException extends DomainException {
 	private final Long memberId;
 
 	public MemberNotFoundException(Long memberId) {
