@@ -72,13 +72,13 @@ class WifiServiceControllerTest {
 				SaveServiceRequest.builder()
 						.type(ServiceType.IPTIME)
 						.cycle(10L)
-						.host("000.000.000.000:0000")
+						.host("192.168.0.1")
 						.certification("id")
 						.password("password")
 						.build();
 
 		String content =
-				"{\"type\":\"ip\",\"cycle\":10,\"host\":\"000.000.000.000:0000\",\"certification\":\"id\",\"password\":\"password\"}";
+				"{\"type\":\"ip\",\"cycle\":10,\"host\":\"192.168.0.1\",\"certification\":\"id\",\"password\":\"password\"}";
 
 		mockMvc
 				.perform(
