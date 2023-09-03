@@ -8,5 +8,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface WifiAuthJpaRepository extends JpaRepository<WifiAuthEntity, Long> {
 
-	Optional<WifiAuthEntity> findByHost(String host);
+	Optional<WifiAuthEntity> findByHostAndDeletedFalse(String host);
 }

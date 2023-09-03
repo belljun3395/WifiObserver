@@ -14,5 +14,5 @@ public interface DeviceJpaRepository extends JpaRepository<DeviceEntity, Long> {
 
 	List<DeviceEntity> findAllByWifiServiceAndDeletedFalse(WifiServiceEntity wifiService);
 
-	Optional<DeviceEntity> findByMac(String mac);
+	Optional<DeviceEntity> findByMacAndDeletedFalse(String mac);
 }

@@ -116,13 +116,15 @@ public class IptimeConnectHistoryWriter implements ItemWriter<IptimeOnConnectUse
 
 	private List<WifiAuthEntity> getAuths(List<? extends IptimeOnConnectUserInfosResponse> items) {
 		return items.stream()
-				.map(response -> wifiAuthRepository.findByHost(response.getHost()).orElse(null))
+				.map(
+						response ->
+								wifiAuthRepository.findByHostAndDeletedFalse(response.getHost()).orElse(null))
 				.collect(Collectors.toList());
 	}
 
 	private List<WifiServiceEntity> getServices(List<WifiAuthEntity> auths) {
 		return auths.stream()
-				.map(auth -> wifiServiceRepository.findByWifiAuthEntity(auth).get())
+				.map(auth -> wifiServiceRepository.findByWifiAuthEntityAndDeletedFalse(auth).get())
 				.collect(Collectors.toList());
 	}
 

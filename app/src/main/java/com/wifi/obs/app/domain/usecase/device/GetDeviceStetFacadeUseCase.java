@@ -32,7 +32,7 @@ public class GetDeviceStetFacadeUseCase {
 
 		DeviceEntity device =
 				deviceRepository
-						.findByMac(mac)
+						.findByMacAndDeletedFalse(mac)
 						.orElseThrow(() -> new RuntimeException("해당 디바이스가 존재하지 않습니다."));
 
 		if (!member.getId().equals(device.getWifiService().getMember().getId())) {
