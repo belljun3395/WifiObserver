@@ -79,7 +79,10 @@ class MemberControllerTest {
 	void deleteMember() throws Exception {
 
 		mockMvc
-				.perform(delete(BASE_URL, 0).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						delete(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -88,6 +91,8 @@ class MemberControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("회원 탈퇴")
 												.tag(TAG)
+												.requestSchema(Schema.schema("DeleteMemberRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("DeleteMemberResponse"))
 												.responseFields(Description.success(MemberDescription.deleteMember()))
 												.build())));

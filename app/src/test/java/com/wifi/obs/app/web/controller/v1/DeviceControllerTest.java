@@ -75,7 +75,11 @@ class DeviceControllerTest {
 		String content = objectMapper.writeValueAsString(request);
 
 		mockMvc
-				.perform(post(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						post(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.content(content)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -84,6 +88,8 @@ class DeviceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("장치 등록")
 												.tag(TAG)
+												.requestSchema(Schema.schema("SaveDeviceRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("SaveDeviceResponse"))
 												.responseFields(Description.success(DeviceDescription.saveDevice()))
 												.build())));
@@ -97,7 +103,11 @@ class DeviceControllerTest {
 		String content = objectMapper.writeValueAsString(request);
 
 		mockMvc
-				.perform(patch(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						patch(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.content(content)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -106,6 +116,8 @@ class DeviceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("장치 수정")
 												.tag(TAG)
+												.requestSchema(Schema.schema("EditDeviceRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("EditDeviceResponse"))
 												.responseFields(Description.success(DeviceDescription.editDevice()))
 												.build())));
@@ -118,7 +130,11 @@ class DeviceControllerTest {
 		String content = objectMapper.writeValueAsString(request);
 
 		mockMvc
-				.perform(delete(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						delete(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.content(content)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -127,6 +143,8 @@ class DeviceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("장치 삭제")
 												.tag(TAG)
+												.requestSchema(Schema.schema("DeleteDeviceRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("DeleteDeviceResponse"))
 												.responseFields(Description.success(DeviceDescription.deleteDevice()))
 												.build())));
@@ -145,6 +163,7 @@ class DeviceControllerTest {
 				.perform(
 						get(BASE_URL + "/service/{serviceId}", 1)
 								.param("serviceId", "1")
+								.header("Authorization", "{{accessToken}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
@@ -156,6 +175,7 @@ class DeviceControllerTest {
 												.tag(TAG)
 												.requestSchema(Schema.schema("BrowseServiceDeviceRequest"))
 												.pathParameters(parameterWithName("serviceId").description("서비스 id"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("BrowseServiceDeviceResponse"))
 												.responseFields(
 														Description.success(DeviceDescription.browseServiceDevice()))
@@ -173,6 +193,7 @@ class DeviceControllerTest {
 				.perform(
 						get(BASE_URL + "/connect", 1)
 								.param("mac", "00:00:00:00:00:00")
+								.header("Authorization", "{{accessToken}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
@@ -184,6 +205,7 @@ class DeviceControllerTest {
 												.tag(TAG)
 												.requestSchema(Schema.schema("IsConnectDeviceRequest"))
 												.requestParameters(parameterWithName("mac").description("mac 주소"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("IsConnectDeviceResponse"))
 												.responseFields(Description.success(DeviceDescription.isConnectDevice()))
 												.build())));
@@ -201,6 +223,7 @@ class DeviceControllerTest {
 						get(BASE_URL + "/statistics", 2)
 								.param("mac", "00:00:00:00:00:00")
 								.param("type", StetType.DAY.toString())
+								.header("Authorization", "{{accessToken}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
@@ -214,6 +237,7 @@ class DeviceControllerTest {
 												.requestParameters(
 														parameterWithName("mac").description("mac 주소"),
 														parameterWithName("type").description("통계 타입"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("DeviceStetResponse"))
 												.responseFields(Description.success(DeviceDescription.deviceStet()))
 												.build())));

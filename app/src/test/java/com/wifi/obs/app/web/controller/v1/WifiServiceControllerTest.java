@@ -81,7 +81,11 @@ class WifiServiceControllerTest {
 				"{\"type\":\"ip\",\"cycle\":10,\"host\":\"000.000.000.000:0000\",\"certification\":\"id\",\"password\":\"password\"}";
 
 		mockMvc
-				.perform(post(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						post(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.content(content)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -90,6 +94,8 @@ class WifiServiceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("서비스 등록")
 												.tag(TAG)
+												.requestSchema(Schema.schema("SaveServiceRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("SaveServiceResponse"))
 												.responseFields(Description.success(ServiceDescription.saveService()))
 												.build())));
@@ -102,7 +108,11 @@ class WifiServiceControllerTest {
 		String content = objectMapper.writeValueAsString(request);
 
 		mockMvc
-				.perform(delete(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						delete(BASE_URL, 0)
+								.header("Authorization", "{{accessToken}}")
+								.content(content)
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -111,6 +121,8 @@ class WifiServiceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("서비스 해지")
 												.tag(TAG)
+												.requestSchema(Schema.schema("DeleteServiceRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("DeleteServiceResponse"))
 												.responseFields(Description.success(ServiceDescription.deleteService()))
 												.build())));
@@ -142,7 +154,10 @@ class WifiServiceControllerTest {
 		WifiServiceInfos res = new WifiServiceInfos(List.of(info, info));
 		when(getWifiServiceInfoUseCase.execute(anyLong())).thenReturn(res);
 		mockMvc
-				.perform(get(BASE_URL + "/service", 0).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						get(BASE_URL + "/service", 0)
+								.header("Authorization", "{{accessToken}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -151,6 +166,8 @@ class WifiServiceControllerTest {
 										ResourceSnippetParameters.builder()
 												.description("서비스 정보 조회")
 												.tag(TAG)
+												.requestSchema(Schema.schema("BrowseServiceInfoRequest"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("BrowseServiceInfoResponse"))
 												.responseFields(
 														Description.success(ServiceDescription.browseServiceInfos()))
@@ -170,6 +187,7 @@ class WifiServiceControllerTest {
 						get(BASE_URL + "/users", 2)
 								.param("sid", "1")
 								.param("ft", "true")
+								.header("Authorization", "{{accessToken}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
@@ -183,6 +201,7 @@ class WifiServiceControllerTest {
 												.requestParameters(
 														parameterWithName("sid").description("서비스 아이디"),
 														parameterWithName("ft").description("등록 기기 필터링").optional())
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("BrowseUsersResponse"))
 												.responseFields(Description.success(ServiceDescription.browseUsers()))
 												.build())));
@@ -195,7 +214,10 @@ class WifiServiceControllerTest {
 
 		mockMvc
 				.perform(
-						get(BASE_URL + "/health", 1).param("sid", "1").contentType(MediaType.APPLICATION_JSON))
+						get(BASE_URL + "/health", 1)
+								.param("sid", "1")
+								.header("Authorization", "{{accessToken}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -206,6 +228,7 @@ class WifiServiceControllerTest {
 												.tag(TAG)
 												.requestSchema(Schema.schema("HealthServiceRequest"))
 												.requestParameters(parameterWithName("sid").description("서비스 아이디"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("HealthServiceResponse"))
 												.responseFields(Description.success(ServiceDescription.health()))
 												.build())));
@@ -225,6 +248,7 @@ class WifiServiceControllerTest {
 						get(BASE_URL + "/statistics", 2)
 								.param("sid", "1")
 								.param("type", StetType.DAY.getCode())
+								.header("Authorization", "{{accessToken}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
@@ -238,6 +262,7 @@ class WifiServiceControllerTest {
 												.requestParameters(
 														parameterWithName("sid").description("서비스 아이디"),
 														parameterWithName("type").description("통계 타입"))
+												.requestHeaders(Description.authHeader())
 												.responseSchema(Schema.schema("ServiceStetResponse"))
 												.responseFields(Description.success(ServiceDescription.serviceStet()))
 												.build())));
