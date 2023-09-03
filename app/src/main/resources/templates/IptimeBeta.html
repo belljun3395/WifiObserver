@@ -32,6 +32,11 @@
     </div>
 
     <div>
+      <label th:for> Iptime Wifi 주소 포트 </label>
+      <input type="text"  th:field="${request.port}" placeholder="ex) xxxx" class="form-control mb-4 col-4" />
+    </div>
+
+    <div>
       <label th:for> Iptime Wifi 로그인 이름 </label>
       <input type="text" th:field="${request.certification}" placeholder="Iptime Wifi 설정 페이지 로그인 이름" class="form-control mb-4 col-4">
       <p class="fieldError" th:if = "${#fields.hasErrors('certification')}"> 이름을 채워주세요</p>
