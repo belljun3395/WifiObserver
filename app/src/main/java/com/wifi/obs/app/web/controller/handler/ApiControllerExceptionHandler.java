@@ -1,7 +1,8 @@
 package com.wifi.obs.app.web.controller.handler;
 
-import com.wifi.obs.app.exception.MemberNotFoundException;
 import com.wifi.obs.app.exception.ResourceNotFoundException;
+import com.wifi.obs.app.exception.domain.DomainException;
+import com.wifi.obs.app.exception.domain.MemberNotFoundException;
 import com.wifi.obs.app.support.ApiResponse;
 import com.wifi.obs.app.support.ApiResponseGenerator;
 import java.nio.file.AccessDeniedException;
@@ -81,6 +82,13 @@ public class ApiControllerExceptionHandler {
 			final AccessDeniedException ex, final HttpServletRequest request) {
 		loggingHandler.writeLog(ex, request);
 		return ApiResponseGenerator.fail(FAIL_CODE, FORBIDDEN_MESSAGE, HttpStatus.FORBIDDEN);
+	}
+
+	@ExceptionHandler({DomainException.class})
+	public ApiResponse<ApiResponse.FailureBody> handleDomain(
+			final DomainException ex, final HttpServletRequest request) {
+		loggingHandler.writeLog(ex, request);
+		return ApiResponseGenerator.fail(FAIL_CODE, ex.getMessage(), HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler({MemberNotFoundException.class})
