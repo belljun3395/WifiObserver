@@ -2,6 +2,7 @@ package com.wifi.obs.app.domain.service.wifi.iptime;
 
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
+import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
@@ -34,15 +35,14 @@ public class GetIptimeUsersService {
 								.password(authInfo.getPassword())
 								.build());
 
-		AuthInfo auth =
-				authResponse.getResponse().orElseThrow(() -> new RuntimeException("인증에 실패했습니다."));
+		AuthInfo auth = authResponse.getResponse().orElseThrow(ClientProblemException::new);
 
 		com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos res =
 				iptimeBrowseClient
 						.query(
 								IptimeBrowseRequest.builder().authInfo(auth.getInfo()).host(auth.getHost()).build())
 						.getResponse()
-						.orElseThrow(() -> new RuntimeException("조회에 실패했습니다."));
+						.orElseThrow(ClientProblemException::new);
 
 		List<OnConnectUserInfo> usersInfo = res.getUsers();
 
@@ -71,7 +71,7 @@ public class GetIptimeUsersService {
 						.query(
 								IptimeBrowseRequest.builder().authInfo(auth.getInfo()).host(auth.getHost()).build())
 						.getResponse()
-						.orElseThrow(() -> new RuntimeException("조회에 실패했습니다."));
+						.orElseThrow(ClientProblemException::new);
 
 		List<OnConnectUserInfo> usersInfo = res.getUsers();
 

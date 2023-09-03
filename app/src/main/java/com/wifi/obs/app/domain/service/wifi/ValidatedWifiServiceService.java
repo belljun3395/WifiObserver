@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.service.wifi;
 
+import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
@@ -19,6 +20,6 @@ public class ValidatedWifiServiceService {
 	public WifiServiceEntity execute(Long wifiServiceId) {
 		return wifiServiceRepository
 				.findById(wifiServiceId)
-				.orElseThrow(() -> new RuntimeException("존재하지 않는 서비스입니다."));
+				.orElseThrow(() -> new ServiceNotFoundException(wifiServiceId));
 	}
 }

@@ -4,6 +4,7 @@ import com.wifi.obs.app.domain.service.device.DeleteDeviceService;
 import com.wifi.obs.app.domain.service.wifi.BrowseWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.DeleteWifiAuthService;
 import com.wifi.obs.app.domain.service.wifi.DeleteWifiServiceService;
+import com.wifi.obs.app.exception.domain.MemberNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
@@ -33,7 +34,7 @@ public class DeleteMemberUseCase {
 		MemberEntity member =
 				memberRepository
 						.findById(memberId)
-						.orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+						.orElseThrow(() -> new MemberNotFoundException(memberId));
 
 		List<WifiServiceEntity> services = browseWifiServiceService.execute(member);
 		List<WifiAuthEntity> auths =

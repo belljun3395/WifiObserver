@@ -2,6 +2,9 @@ package com.wifi.obs.app.domain.usecase.device;
 
 import com.wifi.obs.app.domain.dto.response.device.DeviceStetInfo;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
+import com.wifi.obs.app.exception.domain.BadTypeRequestException;
+import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
@@ -33,10 +36,10 @@ public class GetDeviceStetFacadeUseCase {
 		DeviceEntity device =
 				deviceRepository
 						.findByMacAndDeletedFalse(mac)
-						.orElseThrow(() -> new RuntimeException("해당 디바이스가 존재하지 않습니다."));
+						.orElseThrow(() -> new DeviceNotFoundException(mac));
 
 		if (!member.getId().equals(device.getWifiService().getMember().getId())) {
-			throw new RuntimeException("해당 디바이스는 회원의 디바이스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 
 		LocalDateTime now = LocalDateTime.now();
@@ -49,7 +52,7 @@ public class GetDeviceStetFacadeUseCase {
 			return getDayDeviceStetInfo(device, now);
 		}
 
-		throw new RuntimeException("잘못된 요청입니다.");
+		throw new BadTypeRequestException();
 	}
 
 	private DeviceStetInfo getMonthDeviceStetInfo(DeviceEntity device, LocalDateTime now) {

@@ -3,6 +3,10 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 import com.wifi.obs.app.domain.dto.response.device.DeviceStetInfo;
 import com.wifi.obs.app.domain.dto.response.service.ServiceDeviceStetInfos;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
+import com.wifi.obs.app.exception.domain.BadTypeRequestException;
+import com.wifi.obs.app.exception.domain.ClientProblemException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
+import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
@@ -35,14 +39,14 @@ public class GetServiceStetFacadeUseCase {
 		WifiServiceEntity service =
 				wifiServiceRepository
 						.findById(serviceId)
-						.orElseThrow(() -> new RuntimeException("존재하지 않는 서비스입니다."));
+						.orElseThrow(() -> new ServiceNotFoundException(serviceId));
 
 		if (service.getStatus().equals(WifiStatus.ERROR)) {
-			throw new RuntimeException("서비스에 문제가 있습니다.");
+			throw new ClientProblemException();
 		}
 
 		if (!memberId.equals(service.getMember().getId())) {
-			throw new RuntimeException("해당 서비스는 회원의 서비스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 
 		LocalDateTime now = LocalDateTime.now();
@@ -58,7 +62,7 @@ public class GetServiceStetFacadeUseCase {
 			return getDayServiceDeviceStetInfos(devices, deviceStetInfos, serviceId, now);
 		}
 
-		throw new RuntimeException("잘못된 요청입니다.");
+		throw new BadTypeRequestException();
 	}
 
 	private ServiceDeviceStetInfos getMonthServiceDeviceStetInfos(

@@ -3,6 +3,9 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeHealthService;
 import com.wifi.obs.app.domain.service.wifi.iptime.PostIptimeAuthService;
+import com.wifi.obs.app.exception.domain.ClientProblemException;
+import com.wifi.obs.app.exception.domain.IncludeNotAllowHostNumberException;
+import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.service.SaveServiceRequest;
 import com.wifi.obs.app.web.dto.request.service.ServiceType;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -70,7 +73,7 @@ public class SaveWifiServiceUseCase {
 						MemberEntity.builder().id(memberId).build());
 
 		if (services.size() >= maxServiceCount) {
-			throw new RuntimeException("더 이상 서비스를 신청할 수 없습니다.");
+			throw new OverLimitException();
 		}
 	}
 
@@ -84,7 +87,7 @@ public class SaveWifiServiceUseCase {
 		String hostFirstPart = StringUtils.substringBefore(host, ".");
 
 		if (NOT_ALLOW_HOST_FIRST_PART.contains(hostFirstPart)) {
-			throw new RuntimeException("해당 주소는 사용할 수 없습니다.");
+			throw new IncludeNotAllowHostNumberException(hostFirstPart);
 		}
 	}
 
@@ -93,7 +96,7 @@ public class SaveWifiServiceUseCase {
 			HttpStatus requestStatus = getIptimeHealthService.execute(host);
 
 			if (requestStatus != HttpStatus.OK) {
-				throw new RuntimeException("해당 주소에 접속할 수 없습니다.");
+				throw new ClientProblemException();
 			}
 		}
 	}

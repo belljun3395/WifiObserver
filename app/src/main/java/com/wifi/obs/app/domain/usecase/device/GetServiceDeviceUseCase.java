@@ -6,6 +6,7 @@ import com.wifi.obs.app.domain.dto.response.device.ServiceDeviceInfo;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
@@ -35,7 +36,7 @@ public class GetServiceDeviceUseCase {
 		WifiServiceEntity service = validatedWifiServiceService.execute(serviceId);
 
 		if (!memberId.equals(service.getMember().getId())) {
-			throw new RuntimeException("해당 서비스는 회원의 서비스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 
 		List<DeviceInfo> devices =

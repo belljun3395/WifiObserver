@@ -1,6 +1,8 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
 import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeHealthService;
+import com.wifi.obs.app.exception.domain.BadTypeRequestException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
@@ -28,7 +30,7 @@ public class GetHealthStatusUseCase {
 						.orElseThrow(() -> new RuntimeException("존재하지 않는 서비스입니다."));
 
 		if (!memberId.equals(service.getMember().getId())) {
-			throw new RuntimeException("해당 서비스는 회원의 서비스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 
 		WifiServiceType serviceType = service.getServiceType();
@@ -38,6 +40,6 @@ public class GetHealthStatusUseCase {
 			return getIptimeHealthService.execute(host);
 		}
 
-		throw new RuntimeException("지원하지 않는 서비스입니다.");
+		throw new BadTypeRequestException();
 	}
 }

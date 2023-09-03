@@ -2,6 +2,7 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 
 import com.wifi.obs.app.domain.service.device.DeleteDeviceService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.web.dto.request.service.DeleteServiceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
@@ -44,7 +45,7 @@ public class DeleteWifiServiceUseCase {
 
 			wifiServiceRepository.deleteById(service.getId());
 		} else {
-			throw new RuntimeException("해당 서비스는 회원의 서비스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 	}
 

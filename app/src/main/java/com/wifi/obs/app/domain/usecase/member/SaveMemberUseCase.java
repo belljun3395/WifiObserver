@@ -1,6 +1,7 @@
 package com.wifi.obs.app.domain.usecase.member;
 
 import com.wifi.obs.app.domain.dto.response.member.SavedMemberInfo;
+import com.wifi.obs.app.exception.domain.NotMatchPasswordException;
 import com.wifi.obs.app.security.authentication.authority.Roles;
 import com.wifi.obs.app.support.token.AuthToken;
 import com.wifi.obs.app.support.token.TokenGenerator;
@@ -49,7 +50,7 @@ public class SaveMemberUseCase {
 
 	private void validateRequestPassword(String request, String source) {
 		if (!source.equals(request)) {
-			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+			throw new NotMatchPasswordException();
 		}
 	}
 

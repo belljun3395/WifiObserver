@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.service.wifi.iptime;
 
+import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
@@ -19,6 +20,6 @@ public class PostIptimeAuthService {
 				.command(
 						IptimeAuthRequest.builder().host(host).userName(userName).password(password).build())
 				.getResponse()
-				.orElseThrow(() -> new RuntimeException("인증에 실패했습니다."));
+				.orElseThrow(ClientProblemException::new);
 	}
 }

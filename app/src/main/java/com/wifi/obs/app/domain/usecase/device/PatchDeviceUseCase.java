@@ -2,6 +2,9 @@ package com.wifi.obs.app.domain.usecase.device;
 
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
+import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
+import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
@@ -31,7 +34,7 @@ public class PatchDeviceUseCase {
 		DeviceEntity device =
 				deviceRepository
 						.findById(request.getDeviceId())
-						.orElseThrow(() -> new RuntimeException("존재하지 않는 기기입니다."));
+						.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
 
 		if (request.getChangeServiceId().equals(device.getWifiService().getId())) {
 			return;
@@ -41,7 +44,7 @@ public class PatchDeviceUseCase {
 				validatedWifiServiceService.execute(request.getChangeServiceId());
 
 		if (memberId.equals(changeTargetService.getMember().getId())) {
-			throw new RuntimeException("해당 서비스는 회원의 서비스가 아닙니다.");
+			throw new NotMatchInformationException();
 		}
 
 		validateServiceDeviceCount(changeTargetService, member.getStatus().getMaxDeviceCount());
@@ -53,7 +56,7 @@ public class PatchDeviceUseCase {
 		int savedDeviceCount = deviceRepository.findAllByWifiServiceAndDeletedFalse(service).size();
 
 		if (savedDeviceCount >= maxDeviceCount) {
-			throw new RuntimeException("서비스에 더 이상 기기를 추가할 수 없습니다.");
+			throw new OverLimitException();
 		}
 	}
 }
