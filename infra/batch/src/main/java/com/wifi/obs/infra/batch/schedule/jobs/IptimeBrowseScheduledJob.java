@@ -1,6 +1,8 @@
 package com.wifi.obs.infra.batch.schedule.jobs;
 
 import com.wifi.obs.infra.batch.job.browse.iptime.IptimeBrowseConfig;
+import com.wifi.obs.infra.slack.config.SlackChannel;
+import com.wifi.obs.infra.slack.service.SlackService;
 import org.quartz.JobExecutionContext;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -17,14 +19,17 @@ public class IptimeBrowseScheduledJob extends QuartzJobBean {
 	private final Job job;
 	private final JobExplorer jobExplorer;
 	private final JobLauncher jobLauncher;
+	private final SlackService slackService;
 
 	public IptimeBrowseScheduledJob(
 			@Qualifier(value = IptimeBrowseConfig.JOB_NAME) Job job,
 			JobExplorer jobExplorer,
-			JobLauncher jobLauncher) {
+			JobLauncher jobLauncher,
+			SlackService slackService) {
 		this.job = job;
 		this.jobExplorer = jobExplorer;
 		this.jobLauncher = jobLauncher;
+		this.slackService = slackService;
 	}
 
 	@Override
@@ -35,6 +40,8 @@ public class IptimeBrowseScheduledJob extends QuartzJobBean {
 			this.jobLauncher.run(this.job, jobParameters);
 		} catch (Exception e) {
 			e.printStackTrace();
+			slackService.sendSlackMessage(
+					IptimeBrowseConfig.JOB_NAME + "\n" + e.getMessage(), SlackChannel.ERROR);
 		}
 	}
 }
