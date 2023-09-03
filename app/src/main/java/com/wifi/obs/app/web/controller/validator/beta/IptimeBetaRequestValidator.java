@@ -31,6 +31,10 @@ public class IptimeBetaRequestValidator implements Validator {
 			errors.rejectValue("password", "password.empty");
 		}
 
+		if (request.getPort() == null) {
+			errors.rejectValue("port", "port.empty");
+		}
+
 		if (!PATTERN_HOST.matcher(request.getHost()).matches()) {
 			errors.rejectValue("host", "host.invalid");
 		}
