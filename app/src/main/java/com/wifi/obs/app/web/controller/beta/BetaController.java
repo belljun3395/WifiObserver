@@ -6,7 +6,6 @@ import com.wifi.obs.app.web.controller.validator.beta.IptimeBetaRequestValidator
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -38,8 +37,7 @@ public class BetaController {
 	public String betaRequest(
 			@ModelAttribute("request") IptimeBetaRequest request,
 			BindingResult result,
-			RedirectAttributes redirectAttributes,
-			HttpServletResponse response) {
+			RedirectAttributes redirectAttributes) {
 		iptimeBetaRequestValidator.validate(request, result);
 		if (result.hasErrors()) {
 			List<String> errors =
@@ -47,7 +45,7 @@ public class BetaController {
 							.map(DefaultMessageSourceResolvable::getCode)
 							.collect(Collectors.toList());
 			redirectAttributes.addFlashAttribute("errors", errors);
-			return "redirect:/beta/iptime";
+			return "IptimeBeta.html";
 		} else {
 			try {
 				OnConnectUserInfos res = getIptimeUsersService.execute(request);
