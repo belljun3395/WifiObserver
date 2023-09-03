@@ -58,7 +58,7 @@ public class GetIptimeUsersService {
 		ClientResponse<AuthInfo> authResponse =
 				iptimeAuthClient.command(
 						IptimeAuthRequest.builder()
-								.host(request.getHost())
+								.host(request.getHost() + ":" + request.getPort())
 								.userName(request.getCertification())
 								.password(request.getPassword())
 								.build());
