@@ -79,7 +79,7 @@ class WifiServiceControllerTest {
 						.build();
 
 		String content =
-				"{\"type\":\"ip\",\"cycle\":10,\"host\":\"192.168.0.1\",\"certification\":\"id\",\"password\":\"password\"}";
+				"{\"type\":\"ip\",\"cycle\":10,\"host\":\"192.168.0.1\",\"port\":\"8080\",\"certification\":\"id\",\"password\":\"password\"}";
 
 		mockMvc
 				.perform(
