@@ -25,7 +25,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.wifi.obs.app.web.controller.v1")
 @RequiredArgsConstructor
 public class ApiControllerExceptionHandler {
 
