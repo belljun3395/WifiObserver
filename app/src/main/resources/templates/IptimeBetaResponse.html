@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta charset="ISO-8859-1">
+  <title>wifiobs</title>
+
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <br>
+  <h1>Iptime Wifi 조회 서비스 체험 페이지</h1>
+  <hr>
+  <h2>Iptime Wifi 결과</h2>
+
+  <br>
+
+  <tbody>
+  <tr th:unless="${userInfos}">
+    <td colspan="2"> Wifi를 사용하는 인원이 없습니다. </td>
+    <br>
+  </tr>
+  <tr th:each="userInfo : ${userInfos}">
+    <td><span th:text="${userInfo.mac}"> </span></td>
+    <br>
+  </tr>
+  </tbody>
+  <br>
+  <button type="button" class="btn btn-info col-2" th:onclick="|location.href='@{/beta/iptime}'|"> 뒤로가기 </button>
+</div>
+</body>
+</html>
