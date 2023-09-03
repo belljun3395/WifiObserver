@@ -4,6 +4,13 @@
 
 Wifi Observer 프로젝트는 2022-2에 진행하였던 [에코노 프로젝트](https://github.com/JNU-econovation/econo-forest-be-iptime)를 기반으로 하여, 더욱 발전시킨 프로젝트입니다.
 
+## 프로젝트 주요 코드
+
+프로젝트 주요 코드는 다음과 같습니다.
+
+- [Client 모듈](https://github.com/belljun3395/WifiObserver/pull/1)
+- [Batch 모듈](https://github.com/belljun3395/WifiObserver/pull/2)
+
 ---
 ## 프로젝트 설치 방법
 
