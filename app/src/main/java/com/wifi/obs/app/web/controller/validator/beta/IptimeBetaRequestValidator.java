@@ -1,7 +1,9 @@
 package com.wifi.obs.app.web.controller.validator.beta;
 
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
+import java.util.List;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -12,6 +14,8 @@ public class IptimeBetaRequestValidator implements Validator {
 	private static final Pattern PATTERN_HOST =
 			Pattern.compile(
 					"(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}");
+
+	private static final List<String> NOT_ALLOW_HOST_FIRST_PART = List.of("192", "10", "172");
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -36,6 +40,11 @@ public class IptimeBetaRequestValidator implements Validator {
 		}
 
 		if (!PATTERN_HOST.matcher(request.getHost()).matches()) {
+			errors.rejectValue("host", "host.invalid");
+		}
+
+		String hostFirstPart = StringUtils.substringBefore(request.getHost(), ".");
+		if (NOT_ALLOW_HOST_FIRST_PART.contains(hostFirstPart)) {
 			errors.rejectValue("host", "host.invalid");
 		}
 	}
