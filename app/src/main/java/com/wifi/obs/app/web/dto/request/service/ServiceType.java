@@ -5,14 +5,16 @@ import lombok.Getter;
 
 @Getter
 public enum ServiceType {
-	IPTIME("ip", "IPTIME");
+	IPTIME("ip", "IPTIME", "Iptime");
 
 	private String code;
 	private String name;
+	private String type;
 
-	ServiceType(String code, String type) {
+	ServiceType(String code, String name, String type) {
 		this.code = code;
-		this.name = type;
+		this.name = name;
+		this.type = type;
 	}
 
 	@JsonCreator

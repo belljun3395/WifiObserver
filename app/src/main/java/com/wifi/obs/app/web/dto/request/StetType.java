@@ -5,13 +5,15 @@ import lombok.Getter;
 
 @Getter
 public enum StetType {
-	MONTH("m"),
-	DAY("d");
+	MONTH("m", "Month"),
+	DAY("d", "Day");
 
-	private String code;
+	private final String code;
+	private final String type;
 
-	StetType(String code) {
+	StetType(String code, String type) {
 		this.code = code;
+		this.type = type;
 	}
 
 	@JsonCreator

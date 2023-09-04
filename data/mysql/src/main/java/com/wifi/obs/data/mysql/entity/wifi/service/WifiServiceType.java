@@ -4,5 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum WifiServiceType {
-	IPTIME;
+	IPTIME("Iptime");
+
+	private final String type;
+
+	WifiServiceType(String type) {
+		this.type = type;
+	}
 }
