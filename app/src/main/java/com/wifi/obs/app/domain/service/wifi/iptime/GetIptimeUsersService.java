@@ -2,6 +2,7 @@ package com.wifi.obs.app.domain.service.wifi.iptime;
 
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
+import com.wifi.obs.app.domain.service.wifi.GetUsersService;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetIptimeUsersService {
+public class GetIptimeUsersService implements GetUsersService {
 
 	private final IptimeAuthClientImpl iptimeAuthClient;
 	private final IptimeBrowseClientImpl iptimeBrowseClient;
