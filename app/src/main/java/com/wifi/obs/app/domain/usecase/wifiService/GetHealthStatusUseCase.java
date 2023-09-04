@@ -3,6 +3,7 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 import com.wifi.obs.app.domain.service.wifi.GetHealthService;
 import com.wifi.obs.app.exception.domain.BadTypeRequestException;
 import com.wifi.obs.app.exception.domain.NotMatchInformationException;
+import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
@@ -26,9 +27,7 @@ public class GetHealthStatusUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public HttpStatus execute(Long memberId, Long sid) {
 		WifiServiceEntity service =
-				wifiServiceRepository
-						.findById(sid)
-						.orElseThrow(() -> new RuntimeException("존재하지 않는 서비스입니다."));
+				wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
 
 		if (!memberId.equals(service.getMember().getId())) {
 			throw new NotMatchInformationException();

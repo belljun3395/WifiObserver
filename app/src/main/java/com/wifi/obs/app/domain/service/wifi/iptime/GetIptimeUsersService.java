@@ -64,8 +64,7 @@ public class GetIptimeUsersService implements GetUsersService {
 								.password(request.getPassword())
 								.build());
 
-		AuthInfo auth =
-				authResponse.getResponse().orElseThrow(() -> new RuntimeException("인증에 실패했습니다."));
+		AuthInfo auth = authResponse.getResponse().orElseThrow(ClientProblemException::new);
 
 		com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos res =
 				iptimeBrowseClient
