@@ -4,7 +4,7 @@ import com.wifi.obs.app.domain.dto.response.device.DeviceOnConnectInfo;
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
-import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeUsersService;
+import com.wifi.obs.app.domain.service.wifi.GetUsersService;
 import com.wifi.obs.app.exception.domain.BadTypeRequestException;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
 import com.wifi.obs.app.exception.domain.NotMatchInformationException;
@@ -14,6 +14,7 @@ import com.wifi.obs.data.mysql.entity.member.MemberEntity;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class GetOnConnectDeviceFacadeUseCase {
 	private final DeviceRepository deviceRepository;
 
 	private final ValidatedMemberService validatedMemberService;
-	private final GetIptimeUsersService getIptimeUsersService;
+	private final Map<String, GetUsersService> getUsersServiceMap;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceOnConnectInfo execute(Long memberId, String mac) {
@@ -45,16 +46,26 @@ public class GetOnConnectDeviceFacadeUseCase {
 
 		WifiAuthEntity auth = device.getWifiService().getWifiAuthEntity();
 
-		if (device.getWifiService().getServiceType().equals(WifiServiceType.IPTIME)) {
-			return getIptimeDeviceOnConnectInfo(mac, device, auth);
-		}
+		GetUsersService getUsersService =
+				getMatchServiceTypeUsersService(device.getWifiService().getServiceType());
 
-		throw new BadTypeRequestException();
+		return getDeviceOnConnectInfo(getUsersService, mac, device, auth);
 	}
 
-	private DeviceOnConnectInfo getIptimeDeviceOnConnectInfo(
-			String mac, DeviceEntity device, WifiAuthEntity auth) {
-		OnConnectUserInfos users = getIptimeUsersService.execute(auth);
+	private GetUsersService getMatchServiceTypeUsersService(WifiServiceType serviceType) {
+		String key =
+				getUsersServiceMap.keySet().stream()
+						.filter(s -> s.contains(serviceType.getType()))
+						.findFirst()
+						.orElseThrow(BadTypeRequestException::new);
+		GetUsersService getUsersService = getUsersServiceMap.get(key);
+		return getUsersService;
+	}
+
+	private DeviceOnConnectInfo getDeviceOnConnectInfo(
+			GetUsersService service, String mac, DeviceEntity device, WifiAuthEntity auth) {
+
+		OnConnectUserInfos users = service.execute(auth);
 
 		Optional<String> filteredMac =
 				users.getUserInfos().stream().map(UserInfo::getMac).filter(mac::equals).findFirst();

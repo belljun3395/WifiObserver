@@ -1,8 +1,9 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
-import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeHealthService;
-import com.wifi.obs.app.domain.service.wifi.iptime.PostIptimeAuthService;
+import com.wifi.obs.app.domain.service.wifi.GetHealthService;
+import com.wifi.obs.app.domain.service.wifi.PostAuthService;
+import com.wifi.obs.app.exception.domain.BadTypeRequestException;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.exception.domain.IncludeNotAllowHostNumberException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
@@ -16,6 +17,7 @@ import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.repository.wifi.auth.WifiAuthRepository;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +36,8 @@ public class SaveWifiServiceUseCase {
 
 	private final ValidatedMemberService validatedMemberService;
 
-	private final GetIptimeHealthService getIptimeHealthService;
-	private final PostIptimeAuthService postIptimeAuthService;
+	private final Map<String, GetHealthService> getHealthServiceMap;
+	private final Map<String, PostAuthService> postAuthServiceMap;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveServiceRequest request) {
@@ -92,19 +94,35 @@ public class SaveWifiServiceUseCase {
 	}
 
 	private void validateHostRequestStatus(ServiceType type, String host) {
-		if (type.equals(ServiceType.IPTIME)) {
-			HttpStatus requestStatus = getIptimeHealthService.execute(host);
+		HttpStatus requestStatus = getMatchServiceTypeHealthService(type).execute(host);
 
-			if (requestStatus != HttpStatus.OK) {
-				throw new ClientProblemException();
-			}
+		if (requestStatus != HttpStatus.OK) {
+			throw new ClientProblemException();
 		}
 	}
 
+	public GetHealthService getMatchServiceTypeHealthService(ServiceType type) {
+		String key =
+				getHealthServiceMap.keySet().stream()
+						.filter(s -> s.contains(type.getType()))
+						.findFirst()
+						.orElseThrow(BadTypeRequestException::new);
+
+		return getHealthServiceMap.get(key);
+	}
+
 	private void validateRequestAuthProcess(SaveServiceRequest request) {
-		if (request.getType().equals(ServiceType.IPTIME)) {
-			postIptimeAuthService.execute(
-					request.getHost(), request.getCertification(), request.getPassword());
-		}
+		getMatchServiceTypeAuthService(request.getType())
+				.execute(request.getHost(), request.getCertification(), request.getPassword());
+	}
+
+	public PostAuthService getMatchServiceTypeAuthService(ServiceType type) {
+		String key =
+				postAuthServiceMap.keySet().stream()
+						.filter(s -> s.contains(type.getType()))
+						.findFirst()
+						.orElseThrow(BadTypeRequestException::new);
+
+		return postAuthServiceMap.get(key);
 	}
 }

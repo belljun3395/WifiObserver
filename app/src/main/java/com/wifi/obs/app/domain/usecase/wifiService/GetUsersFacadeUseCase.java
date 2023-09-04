@@ -3,7 +3,7 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
-import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeUsersService;
+import com.wifi.obs.app.domain.service.wifi.GetUsersService;
 import com.wifi.obs.app.exception.domain.BadTypeRequestException;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.exception.domain.NotMatchInformationException;
@@ -16,6 +16,7 @@ import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class GetUsersFacadeUseCase {
 	private final WifiServiceRepository wifiServiceRepository;
 
 	private final BrowseDeviceService browseDeviceService;
-	private final GetIptimeUsersService getIptimeUsersService;
+	private final Map<String, GetUsersService> getUsersServiceMap;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public OnConnectUserInfos execute(Long memberId, Long serviceId, Optional<Boolean> filter) {
@@ -52,18 +53,24 @@ public class GetUsersFacadeUseCase {
 
 		WifiServiceType serviceType = service.getServiceType();
 
-		if (serviceType.equals(WifiServiceType.IPTIME)) {
-			OnConnectUserInfos res = getIptimeUsersService.execute(authInfo);
+		OnConnectUserInfos res = getMatchServiceTypeUsersService(serviceType).execute(authInfo);
 
-			if (filter.isEmpty() || filter.get().equals(Boolean.FALSE)) {
-				return res;
-			}
-
-			List<DeviceEntity> devices = browseDeviceService.execute(service);
-			return getFilteredRes(res, devices);
+		if (filter.isEmpty() || filter.get().equals(Boolean.FALSE)) {
+			return res;
 		}
 
-		throw new BadTypeRequestException();
+		List<DeviceEntity> devices = browseDeviceService.execute(service);
+		return getFilteredRes(res, devices);
+	}
+
+	private GetUsersService getMatchServiceTypeUsersService(WifiServiceType serviceType) {
+		String key =
+				getUsersServiceMap.keySet().stream()
+						.filter(s -> s.contains(serviceType.getType()))
+						.findFirst()
+						.orElseThrow(BadTypeRequestException::new);
+		GetUsersService getUsersService = getUsersServiceMap.get(key);
+		return getUsersService;
 	}
 
 	private OnConnectUserInfos getFilteredRes(OnConnectUserInfos res, List<DeviceEntity> devices) {
