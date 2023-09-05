@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TimeStamper implements JobParametersIncrementer {
-	static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
+	static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd aa hh:mm:ss");
 
 	@Override
 	public JobParameters getNext(JobParameters parameters) {
