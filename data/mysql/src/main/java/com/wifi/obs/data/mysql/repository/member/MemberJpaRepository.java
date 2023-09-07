@@ -8,5 +8,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
 
+	Optional<MemberEntity> findByIdAndDeletedFalse(Long id);
+
 	Optional<MemberEntity> findByCertificationAndDeletedFalse(String email);
 }

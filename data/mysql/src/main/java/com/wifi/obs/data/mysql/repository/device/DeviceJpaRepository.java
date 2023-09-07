@@ -10,6 +10,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface DeviceJpaRepository extends JpaRepository<DeviceEntity, Long> {
 
+	Optional<DeviceEntity> findByIdAndDeletedFalse(Long id);
+
 	Boolean existsByMacAndWifiServiceAndDeletedFalse(String mac, WifiServiceEntity wifiService);
 
 	List<DeviceEntity> findAllByWifiServiceAndDeletedFalse(WifiServiceEntity wifiService);

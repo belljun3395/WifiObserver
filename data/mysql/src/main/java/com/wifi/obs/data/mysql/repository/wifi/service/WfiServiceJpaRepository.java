@@ -13,6 +13,8 @@ import org.springframework.data.repository.query.Param;
 @NoRepositoryBean
 public interface WfiServiceJpaRepository extends JpaRepository<WifiServiceEntity, Long> {
 
+	Optional<WifiServiceEntity> findByIdAndDeletedFalse(Long id);
+
 	Optional<WifiServiceEntity> findByWifiAuthEntityAndDeletedFalse(WifiAuthEntity wifiAuthEntity);
 
 	@Query(
