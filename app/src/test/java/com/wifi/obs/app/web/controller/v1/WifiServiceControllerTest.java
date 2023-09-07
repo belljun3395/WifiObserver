@@ -152,7 +152,7 @@ class WifiServiceControllerTest {
 												.mac("00:00:00:00:00:00")
 												.build()))
 						.build();
-		WifiServiceInfos res = new WifiServiceInfos(List.of(info, info));
+		WifiServiceInfos res = WifiServiceInfos.of(List.of(info, info));
 		when(getWifiServiceInfoUseCase.execute(anyLong())).thenReturn(res);
 		mockMvc
 				.perform(
@@ -179,7 +179,7 @@ class WifiServiceControllerTest {
 	void browseUsers() throws Exception {
 
 		UserInfo info = UserInfo.builder().mac("00:00:00:00:00:00").build();
-		OnConnectUserInfos res = new OnConnectUserInfos(List.of(info, info));
+		OnConnectUserInfos res = OnConnectUserInfos.of(List.of(info, info));
 
 		when(getUsersFacadeUseCase.execute(anyLong(), anyLong(), any())).thenReturn(res);
 

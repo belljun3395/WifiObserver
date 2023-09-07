@@ -155,7 +155,7 @@ class DeviceControllerTest {
 
 		DeviceInfo info =
 				DeviceInfo.builder().id(1L).type(DeviceType.NOTEBOOK).mac("00:00:00:00:00:00").build();
-		DeviceInfos res = new DeviceInfos(List.of(info));
+		DeviceInfos res = DeviceInfos.of(List.of(info));
 
 		when(getServiceDeviceUseCase.execute(anyLong(), anyLong())).thenReturn(res);
 
