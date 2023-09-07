@@ -10,7 +10,6 @@ import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
-import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -48,9 +47,7 @@ public class PatchDeviceUseCase {
 
 		DeviceModel device = deviceModelConverter.from(getDevice(request));
 
-		try {
-			idMatchValidator.validate(request.getChangeServiceId(), device.getServiceId());
-		} catch (NotMatchInformationException nme) {
+		if (device.getServiceId().equals(request.getChangeServiceId())) {
 			return;
 		}
 
