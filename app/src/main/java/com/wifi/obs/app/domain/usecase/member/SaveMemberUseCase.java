@@ -27,8 +27,7 @@ public class SaveMemberUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public SavedMemberInfo execute(SaveMemberRequest request) {
 
-		Optional<MemberEntity> member =
-				memberRepository.findByCertificationAndDeletedFalse(request.getEmail());
+		Optional<MemberEntity> member = getMember(request);
 
 		if (member.isPresent()) {
 			MemberEntity source = member.get();
@@ -48,8 +47,12 @@ public class SaveMemberUseCase {
 		return getSavedMember(savedMemberId);
 	}
 
+	private Optional<MemberEntity> getMember(SaveMemberRequest request) {
+		return memberRepository.findByCertificationAndDeletedFalse(request.getEmail());
+	}
+
 	private void validateRequestPassword(String request, String source) {
-		if (!source.equals(request)) {
+		if (!request.equals(source)) {
 			throw new NotMatchPasswordException();
 		}
 	}

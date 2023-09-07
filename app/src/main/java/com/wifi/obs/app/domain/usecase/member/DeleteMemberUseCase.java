@@ -31,19 +31,25 @@ public class DeleteMemberUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId) {
-		MemberEntity member =
-				memberRepository
-						.findById(memberId)
-						.orElseThrow(() -> new MemberNotFoundException(memberId));
+		MemberEntity member = getMember(memberId);
 
 		List<WifiServiceEntity> services = browseWifiServiceService.execute(member);
-		List<WifiAuthEntity> auths =
-				services.stream().map(WifiServiceEntity::getWifiAuthEntity).collect(Collectors.toList());
+		List<WifiAuthEntity> auths = getAuths(services);
 
 		deleteWifiAuthService.execute(auths);
 		deleteDeviceService.execute(services);
 		deleteWifiServiceService.execute(services);
 
 		memberRepository.deleteById(memberId);
+	}
+
+	private List<WifiAuthEntity> getAuths(List<WifiServiceEntity> services) {
+		return services.stream().map(WifiServiceEntity::getWifiAuthEntity).collect(Collectors.toList());
+	}
+
+	private MemberEntity getMember(Long memberId) {
+		return memberRepository
+				.findById(memberId)
+				.orElseThrow(() -> new MemberNotFoundException(memberId));
 	}
 }
