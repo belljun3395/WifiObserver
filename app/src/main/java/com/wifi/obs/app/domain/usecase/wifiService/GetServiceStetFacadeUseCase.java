@@ -57,7 +57,9 @@ public class GetServiceStetFacadeUseCase {
 	}
 
 	private WifiServiceEntity getService(Long sid) {
-		return wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
+		return wifiServiceRepository
+				.findByIdAndDeletedFalse(sid)
+				.orElseThrow(() -> new ServiceNotFoundException(sid));
 	}
 
 	private void isError(WifiStatus status) {

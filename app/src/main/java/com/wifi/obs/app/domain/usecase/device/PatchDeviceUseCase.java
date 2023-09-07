@@ -69,7 +69,7 @@ public class PatchDeviceUseCase {
 
 	private DeviceEntity getDevice(PatchDeviceRequest request) {
 		return deviceRepository
-				.findById(request.getDeviceId())
+				.findByIdAndDeletedFalse(request.getDeviceId())
 				.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
 	}
 

@@ -43,6 +43,8 @@ public class GetHealthStatusUseCase {
 	}
 
 	private WifiServiceEntity getService(Long sid) {
-		return wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
+		return wifiServiceRepository
+				.findByIdAndDeletedFalse(sid)
+				.orElseThrow(() -> new ServiceNotFoundException(sid));
 	}
 }

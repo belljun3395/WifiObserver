@@ -19,7 +19,7 @@ public class ValidatedMemberService {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public MemberEntity execute(Long memberId) {
 		return memberRepository
-				.findById(memberId)
+				.findByIdAndDeletedFalse(memberId)
 				.orElseThrow(() -> new MemberNotFoundException(memberId));
 	}
 }

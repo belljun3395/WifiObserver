@@ -57,7 +57,7 @@ public class DeleteMemberUseCase {
 
 	private MemberEntity getMember(Long memberId) {
 		return memberRepository
-				.findById(memberId)
+				.findByIdAndDeletedFalse(memberId)
 				.orElseThrow(() -> new MemberNotFoundException(memberId));
 	}
 }
