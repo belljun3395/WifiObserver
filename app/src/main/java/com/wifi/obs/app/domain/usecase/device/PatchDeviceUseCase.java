@@ -1,5 +1,7 @@
 package com.wifi.obs.app.domain.usecase.device;
 
+import com.wifi.obs.app.domain.model.MemberModel;
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
@@ -9,7 +11,6 @@ import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
-import com.wifi.obs.data.mysql.entity.member.MemberEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class PatchDeviceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, PatchDeviceRequest request) {
 
-		MemberEntity member = validatedMemberService.execute(memberId);
+		MemberModel member = MemberModel.of(validatedMemberService.execute(memberId));
 
 		DeviceEntity device = getDevice(request);
 
@@ -42,14 +43,14 @@ public class PatchDeviceUseCase {
 			return;
 		}
 
-		WifiServiceEntity changeTargetService =
-				validatedWifiServiceService.execute(request.getChangeServiceId());
+		WifiServiceModel changeTargetService =
+				WifiServiceModel.of(validatedWifiServiceService.execute(request.getChangeServiceId()));
 
-		idMatchValidator.validate(memberId, changeTargetService.getMember().getId());
+		idMatchValidator.validate(memberId, changeTargetService.getId());
 
-		validateServiceDeviceCount(changeTargetService, member.getStatus().getMaxDeviceCount());
+		validateServiceDeviceCount(changeTargetService.getSource(), member);
 
-		deviceRepository.save(device.toBuilder().wifiService(changeTargetService).build());
+		deviceRepository.save(device.toBuilder().wifiService(changeTargetService.getSource()).build());
 	}
 
 	private DeviceEntity getDevice(PatchDeviceRequest request) {
@@ -58,10 +59,10 @@ public class PatchDeviceUseCase {
 				.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
 	}
 
-	private void validateServiceDeviceCount(WifiServiceEntity service, Long maxDeviceCount) {
+	private void validateServiceDeviceCount(WifiServiceEntity service, MemberModel member) {
 		int savedDeviceCount = deviceRepository.findAllByWifiServiceAndDeletedFalse(service).size();
 
-		if (savedDeviceCount >= maxDeviceCount) {
+		if (member.isOverDeviceMaxCount((long) savedDeviceCount)) {
 			throw new OverLimitException();
 		}
 	}

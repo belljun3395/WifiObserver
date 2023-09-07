@@ -3,6 +3,7 @@ package com.wifi.obs.app.domain.usecase.device;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfos;
 import com.wifi.obs.app.domain.dto.response.device.ServiceDeviceInfo;
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
@@ -35,11 +36,11 @@ public class GetServiceDeviceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceInfos execute(Long memberId, Long serviceId) {
 
-		WifiServiceEntity service = validatedWifiServiceService.execute(serviceId);
+		WifiServiceModel service = WifiServiceModel.of(validatedWifiServiceService.execute(serviceId));
 
-		idMatchValidator.validate(memberId, service.getMember().getId());
+		idMatchValidator.validate(memberId, service.getMemberId());
 
-		return DeviceInfos.of(getDeviceInfos(service));
+		return DeviceInfos.of(getDeviceInfos(service.getSource()));
 	}
 
 	private List<DeviceInfo> getDeviceInfos(WifiServiceEntity service) {
