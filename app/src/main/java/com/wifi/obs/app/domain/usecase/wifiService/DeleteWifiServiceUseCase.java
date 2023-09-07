@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.converter.MemberModelConverter;
 import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.domain.service.device.DeleteDeviceService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
@@ -7,6 +8,7 @@ import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.web.dto.request.service.DeleteServiceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
+import com.wifi.obs.data.mysql.entity.support.MemberEntitySupporter;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.ArrayList;
@@ -28,12 +30,17 @@ public class DeleteWifiServiceUseCase {
 	private final ValidatedMemberService validatedMemberService;
 	private final DeleteDeviceService deleteDeviceService;
 
+	private final MemberModelConverter memberModelConverter;
+
+	private final MemberEntitySupporter memberEntitySupporter;
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, DeleteServiceRequest request) {
 
-		MemberModel member = MemberModel.of(validatedMemberService.execute(memberId));
+		MemberModel member = memberModelConverter.from(validatedMemberService.execute(memberId));
 
-		List<WifiServiceEntity> services = getServices(member.getSource());
+		List<WifiServiceEntity> services =
+				getServices(memberEntitySupporter.getReferenceEntity(member.getId()));
 
 		if (validateRequestServiceId(request.getSid(), services)) {
 			WifiServiceEntity service = getServices(request, services);

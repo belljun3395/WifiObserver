@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.converter.MemberModelConverter;
 import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
@@ -34,9 +35,10 @@ public class SaveWifiServiceUseCase {
 	private final WifiAuthRepository wifiAuthRepository;
 
 	private final ValidatedMemberService validatedMemberService;
-
 	private final GetHealthServiceManager getHealthServiceManager;
 	private final PostAuthServiceManager postAuthServiceManager;
+
+	private final MemberModelConverter memberModelConverter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveServiceRequest request) {
@@ -62,7 +64,7 @@ public class SaveWifiServiceUseCase {
 	}
 
 	private void validateMember(Long memberId) {
-		MemberModel member = MemberModel.of(validatedMemberService.execute(memberId));
+		MemberModel member = memberModelConverter.from(validatedMemberService.execute(memberId));
 
 		validateMemberServiceCount(member);
 	}

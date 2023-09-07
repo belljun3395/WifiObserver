@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
 import com.wifi.obs.app.domain.dto.response.service.ServiceDeviceStetInfos;
 import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
@@ -9,6 +10,7 @@ import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
+import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
@@ -30,11 +32,15 @@ public class GetServiceStetFacadeUseCase {
 
 	private final GetServiceDeviceStetInfosManager getServiceDeviceStetInfosManager;
 
+	private final WifiServiceModelConverter wifiServiceModelConverter;
+
 	private final IdMatchValidator idMatchValidator;
+
+	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public ServiceDeviceStetInfos execute(Long memberId, Long sid, StetType type) {
-		WifiServiceModel service = WifiServiceModel.of(getService(sid));
+		WifiServiceModel service = wifiServiceModelConverter.from(getService(sid));
 
 		isError(service.getStatus());
 
@@ -43,7 +49,8 @@ public class GetServiceStetFacadeUseCase {
 		return getServiceDeviceStetInfosManager
 				.getService(type)
 				.execute(
-						browseDeviceService.execute(service.getSource()),
+						browseDeviceService.execute(
+								wifiServiceEntitySupporter.getReferenceEntity(service.getAuthId())),
 						new ArrayList<>(),
 						sid,
 						LocalDateTime.now());
