@@ -22,7 +22,7 @@ public class IptimeBetaRequest {
 	private String host;
 
 	@Min(1)
-	@Max(9999)
+	@Max(65535)
 	private Long port;
 
 	@NotNull private String certification;
