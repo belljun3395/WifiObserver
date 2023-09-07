@@ -1,7 +1,7 @@
 package com.wifi.obs.app.web.controller.beta;
 
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
-import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeUsersService;
+import com.wifi.obs.app.domain.service.wifi.iptime.GetIptimeUserService;
 import com.wifi.obs.app.web.controller.validator.beta.IptimeBetaRequestValidator;
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class BetaController {
 
-	private final GetIptimeUsersService getIptimeUsersService;
+	private final GetIptimeUserService getIptimeUsersService;
 	private final IptimeBetaRequestValidator iptimeBetaRequestValidator;
 
 	@GetMapping("/iptime")
