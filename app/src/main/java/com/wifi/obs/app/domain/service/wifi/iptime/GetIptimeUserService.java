@@ -2,7 +2,7 @@ package com.wifi.obs.app.domain.service.wifi.iptime;
 
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
-import com.wifi.obs.app.domain.service.wifi.GetUsersService;
+import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetIptimeUsersService implements GetUsersService {
+public class GetIptimeUserService implements GetUserService {
 
 	private final IptimeAuthClientImpl iptimeAuthClient;
 	private final IptimeBrowseClientImpl iptimeBrowseClient;
@@ -52,7 +52,7 @@ public class GetIptimeUsersService implements GetUsersService {
 						.map(userInfo -> UserInfo.builder().mac(userInfo.getUser()).build())
 						.collect(Collectors.toList());
 
-		return new OnConnectUserInfos(userInfos);
+		return OnConnectUserInfos.of(userInfos);
 	}
 
 	public OnConnectUserInfos execute(IptimeBetaRequest request) {
@@ -80,6 +80,6 @@ public class GetIptimeUsersService implements GetUsersService {
 						.map(userInfo -> UserInfo.builder().mac(userInfo.getUser()).build())
 						.collect(Collectors.toList());
 
-		return new OnConnectUserInfos(userInfos);
+		return OnConnectUserInfos.of(userInfos);
 	}
 }
