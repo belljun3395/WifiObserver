@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.member;
 
+import com.wifi.obs.app.domain.converter.MemberModelConverter;
 import com.wifi.obs.app.domain.dto.response.member.SavedMemberInfo;
 import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.exception.domain.NotMatchPasswordException;
@@ -24,13 +25,15 @@ public class SaveMemberUseCase {
 	private final MemberRepository memberRepository;
 	private final TokenGenerator tokenGenerator;
 
+	private final MemberModelConverter memberModelConverter;
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public SavedMemberInfo execute(SaveMemberRequest request) {
 
 		Optional<MemberEntity> memberRecord = getMember(request);
 
 		if (memberRecord.isPresent()) {
-			MemberModel member = MemberModel.of(memberRecord.get());
+			MemberModel member = memberModelConverter.from(memberRecord.get());
 
 			validateRequestPassword(request.getPassword(), member);
 
