@@ -2,8 +2,8 @@ package com.wifi.obs.app.domain.usecase.device;
 
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
+import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
-import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -26,6 +26,8 @@ public class PatchDeviceUseCase {
 	private final ValidatedMemberService validatedMemberService;
 	private final ValidatedWifiServiceService validatedWifiServiceService;
 
+	private final IdMatchValidator idMatchValidator;
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, PatchDeviceRequest request) {
 
@@ -43,9 +45,7 @@ public class PatchDeviceUseCase {
 		WifiServiceEntity changeTargetService =
 				validatedWifiServiceService.execute(request.getChangeServiceId());
 
-		if (memberId.equals(changeTargetService.getMember().getId())) {
-			throw new NotMatchInformationException();
-		}
+		idMatchValidator.validate(memberId, changeTargetService.getMember().getId());
 
 		validateServiceDeviceCount(changeTargetService, member.getStatus().getMaxDeviceCount());
 

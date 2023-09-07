@@ -2,8 +2,8 @@ package com.wifi.obs.app.domain.usecase.device;
 
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
+import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.AlreadyRegisterException;
-import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.SaveDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -26,15 +26,15 @@ public class SaveDeviceUseCase {
 	private final ValidatedWifiServiceService validatedWifiServiceService;
 	private final ValidatedMemberService validatedMemberService;
 
+	private final IdMatchValidator idMatchValidator;
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveDeviceRequest request) {
 
 		WifiServiceEntity service = validatedWifiServiceService.execute(request.getSid());
 		MemberEntity member = validatedMemberService.execute(memberId);
 
-		if (!memberId.equals(service.getMember().getId())) {
-			throw new NotMatchInformationException();
-		}
+		idMatchValidator.validate(memberId, service.getMember().getId());
 
 		validateServiceDeviceCount(service, member.getStatus().getMaxDeviceCount());
 		validateRequestMacDuplication(request.getMac().toUpperCase(), service);
