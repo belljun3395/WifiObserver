@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.device;
 
+import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfos;
 import com.wifi.obs.app.domain.dto.response.device.ServiceDeviceInfo;
@@ -10,6 +11,7 @@ import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
+import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import java.util.ArrayList;
@@ -31,16 +33,22 @@ public class GetServiceDeviceUseCase {
 	private final ValidatedWifiServicesService validatedWifiServicesService;
 	private final ValidatedMemberService validatedMemberService;
 
+	private final WifiServiceModelConverter wifiServiceModelConverter;
+
 	private final IdMatchValidator idMatchValidator;
+
+	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceInfos execute(Long memberId, Long serviceId) {
 
-		WifiServiceModel service = WifiServiceModel.of(validatedWifiServiceService.execute(serviceId));
+		WifiServiceModel service =
+				wifiServiceModelConverter.from(validatedWifiServiceService.execute(serviceId));
 
 		idMatchValidator.validate(memberId, service.getMemberId());
 
-		return DeviceInfos.of(getDeviceInfos(service.getSource()));
+		return DeviceInfos.of(
+				getDeviceInfos(wifiServiceEntitySupporter.getReferenceEntity(service.getId())));
 	}
 
 	private List<DeviceInfo> getDeviceInfos(WifiServiceEntity service) {
