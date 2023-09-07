@@ -28,23 +28,29 @@ public class GetWifiServiceInfoUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public WifiServiceInfos execute(Long memberId) {
-		List<WifiServiceEntity> wifiServices =
-				wifiServiceRepository.findAllByMemberAndDeletedFalse(
-						MemberEntity.builder().id(memberId).build());
+		List<WifiServiceEntity> services = getServices(memberId);
 
-		List<List<DeviceEntity>> devices =
-				wifiServices.stream().map(browseDeviceService::execute).collect(Collectors.toList());
+		List<List<DeviceEntity>> devices = getDevices(services);
 
-		return getWifiServiceInfos(wifiServices, devices);
+		return getServiceInfos(services, devices);
 	}
 
-	private WifiServiceInfos getWifiServiceInfos(
-			List<WifiServiceEntity> wifiServices, List<List<DeviceEntity>> devices) {
+	private List<List<DeviceEntity>> getDevices(List<WifiServiceEntity> services) {
+		return services.stream().map(browseDeviceService::execute).collect(Collectors.toList());
+	}
+
+	private List<WifiServiceEntity> getServices(Long memberId) {
+		return wifiServiceRepository.findAllByMemberAndDeletedFalse(
+				MemberEntity.builder().id(memberId).build());
+	}
+
+	private WifiServiceInfos getServiceInfos(
+			List<WifiServiceEntity> services, List<List<DeviceEntity>> devices) {
 
 		List<WifiServiceInfo> serviceInfos = new ArrayList<>();
 
-		for (int i = 0; i < wifiServices.size(); i++) {
-			WifiServiceEntity cws = wifiServices.get(i);
+		for (int i = 0; i < services.size(); i++) {
+			WifiServiceEntity cws = services.get(i);
 			List<DeviceEntity> cds = devices.get(i);
 
 			List<DeviceInfo> deviceInfos = new ArrayList<>();
@@ -65,6 +71,6 @@ public class GetWifiServiceInfoUseCase {
 							.build());
 		}
 
-		return new WifiServiceInfos(serviceInfos);
+		return WifiServiceInfos.of(serviceInfos);
 	}
 }

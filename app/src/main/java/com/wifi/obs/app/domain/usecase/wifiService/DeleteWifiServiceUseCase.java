@@ -32,14 +32,10 @@ public class DeleteWifiServiceUseCase {
 
 		MemberEntity member = validatedMemberService.execute(memberId);
 
-		List<WifiServiceEntity> services =
-				new ArrayList<>(wifiServiceRepository.findAllByMemberAndDeletedFalse(member));
+		List<WifiServiceEntity> services = getServices(member);
 
 		if (validateRequestServiceId(request.getSid(), services)) {
-			WifiServiceEntity service =
-					Objects.requireNonNull(
-							services.stream().filter(s -> s.getId().equals(request.getSid())).findFirst().get(),
-							"죄송합니다. 서비스가 존재하지 않습니다.");
+			WifiServiceEntity service = getServices(request, services);
 
 			deleteDeviceService.execute(service);
 
@@ -49,10 +45,21 @@ public class DeleteWifiServiceUseCase {
 		}
 	}
 
-	private boolean validateRequestServiceId(Long wifiServiceId, List<WifiServiceEntity> services) {
+	private WifiServiceEntity getServices(
+			DeleteServiceRequest request, List<WifiServiceEntity> services) {
+		return Objects.requireNonNull(
+				services.stream().filter(s -> s.getId().equals(request.getSid())).findFirst().orElse(null),
+				"죄송합니다. 서비스가 존재하지 않습니다.");
+	}
+
+	private List<WifiServiceEntity> getServices(MemberEntity member) {
+		return new ArrayList<>(wifiServiceRepository.findAllByMemberAndDeletedFalse(member));
+	}
+
+	private boolean validateRequestServiceId(Long sid, List<WifiServiceEntity> services) {
 		return services.stream()
 				.map(WifiServiceEntity::getId)
 				.collect(Collectors.toList())
-				.contains(wifiServiceId);
+				.contains(sid);
 	}
 }
