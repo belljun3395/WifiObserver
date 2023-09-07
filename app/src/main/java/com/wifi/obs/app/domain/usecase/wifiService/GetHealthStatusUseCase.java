@@ -1,14 +1,12 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
-import com.wifi.obs.app.domain.service.wifi.GetHealthService;
-import com.wifi.obs.app.exception.domain.BadTypeRequestException;
-import com.wifi.obs.app.exception.domain.NotMatchInformationException;
+import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
+import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,30 +20,23 @@ public class GetHealthStatusUseCase {
 
 	private final WifiServiceRepository wifiServiceRepository;
 
-	private final Map<String, GetHealthService> getHealthServiceMap;
+	private final IdMatchValidator idMatchValidator;
+
+	private final GetHealthServiceManager getHealthServiceManager;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public HttpStatus execute(Long memberId, Long sid) {
-		WifiServiceEntity service =
-				wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
+		WifiServiceEntity service = getService(sid);
 
-		if (!memberId.equals(service.getMember().getId())) {
-			throw new NotMatchInformationException();
-		}
+		idMatchValidator.validate(memberId, service.getMember().getId());
 
 		WifiServiceType serviceType = service.getServiceType();
 		String host = service.getWifiAuthEntity().getHost();
 
-		return getMatchServiceTypeHealthService(serviceType).execute(host);
+		return getHealthServiceManager.getService(serviceType).execute(host);
 	}
 
-	public GetHealthService getMatchServiceTypeHealthService(WifiServiceType type) {
-		String key =
-				getHealthServiceMap.keySet().stream()
-						.filter(s -> s.contains(type.getType()))
-						.findFirst()
-						.orElseThrow(BadTypeRequestException::new);
-
-		return getHealthServiceMap.get(key);
+	private WifiServiceEntity getService(Long sid) {
+		return wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
 	}
 }
