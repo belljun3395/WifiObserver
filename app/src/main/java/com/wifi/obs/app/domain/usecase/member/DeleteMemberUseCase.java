@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.member;
 
+import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.domain.service.device.DeleteDeviceService;
 import com.wifi.obs.app.domain.service.wifi.BrowseWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.DeleteWifiAuthService;
@@ -31,9 +32,9 @@ public class DeleteMemberUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId) {
-		MemberEntity member = getMember(memberId);
+		MemberModel member = MemberModel.of(getMember(memberId));
 
-		List<WifiServiceEntity> services = browseWifiServiceService.execute(member);
+		List<WifiServiceEntity> services = browseWifiServiceService.execute(member.getSource());
 		List<WifiAuthEntity> auths = getAuths(services);
 
 		deleteWifiAuthService.execute(auths);
