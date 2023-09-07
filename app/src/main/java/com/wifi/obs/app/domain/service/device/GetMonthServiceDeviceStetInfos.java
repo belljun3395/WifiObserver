@@ -19,10 +19,7 @@ public class GetMonthServiceDeviceStetInfos implements GetServiceDeviceStetInfos
 
 	@Override
 	public ServiceDeviceStetInfos execute(
-			List<DeviceEntity> devices,
-			List<DeviceStetInfo> deviceStetInfos,
-			Long serviceId,
-			LocalDateTime now) {
+			List<DeviceEntity> devices, List<DeviceStetInfo> stetInfos, Long sid, LocalDateTime now) {
 		for (DeviceEntity device : devices) {
 			Optional<ConnectHistoryMetaEntity> monthStet =
 					connectHistoryMetaRepository.findTopByDeviceAndMonthOrderByIdDesc(
@@ -31,7 +28,7 @@ public class GetMonthServiceDeviceStetInfos implements GetServiceDeviceStetInfos
 			if (monthStet.isEmpty()) {
 				DeviceStetInfo stetInfo =
 						DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
-				deviceStetInfos.add(stetInfo);
+				stetInfos.add(stetInfo);
 				continue;
 			}
 
@@ -41,8 +38,8 @@ public class GetMonthServiceDeviceStetInfos implements GetServiceDeviceStetInfos
 							.mac(device.getMac())
 							.time(monthStet.get().getConnectedTimeOnMonth())
 							.build();
-			deviceStetInfos.add(stetInfo);
+			stetInfos.add(stetInfo);
 		}
-		return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
+		return new ServiceDeviceStetInfos(sid, stetInfos);
 	}
 }

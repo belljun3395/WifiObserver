@@ -19,10 +19,7 @@ public class GetDayServiceDeviceStetInfos implements GetServiceDeviceStetInfos {
 
 	@Override
 	public ServiceDeviceStetInfos execute(
-			List<DeviceEntity> devices,
-			List<DeviceStetInfo> deviceStetInfos,
-			Long serviceId,
-			LocalDateTime now) {
+			List<DeviceEntity> devices, List<DeviceStetInfo> stetInfos, Long sid, LocalDateTime now) {
 		for (DeviceEntity device : devices) {
 			Optional<ConnectHistoryMetaEntity> dayStet =
 					connectHistoryMetaRepository.findTopByDeviceAndDayAndMonthOrderByIdDesc(
@@ -31,7 +28,7 @@ public class GetDayServiceDeviceStetInfos implements GetServiceDeviceStetInfos {
 			if (dayStet.isEmpty()) {
 				DeviceStetInfo stetInfo =
 						DeviceStetInfo.builder().id(device.getId()).mac(device.getMac()).build();
-				deviceStetInfos.add(stetInfo);
+				stetInfos.add(stetInfo);
 				continue;
 			}
 
@@ -41,8 +38,8 @@ public class GetDayServiceDeviceStetInfos implements GetServiceDeviceStetInfos {
 							.mac(device.getMac())
 							.time(dayStet.get().getConnectedTimeOnDay())
 							.build();
-			deviceStetInfos.add(stetInfo);
+			stetInfos.add(stetInfo);
 		}
-		return new ServiceDeviceStetInfos(serviceId, deviceStetInfos);
+		return new ServiceDeviceStetInfos(sid, stetInfos);
 	}
 }

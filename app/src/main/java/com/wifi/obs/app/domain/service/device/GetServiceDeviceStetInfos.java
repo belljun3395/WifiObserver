@@ -9,8 +9,5 @@ import java.util.List;
 public interface GetServiceDeviceStetInfos {
 
 	ServiceDeviceStetInfos execute(
-			List<DeviceEntity> devices,
-			List<DeviceStetInfo> deviceStetInfos,
-			Long serviceId,
-			LocalDateTime now);
+			List<DeviceEntity> devices, List<DeviceStetInfo> stetInfos, Long sid, LocalDateTime now);
 }
