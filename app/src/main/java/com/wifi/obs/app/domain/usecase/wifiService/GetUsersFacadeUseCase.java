@@ -2,6 +2,7 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetUserServiceManager;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
@@ -12,7 +13,6 @@ import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +37,11 @@ public class GetUsersFacadeUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public OnConnectUserInfos execute(Long memberId, Long sid, Optional<Boolean> filter) {
-		WifiServiceEntity service = getService(sid);
+		WifiServiceModel service = WifiServiceModel.of(getService(sid));
 
 		isError(service);
 
-		idMatchValidator.validate(memberId, service.getMember().getId());
+		idMatchValidator.validate(memberId, service.getMemberId());
 
 		WifiAuthEntity authInfo = service.getWifiAuthEntity();
 
@@ -53,12 +53,12 @@ public class GetUsersFacadeUseCase {
 			return res;
 		}
 
-		List<DeviceEntity> devices = browseDeviceService.execute(service);
+		List<DeviceEntity> devices = browseDeviceService.execute(service.getSource());
 		return getFilteredRes(res, devices);
 	}
 
-	private void isError(WifiServiceEntity service) {
-		if (service.getStatus().equals(WifiStatus.ERROR)) {
+	private void isError(WifiServiceModel service) {
+		if (!service.isOn()) {
 			throw new ClientProblemException();
 		}
 	}

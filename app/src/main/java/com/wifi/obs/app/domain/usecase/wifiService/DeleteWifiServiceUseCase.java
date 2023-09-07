@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.domain.service.device.DeleteDeviceService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.exception.domain.NotMatchInformationException;
@@ -30,9 +31,9 @@ public class DeleteWifiServiceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, DeleteServiceRequest request) {
 
-		MemberEntity member = validatedMemberService.execute(memberId);
+		MemberModel member = MemberModel.of(validatedMemberService.execute(memberId));
 
-		List<WifiServiceEntity> services = getServices(member);
+		List<WifiServiceEntity> services = getServices(member.getSource());
 
 		if (validateRequestServiceId(request.getSid(), services)) {
 			WifiServiceEntity service = getServices(request, services);

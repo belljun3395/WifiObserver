@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.model.MemberModel;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
 import com.wifi.obs.app.domain.usecase.support.manager.PostAuthServiceManager;
@@ -61,18 +62,18 @@ public class SaveWifiServiceUseCase {
 	}
 
 	private void validateMember(Long memberId) {
-		MemberEntity member = validatedMemberService.execute(memberId);
+		MemberModel member = MemberModel.of(validatedMemberService.execute(memberId));
 
-		validateMemberServiceCount(memberId, member.getStatus().getMaxServiceCount());
+		validateMemberServiceCount(member);
 	}
 
-	private void validateMemberServiceCount(Long memberId, Long maxServiceCount) {
+	private void validateMemberServiceCount(MemberModel member) {
 
 		List<WifiServiceEntity> services =
 				wifiServiceRepository.findAllByMemberAndDeletedFalse(
-						MemberEntity.builder().id(memberId).build());
+						MemberEntity.builder().id(member.getId()).build());
 
-		if (services.size() >= maxServiceCount) {
+		if (member.isOverServiceMaxCount((long) services.size())) {
 			throw new OverLimitException();
 		}
 	}

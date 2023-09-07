@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
@@ -26,9 +27,9 @@ public class GetHealthStatusUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public HttpStatus execute(Long memberId, Long sid) {
-		WifiServiceEntity service = getService(sid);
+		WifiServiceModel service = WifiServiceModel.of(getService(sid));
 
-		idMatchValidator.validate(memberId, service.getMember().getId());
+		idMatchValidator.validate(memberId, service.getMemberId());
 
 		WifiServiceType serviceType = service.getServiceType();
 		String host = service.getWifiAuthEntity().getHost();

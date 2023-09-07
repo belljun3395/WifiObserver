@@ -1,6 +1,7 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
 import com.wifi.obs.app.domain.dto.response.service.ServiceDeviceStetInfos;
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetServiceDeviceStetInfosManager;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
@@ -33,15 +34,19 @@ public class GetServiceStetFacadeUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public ServiceDeviceStetInfos execute(Long memberId, Long sid, StetType type) {
-		WifiServiceEntity service = getService(sid);
+		WifiServiceModel service = WifiServiceModel.of(getService(sid));
 
 		isError(service.getStatus());
 
-		idMatchValidator.validate(memberId, service.getMember().getId());
+		idMatchValidator.validate(memberId, service.getMemberId());
 
 		return getServiceDeviceStetInfosManager
 				.getService(type)
-				.execute(browseDeviceService.execute(service), new ArrayList<>(), sid, LocalDateTime.now());
+				.execute(
+						browseDeviceService.execute(service.getSource()),
+						new ArrayList<>(),
+						sid,
+						LocalDateTime.now());
 	}
 
 	private WifiServiceEntity getService(Long sid) {

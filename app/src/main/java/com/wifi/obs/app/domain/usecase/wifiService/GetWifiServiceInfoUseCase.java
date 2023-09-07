@@ -3,11 +3,11 @@ package com.wifi.obs.app.domain.usecase.wifiService;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfos;
+import com.wifi.obs.app.domain.model.WifiServiceModel;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,29 +28,34 @@ public class GetWifiServiceInfoUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public WifiServiceInfos execute(Long memberId) {
-		List<WifiServiceEntity> services = getServices(memberId);
+		List<WifiServiceModel> services = getServices(memberId);
 
 		List<List<DeviceEntity>> devices = getDevices(services);
 
 		return getServiceInfos(services, devices);
 	}
 
-	private List<List<DeviceEntity>> getDevices(List<WifiServiceEntity> services) {
-		return services.stream().map(browseDeviceService::execute).collect(Collectors.toList());
+	private List<List<DeviceEntity>> getDevices(List<WifiServiceModel> services) {
+		return services.stream()
+				.map(info -> browseDeviceService.execute(info.getSource()))
+				.collect(Collectors.toList());
 	}
 
-	private List<WifiServiceEntity> getServices(Long memberId) {
-		return wifiServiceRepository.findAllByMemberAndDeletedFalse(
-				MemberEntity.builder().id(memberId).build());
+	private List<WifiServiceModel> getServices(Long memberId) {
+		return wifiServiceRepository
+				.findAllByMemberAndDeletedFalse(MemberEntity.builder().id(memberId).build())
+				.stream()
+				.map(WifiServiceModel::of)
+				.collect(Collectors.toList());
 	}
 
 	private WifiServiceInfos getServiceInfos(
-			List<WifiServiceEntity> services, List<List<DeviceEntity>> devices) {
+			List<WifiServiceModel> services, List<List<DeviceEntity>> devices) {
 
 		List<WifiServiceInfo> serviceInfos = new ArrayList<>();
 
 		for (int i = 0; i < services.size(); i++) {
-			WifiServiceEntity cws = services.get(i);
+			WifiServiceModel cws = services.get(i);
 			List<DeviceEntity> cds = devices.get(i);
 
 			List<DeviceInfo> deviceInfos = new ArrayList<>();
@@ -66,7 +71,7 @@ public class GetWifiServiceInfoUseCase {
 							.type(cws.getServiceType())
 							.cycle(cws.getCycle())
 							.status(cws.getStatus())
-							.createAt(cws.getCreateAt().toString())
+							.createAt(cws.getCreateAtAsString())
 							.deviceInfos(deviceInfos)
 							.build());
 		}
