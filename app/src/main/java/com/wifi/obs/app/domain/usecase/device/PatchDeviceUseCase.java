@@ -33,10 +33,7 @@ public class PatchDeviceUseCase {
 
 		MemberEntity member = validatedMemberService.execute(memberId);
 
-		DeviceEntity device =
-				deviceRepository
-						.findById(request.getDeviceId())
-						.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
+		DeviceEntity device = getDevice(request);
 
 		if (request.getChangeServiceId().equals(device.getWifiService().getId())) {
 			return;
@@ -50,6 +47,12 @@ public class PatchDeviceUseCase {
 		validateServiceDeviceCount(changeTargetService, member.getStatus().getMaxDeviceCount());
 
 		deviceRepository.save(device.toBuilder().wifiService(changeTargetService).build());
+	}
+
+	private DeviceEntity getDevice(PatchDeviceRequest request) {
+		return deviceRepository
+				.findById(request.getDeviceId())
+				.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
 	}
 
 	private void validateServiceDeviceCount(WifiServiceEntity service, Long maxDeviceCount) {
