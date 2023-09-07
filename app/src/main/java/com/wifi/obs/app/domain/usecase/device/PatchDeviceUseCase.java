@@ -4,6 +4,7 @@ import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -35,7 +36,9 @@ public class PatchDeviceUseCase {
 
 		DeviceEntity device = getDevice(request);
 
-		if (request.getChangeServiceId().equals(device.getWifiService().getId())) {
+		try {
+			idMatchValidator.validate(request.getChangeServiceId(), device.getWifiService().getId());
+		} catch (NotMatchInformationException nme) {
 			return;
 		}
 
