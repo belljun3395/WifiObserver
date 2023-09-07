@@ -17,9 +17,7 @@ public class ValidatedWifiServiceService {
 	private final WifiServiceRepository wifiServiceRepository;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
-	public WifiServiceEntity execute(Long wifiServiceId) {
-		return wifiServiceRepository
-				.findById(wifiServiceId)
-				.orElseThrow(() -> new ServiceNotFoundException(wifiServiceId));
+	public WifiServiceEntity execute(Long sid) {
+		return wifiServiceRepository.findById(sid).orElseThrow(() -> new ServiceNotFoundException(sid));
 	}
 }
