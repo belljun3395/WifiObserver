@@ -38,10 +38,14 @@ public class CookieResource {
 				cookie = cookieResponse.getResponse().get().getInfo();
 				log.debug("쿠키 값 획득 : {}", cookie);
 			} else {
-				throw new WifiConnectionException("쿠키 값 획득 실패");
+				throw new WifiConnectionException(host);
 			}
 			return cookie;
 		}
 		return cookie;
+	}
+
+	public String getDefaultCookie() {
+		return DEFAULT_COOKE_VALUE;
 	}
 }
