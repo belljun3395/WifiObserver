@@ -94,7 +94,9 @@ subprojects {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnitPlatform() {
+            excludeTags("connect")
+        }
         testLogging {
             events "failed"
             exceptionFormat "full"
