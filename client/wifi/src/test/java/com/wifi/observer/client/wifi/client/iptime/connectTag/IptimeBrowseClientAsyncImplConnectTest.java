@@ -30,7 +30,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @ContextConfiguration(classes = {WifiClientConfig.class, CookieResource.class})
 @TestPropertySource("classpath:application-test.yml")
-@DisplayName("비동기 IPTIME 공유기 조회 테스트")
+@DisplayName("비동기 IPTIME 공유기 조회 연결 테스트")
 @Tag("connect")
 class IptimeBrowseClientAsyncImplConnectTest {
 

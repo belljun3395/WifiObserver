@@ -26,7 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @ContextConfiguration(classes = {WifiClientConfig.class, CookieResource.class})
 @TestPropertySource("classpath:application-test.yml")
-@DisplayName("IPTIME 공유기 쿠키 획득 테스트")
+@DisplayName("IPTIME 공유기 쿠키 획득 연결 테스트")
 @Tag("connect")
 class IptimeAuthClientConnectTest {
 

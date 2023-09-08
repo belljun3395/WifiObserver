@@ -39,7 +39,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @ContextConfiguration(classes = {WifiClientConfig.class, CookieResource.class})
 @TestPropertySource("classpath:application-test.yml")
-@DisplayName("동기 IPTIME 공유기 헬스체 테스트")
+@DisplayName("동기 IPTIME 공유기 헬스체크 테스트")
 class IptimeHealthClientImplTest {
 
 	private static final int BULK_COUNT = 10;
@@ -103,7 +103,7 @@ class IptimeHealthClientImplTest {
 	}
 
 	@Test
-	@DisplayName("헬스체크 실패 테스트")
+	@DisplayName("host 실패 테스트")
 	void queryHealthRequestFailTest() {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host + "fail").build();
