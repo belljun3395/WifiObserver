@@ -11,6 +11,6 @@ public class WifiURISyntaxException extends WifiRuntimeException {
 
 	@Override
 	public String getMessage() {
-		return super.getHost() + " : 올바르지 않은 URI 형식입니다. host : {} " + super.getHost();
+		return "올바르지 않은 URI 형식입니다. host : " + super.getHost();
 	}
 }
