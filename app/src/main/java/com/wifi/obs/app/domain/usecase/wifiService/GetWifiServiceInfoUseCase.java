@@ -65,7 +65,7 @@ public class GetWifiServiceInfoUseCase {
 				.collect(Collectors.toList());
 	}
 
-	private WifiServiceInfos getServiceInfos(
+	protected WifiServiceInfos getServiceInfos(
 			List<WifiServiceModel> services, List<List<DeviceModel>> devices) {
 
 		List<WifiServiceInfo> serviceInfos = new ArrayList<>();

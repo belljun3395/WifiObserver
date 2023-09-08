@@ -78,7 +78,7 @@ public class GetUsersFacadeUseCase {
 				.orElseThrow(() -> new ServiceNotFoundException(sid));
 	}
 
-	private OnConnectUserInfos getFilteredRes(OnConnectUserInfos res, List<DeviceEntity> devices) {
+	protected OnConnectUserInfos getFilteredRes(OnConnectUserInfos res, List<DeviceEntity> devices) {
 		List<String> macSources =
 				devices.stream().map(DeviceEntity::getMac).collect(Collectors.toList());
 

@@ -73,18 +73,21 @@ public class GetOnConnectDeviceFacadeUseCase {
 				.orElseThrow(() -> new DeviceNotFoundException(mac));
 	}
 
-	private DeviceOnConnectInfo getDeviceOnConnectInfo(
+	protected DeviceOnConnectInfo getDeviceOnConnectInfo(
 			GetUserService service, String mac, DeviceEntity device, WifiAuthEntity auth) {
 
 		OnConnectUserInfos users = service.execute(auth);
 
-		Optional<String> filteredMac =
-				users.getUserInfos().stream().map(UserInfo::getMac).filter(mac::equals).findFirst();
+		Optional<String> filteredMac = getFilteredMac(mac, users);
 		if (filteredMac.isEmpty()) {
 			return getDeviceOnConnectInfo(device, false);
 		}
 
 		return getDeviceOnConnectInfo(device, true);
+	}
+
+	protected Optional<String> getFilteredMac(String mac, OnConnectUserInfos users) {
+		return users.getUserInfos().stream().map(UserInfo::getMac).filter(mac::equals).findFirst();
 	}
 
 	private DeviceOnConnectInfo getDeviceOnConnectInfo(DeviceEntity device, Boolean connected) {
