@@ -2,12 +2,18 @@ package com.wifi.observer.client.wifi.client.iptime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.when;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
+import com.wifi.observer.client.wifi.dto.http.IptimeWifiBrowseClientDto;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBrowseRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkBrowseRequest;
 import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
+import com.wifi.observer.client.wifi.http.request.get.BrowseClientQuery;
 import com.wifi.observer.test.util.CookieResource;
+import com.wifi.observer.test.util.DocumentResource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -26,33 +33,21 @@ import org.springframework.test.context.TestPropertySource;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
-@ContextConfiguration(classes = {WifiClientConfig.class, CookieResource.class})
+@ContextConfiguration(
+		classes = {WifiClientConfig.class, CookieResource.class, DocumentResource.class})
 @TestPropertySource("classpath:application-test.yml")
 @DisplayName("동기 IPTIME 공유기 조회 테스트")
 class IptimeBrowseClientImplTest {
 
 	private static final int BULK_COUNT = 10;
 
-	@Value("${test.host}")
-	String host;
+	static String host = "host";
 
-	@Value("${test.userName}")
-	String userName;
+	@InjectMocks @Autowired IptimeBrowseClientImpl iptimeBrowseClient;
+	@MockBean BrowseClientQuery browseClientQuery;
 
-	@Value("${test.password}")
-	String password;
-
-	@Value("${test.hosts}")
-	String[] hosts;
-
-	@Value("${test.userNames}")
-	String[] userNames;
-
-	@Value("${test.passwords}")
-	String[] passwords;
-
-	@Autowired IptimeBrowseClientImpl iptimeBrowseClient;
 	@Autowired CookieResource cookieResource;
+	@Autowired DocumentResource documentResource;
 
 	@AfterEach
 	void clean() {
@@ -63,8 +58,11 @@ class IptimeBrowseClientImplTest {
 	@DisplayName("조회 성공 테스트")
 	void browseIptimeOnConnectUsersTest() {
 		// given
-		String cookie = cookieResource.getCookie();
+		String cookie = cookieResource.getDefaultCookie();
 		IptimeBrowseRequest request = IptimeBrowseRequest.builder().authInfo(cookie).host(host).build();
+
+		when(browseClientQuery.query(any(IptimeWifiBrowseClientDto.class)))
+				.thenReturn(Optional.of(documentResource.getOnConnectDocument()));
 
 		// when
 		IptimeOnConnectUserInfosResponse response = iptimeBrowseClient.query(request);
@@ -100,9 +98,15 @@ class IptimeBrowseClientImplTest {
 		List<IptimeBrowseRequest> requests = new ArrayList<>();
 		for (int i = 0; i < BULK_COUNT; i++) {
 			requests.add(
-					IptimeBrowseRequest.builder().authInfo(cookieResource.getCookie()).host(host).build());
+					IptimeBrowseRequest.builder()
+							.authInfo(cookieResource.getDefaultCookie())
+							.host(host)
+							.build());
 		}
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
+
+		when(browseClientQuery.query(any(IptimeWifiBrowseClientDto.class)))
+				.thenReturn(Optional.of(documentResource.getOnConnectDocument()));
 
 		// when
 		List<IptimeOnConnectUserInfosResponse> responses =
@@ -127,9 +131,20 @@ class IptimeBrowseClientImplTest {
 		requests.add(failRequest);
 		for (int i = 0; i < BULK_COUNT; i++) {
 			requests.add(
-					IptimeBrowseRequest.builder().authInfo(cookieResource.getCookie()).host(host).build());
+					IptimeBrowseRequest.builder()
+							.authInfo(cookieResource.getDefaultCookie())
+							.host(host)
+							.build());
 		}
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
+
+		when(browseClientQuery.query(
+						argThat(
+								dto ->
+										dto.getHost()
+												.equals(
+														host + "/sess-bin/timepro.cgi?tmenu=iframe&smenu=lan_pcinfo_status"))))
+				.thenReturn(Optional.of(documentResource.getOnConnectDocument()));
 
 		// when
 		List<IptimeOnConnectUserInfosResponse> clientResponses =

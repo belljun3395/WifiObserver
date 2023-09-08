@@ -1,13 +1,19 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
+import com.wifi.observer.client.wifi.dto.http.IptimeWifiHealthClientDto;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
+import com.wifi.observer.client.wifi.http.request.get.HealthClientQuery;
+import com.wifi.observer.client.wifi.support.generator.iptime.IptimeHealthFutureGenerator;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -33,13 +40,12 @@ class IptimeHealthClientAsyncImplTest {
 
 	private static final int BULK_COUNT = 10;
 
-	@Value("${test.host}")
-	String host;
+	static String host = "host";
 
-	@Value("${test.hosts}")
-	String[] hosts;
+	@InjectMocks @Autowired IptimeHealthFutureGenerator iptimeHealthFutureGenerator;
+	@MockBean HealthClientQuery healthClientQuery;
 
-	@Autowired IptimeHealthClientAsyncImpl iptimeBrowseClientAsync;
+	@Autowired IptimeHealthClientAsyncImpl iptimeHealthClientAsync;
 
 	@AfterEach
 	void clean() {
@@ -57,9 +63,11 @@ class IptimeHealthClientAsyncImplTest {
 
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+
 		// when
 		List<CommonHealthStatusResponse> responses =
-				iptimeBrowseClientAsync.queriesAsync(bulkHealthRequest);
+				iptimeHealthClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then
 		responses.forEach(response -> assertThat(response.getResponse()).containsSame(OK));
@@ -76,9 +84,11 @@ class IptimeHealthClientAsyncImplTest {
 
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
+		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host)))).thenReturn(OK);
+
 		// when
 		List<CommonHealthStatusResponse> responses =
-				iptimeBrowseClientAsync.queriesAsync(bulkHealthRequest);
+				iptimeHealthClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then
 		for (int i = 0; i < responses.size(); i++) {

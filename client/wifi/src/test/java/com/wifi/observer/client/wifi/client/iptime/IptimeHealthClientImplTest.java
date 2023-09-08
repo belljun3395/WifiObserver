@@ -1,16 +1,21 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
+import com.wifi.observer.client.wifi.dto.http.IptimeWifiHealthClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
 import com.wifi.observer.client.wifi.exception.WifiURISyntaxException;
+import com.wifi.observer.client.wifi.http.request.get.HealthClientQuery;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +24,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,13 +44,10 @@ class IptimeHealthClientImplTest {
 
 	private static final int BULK_COUNT = 10;
 
-	@Value("${test.host}")
-	String host;
+	static String host = "host";
 
-	@Value("${test.hosts}")
-	String[] hosts;
-
-	@Autowired IptimeHealthClientImpl iptimeHealthClient;
+	@InjectMocks @Autowired IptimeHealthClientImpl iptimeHealthClient;
+	@MockBean HealthClientQuery healthClientQuery;
 
 	@AfterEach
 	void clean() {
@@ -58,6 +61,8 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host).build();
 
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+
 		// when
 		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
 
@@ -66,10 +71,12 @@ class IptimeHealthClientImplTest {
 	}
 
 	@Test
-	@DisplayName("헬스체크 테스트")
+	@DisplayName("실패 테스트")
 	void queryHealthFailTest() {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host("fail").build();
+
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
 
 		// when
 		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
@@ -84,19 +91,24 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host("").build();
 
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenThrow(WifiURISyntaxException.class);
+
 		// when
 
 		// then
 		Assertions.assertThatThrownBy(() -> iptimeHealthClient.query(request))
 				.isInstanceOf(WifiURISyntaxException.class)
-				.hasMessageContaining(" : 올바르지 않은 URI 형식입니다.");
+				.hasMessageContaining("올바르지 않은 URI 형식입니다.");
 	}
 
 	@Test
-	@DisplayName("헬스체 실패 테스트")
+	@DisplayName("헬스체크 실패 테스트")
 	void queryHealthRequestFailTest() {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host + "fail").build();
+
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
 
 		// when
 		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
@@ -111,6 +123,8 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request =
 				CommonWifiHealthRequest.builder().host(host + "/fail").build();
+
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
 
 		// when
 		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
@@ -130,6 +144,8 @@ class IptimeHealthClientImplTest {
 
 		WifiBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+
 		// when
 		List<ClientResponse<HttpStatus>> responses = iptimeHealthClient.queries(bulkHealthRequest);
 
@@ -147,6 +163,8 @@ class IptimeHealthClientImplTest {
 		}
 
 		WifiBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
+
+		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host)))).thenReturn(OK);
 
 		// when
 		List<ClientResponse<HttpStatus>> responses = iptimeHealthClient.queries(bulkHealthRequest);
