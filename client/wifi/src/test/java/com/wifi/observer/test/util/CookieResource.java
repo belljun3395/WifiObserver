@@ -1,6 +1,6 @@
 package com.wifi.observer.test.util;
 
-import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClient;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
@@ -24,7 +24,7 @@ public class CookieResource {
 	@Value("${test.password}")
 	String password;
 
-	@Autowired IptimeAuthClientImpl iptimeAuthClient;
+	@Autowired IptimeAuthClient iptimeAuthClient;
 
 	String cookie;
 	String DEFAULT_COOKE_VALUE = "2Lr3BFTO4DCFeGQF";

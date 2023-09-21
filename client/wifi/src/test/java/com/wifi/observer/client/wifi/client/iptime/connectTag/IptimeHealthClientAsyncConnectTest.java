@@ -5,10 +5,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
-import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClientAsyncImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClientAsync;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
-import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
+import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -32,7 +33,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource("classpath:application-test.yml")
 @DisplayName("비동기 IPTIME 공유기 헬스체크 연결 테스트")
 @Tag("connect")
-class IptimeHealthClientAsyncImplConnectTest {
+class IptimeHealthClientAsyncConnectTest {
 
 	private static final int BULK_COUNT = 10;
 
@@ -42,7 +43,7 @@ class IptimeHealthClientAsyncImplConnectTest {
 	@Value("${test.hosts}")
 	String[] hosts;
 
-	@Autowired IptimeHealthClientAsyncImpl iptimeBrowseClientAsync;
+	@Autowired IptimeHealthClientAsync iptimeBrowseClientAsync;
 
 	@AfterEach
 	void clean() {
@@ -61,7 +62,7 @@ class IptimeHealthClientAsyncImplConnectTest {
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
 		// when
-		List<CommonHealthStatusResponse> responses =
+		List<ClientResponse<HttpStatus>> responses =
 				iptimeBrowseClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then
@@ -80,7 +81,7 @@ class IptimeHealthClientAsyncImplConnectTest {
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
 		// when
-		List<CommonHealthStatusResponse> responses =
+		List<ClientResponse<HttpStatus>> responses =
 				iptimeBrowseClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then

@@ -5,12 +5,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
-import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClient;
 import com.wifi.observer.client.wifi.dto.request.WifiBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
-import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
 import com.wifi.observer.client.wifi.exception.WifiURISyntaxException;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource("classpath:application-test.yml")
 @DisplayName("동기 IPTIME 공유기 헬스체크 연결 테스트")
 @Tag("connect")
-class IptimeHealthClientImplConnectTest {
+class IptimeHealthClientConnectTest {
 
 	private static final int BULK_COUNT = 10;
 
@@ -47,7 +46,7 @@ class IptimeHealthClientImplConnectTest {
 	@Value("${test.hosts}")
 	String[] hosts;
 
-	@Autowired IptimeHealthClientImpl iptimeHealthClient;
+	@Autowired IptimeHealthClient iptimeHealthClient;
 
 	@AfterEach
 	void clean() {
@@ -62,7 +61,7 @@ class IptimeHealthClientImplConnectTest {
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host).build();
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(OK);
@@ -75,7 +74,7 @@ class IptimeHealthClientImplConnectTest {
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host("fail").build();
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);
@@ -92,7 +91,7 @@ class IptimeHealthClientImplConnectTest {
 		// then
 		Assertions.assertThatThrownBy(() -> iptimeHealthClient.query(request))
 				.isInstanceOf(WifiURISyntaxException.class)
-				.hasMessageContaining(" : 올바르지 않은 URI 형식입니다.");
+				.hasMessageContaining("올바르지 않은 URI 형식입니다");
 	}
 
 	@Test
@@ -102,7 +101,7 @@ class IptimeHealthClientImplConnectTest {
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host + "fail").build();
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);
@@ -116,7 +115,7 @@ class IptimeHealthClientImplConnectTest {
 				CommonWifiHealthRequest.builder().host(host + "/fail").build();
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);

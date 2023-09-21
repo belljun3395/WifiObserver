@@ -13,9 +13,10 @@ import com.wifi.observer.client.wifi.dto.request.WifiBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
-import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
 import com.wifi.observer.client.wifi.exception.WifiURISyntaxException;
 import com.wifi.observer.client.wifi.http.request.get.HealthClientQuery;
+import com.wifi.observer.client.wifi.model.HealthQueryClientModel;
+import com.wifi.observer.client.wifi.model.info.HealthQueryInfo;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +62,14 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host).build();
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(
+						HealthQueryClientModel.builder()
+								.statusInfo(HealthQueryInfo.builder().info(OK).build())
+								.build());
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(OK);
@@ -76,10 +81,11 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host("fail").build();
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(HealthQueryClientModel.fail(host));
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);
@@ -108,10 +114,11 @@ class IptimeHealthClientImplTest {
 		// given
 		CommonWifiHealthRequest request = CommonWifiHealthRequest.builder().host(host + "fail").build();
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(HealthQueryClientModel.fail(host));
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);
@@ -124,10 +131,11 @@ class IptimeHealthClientImplTest {
 		CommonWifiHealthRequest request =
 				CommonWifiHealthRequest.builder().host(host + "/fail").build();
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(BAD_REQUEST);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(HealthQueryClientModel.fail(host));
 
 		// when
-		CommonHealthStatusResponse response = iptimeHealthClient.query(request);
+		ClientResponse<HttpStatus> response = iptimeHealthClient.query(request);
 
 		// then
 		assertThat(response.getResponse()).containsSame(BAD_REQUEST);
@@ -144,7 +152,11 @@ class IptimeHealthClientImplTest {
 
 		WifiBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(
+						HealthQueryClientModel.builder()
+								.statusInfo(HealthQueryInfo.builder().info(OK).build())
+								.build());
 
 		// when
 		List<ClientResponse<HttpStatus>> responses = iptimeHealthClient.queries(bulkHealthRequest);
@@ -164,7 +176,11 @@ class IptimeHealthClientImplTest {
 
 		WifiBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
-		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host)))).thenReturn(OK);
+		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host))))
+				.thenReturn(
+						HealthQueryClientModel.builder()
+								.statusInfo(HealthQueryInfo.builder().info(OK).build())
+								.build());
 
 		// when
 		List<ClientResponse<HttpStatus>> responses = iptimeHealthClient.queries(bulkHealthRequest);

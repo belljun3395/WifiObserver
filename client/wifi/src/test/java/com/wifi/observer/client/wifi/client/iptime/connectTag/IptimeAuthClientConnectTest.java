@@ -3,7 +3,7 @@ package com.wifi.observer.client.wifi.client.iptime.connectTag;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
-import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClient;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
@@ -39,7 +39,7 @@ class IptimeAuthClientConnectTest {
 	@Value("${test.password}")
 	String password;
 
-	@Autowired IptimeAuthClientImpl iptimeAuthClient;
+	@Autowired IptimeAuthClient iptimeAuthClient;
 	@Autowired CookieResource cookieResource;
 
 	@AfterEach
@@ -58,7 +58,7 @@ class IptimeAuthClientConnectTest {
 
 		// then
 
-		assertThat(response.getHost()).isEqualTo(host);
+		assertThat(response.getHost()).contains(host);
 		assertThat(response.getResponse()).isNotNull();
 	}
 
@@ -75,7 +75,7 @@ class IptimeAuthClientConnectTest {
 		ClientResponse<AuthInfo> response = iptimeAuthClient.command(request);
 
 		// then
-		assertThat(response.getHost()).isEqualTo(host);
+		assertThat(response.getHost()).contains(host);
 		assertThat(response.getResponse()).isEmpty();
 	}
 }

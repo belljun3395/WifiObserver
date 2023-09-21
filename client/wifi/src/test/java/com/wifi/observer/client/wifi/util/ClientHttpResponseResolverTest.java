@@ -3,6 +3,9 @@ package com.wifi.observer.client.wifi.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.wifi.observer.client.wifi.model.info.AuthCommandInfo;
+import com.wifi.observer.client.wifi.model.info.BrowseQueryInfo;
+import com.wifi.observer.client.wifi.support.jsoup.ClientDocument;
 import com.wifi.observer.client.wifi.util.resolver.CookieResolver;
 import com.wifi.observer.client.wifi.util.resolver.string.CookieNamePatternResolverDecorator;
 import com.wifi.observer.client.wifi.util.resolver.string.SetCookiePatternResolver;
@@ -11,7 +14,6 @@ import com.wifi.observer.client.wifi.util.resolver.users.IptimeUsersOnConnectFil
 import com.wifi.observer.test.util.DocumentResource;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +38,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 			DocumentResource.class,
 		})
 @TestPropertySource("classpath:application-test.yml")
-class ResponseResolverTest {
+class ClientHttpResponseResolverTest {
 
 	static String LOCAL_HOST = "http://localhost";
 	static String EXPECT_EXTRACT_COOKIE_VALUE = "2Lr3BFTO4DCFeGQF";
@@ -61,7 +63,9 @@ class ResponseResolverTest {
 		Document authSource = documentResource.getAuthDocument();
 
 		// when
-		String cookie = cookieResolver.resolve(authSource);
+		String cookie =
+				cookieResolver.resolve(
+						AuthCommandInfo.builder().info(ClientDocument.of(authSource)).build());
 
 		// then
 		assertThat(cookie).isEqualTo(EXPECT_EXTRACT_COOKIE_VALUE);
@@ -77,7 +81,10 @@ class ResponseResolverTest {
 		// when
 
 		// then
-		assertThatThrownBy(() -> cookieResolver.resolve(document))
+		assertThatThrownBy(
+						() ->
+								cookieResolver.resolve(
+										AuthCommandInfo.builder().info(ClientDocument.of(document)).build()))
 				.isInstanceOf(NoSuchElementException.class)
 				.hasMessageContaining("값을 찾아낼 수 없습니다.");
 	}
@@ -90,7 +97,8 @@ class ResponseResolverTest {
 
 		// when
 		List<String> onConnectUsers =
-				iptimeOnConnectUsersResolver.resolve(Optional.of(onConnectSource));
+				iptimeOnConnectUsersResolver.resolve(
+						BrowseQueryInfo.builder().info(ClientDocument.of(onConnectSource)).build());
 
 		// then
 		assertThat(onConnectUsers).containsExactlyInAnyOrder(EXPECT_EXTRACT_ON_CONNECT_USERS);

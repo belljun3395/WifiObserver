@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wifi.observer.client.wifi.WifiClientConfig;
-import com.wifi.observer.client.wifi.client.iptime.IptimeBrowseClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeBrowseClientAsync;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBrowseRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkBrowseRequest;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
+import com.wifi.observer.client.wifi.dto.response.ClientResponse;
+import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,9 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @ContextConfiguration(classes = {WifiClientConfig.class, CookieResource.class})
 @TestPropertySource("classpath:application-test.yml")
-@DisplayName("동기 IPTIME 공유기 조회 연결 테스트")
+@DisplayName("비동기 IPTIME 공유기 조회 연결 테스트")
 @Tag("connect")
-class IptimeBrowseClientImplConnectTest {
+class IptimeBrowseClientAsyncConnectTest {
 
 	private static final int BULK_COUNT = 10;
 
@@ -54,46 +55,13 @@ class IptimeBrowseClientImplConnectTest {
 	@Value("${test.passwords}")
 	String[] passwords;
 
-	@Autowired IptimeBrowseClientImpl iptimeBrowseClient;
+	@Autowired IptimeBrowseClientAsync iptimeBrowseClientAsync;
+
 	@Autowired CookieResource cookieResource;
 
 	@AfterEach
 	void clean() {
 		MDC.clear();
-	}
-
-	@Test
-	@DisplayName("조회 성공 테스트")
-	void browseIptimeOnConnectUsersTest() {
-		// given
-		String cookie = cookieResource.getCookie();
-		IptimeBrowseRequest request = IptimeBrowseRequest.builder().authInfo(cookie).host(host).build();
-
-		// when
-		IptimeOnConnectUserInfosResponse response = iptimeBrowseClient.query(request);
-		if (response.getResponse().isEmpty()) {
-			log.info("response is empty");
-		}
-
-		// then
-		assertAll(
-				() -> assertThat(response.getResponse().get().getUsers()).isNotEmpty(),
-				() -> assertThat(response.getHost()).isEqualTo(host));
-	}
-
-	@Test
-	@DisplayName("조회 실패 테스트")
-	void browseIptimeOnConnectUsersFailTest() {
-		// given
-		String cookie = "wrong cookie";
-		String host = "wrong host";
-		IptimeBrowseRequest request = IptimeBrowseRequest.builder().authInfo(cookie).host(host).build();
-
-		// when
-		IptimeOnConnectUserInfosResponse response = iptimeBrowseClient.query(request);
-
-		// then
-		assertThat(response.getResponse()).isEmpty();
 	}
 
 	@Test
@@ -108,15 +76,14 @@ class IptimeBrowseClientImplConnectTest {
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
 
 		// when
-		List<IptimeOnConnectUserInfosResponse> responses =
-				iptimeBrowseClient.queries(bulkOnConnectRequest);
+		List<ClientResponse<OnConnectUserInfos>> responses =
+				iptimeBrowseClientAsync.queriesAsync(bulkOnConnectRequest);
 
 		// then
 		responses.stream()
-				.map(IptimeOnConnectUserInfosResponse::getResponse)
+				.map(ClientResponse::getResponse)
 				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.forEach(response -> assertThat(response.getUsers()).isNotEmpty());
+				.forEach(response -> assertThat(response.get().getUsers()).isNotEmpty());
 	}
 
 	@Test
@@ -135,9 +102,9 @@ class IptimeBrowseClientImplConnectTest {
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
 
 		// when
-		List<IptimeOnConnectUserInfosResponse> clientResponses =
-				iptimeBrowseClient.queries(bulkOnConnectRequest);
-		IptimeOnConnectUserInfosResponse failResponse = clientResponses.get(0);
+		List<ClientResponse<OnConnectUserInfos>> clientResponses =
+				iptimeBrowseClientAsync.queriesAsync(bulkOnConnectRequest);
+		ClientResponse<OnConnectUserInfos> failResponse = clientResponses.get(0);
 
 		// then
 		assertAll(

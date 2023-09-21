@@ -10,9 +10,11 @@ import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import com.wifi.observer.client.wifi.http.request.post.AuthClientCommand;
+import com.wifi.observer.client.wifi.model.AuthCommandClientModel;
+import com.wifi.observer.client.wifi.model.info.AuthCommandInfo;
+import com.wifi.observer.client.wifi.support.jsoup.ClientDocument;
 import com.wifi.observer.test.util.CookieResource;
 import com.wifi.observer.test.util.DocumentResource;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +35,7 @@ import org.springframework.test.context.TestPropertySource;
 		classes = {WifiClientConfig.class, CookieResource.class, DocumentResource.class})
 @TestPropertySource("classpath:application-test.yml")
 @DisplayName("IPTIME 공유기 쿠키 획득 테스트")
-class IptimeAuthClientTest {
+class IptimeAuthClientImplTest {
 
 	static String host = "host";
 	static String userName = "userName";
@@ -58,7 +60,14 @@ class IptimeAuthClientTest {
 				IptimeAuthRequest.builder().host(host).userName(userName).password(password).build();
 
 		when(authClientCommand.command(any(IptimeWifiAuthClientDto.class)))
-				.thenReturn(Optional.of(documentResource.getAuthDocument()));
+				.thenReturn(
+						AuthCommandClientModel.builder()
+								.authInfo(
+										AuthCommandInfo.builder()
+												.info(ClientDocument.of(documentResource.getAuthDocument()))
+												.build())
+								.host(host)
+								.build());
 
 		// when
 		ClientResponse<AuthInfo> response = iptimeAuthClient.command(request);
@@ -77,6 +86,9 @@ class IptimeAuthClientTest {
 		String host = "wrong host";
 		IptimeAuthRequest request =
 				IptimeAuthRequest.builder().host(host).userName(userName).password(password).build();
+
+		when(authClientCommand.command(any(IptimeWifiAuthClientDto.class)))
+				.thenReturn(AuthCommandClientModel.fail(host));
 
 		// when
 		ClientResponse<AuthInfo> response = iptimeAuthClient.command(request);

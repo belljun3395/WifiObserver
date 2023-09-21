@@ -9,19 +9,25 @@ import com.wifi.observer.client.wifi.WifiClientConfig;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiBrowseClientDto;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBrowseRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkBrowseRequest;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
+import com.wifi.observer.client.wifi.dto.response.ClientResponse;
+import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos;
 import com.wifi.observer.client.wifi.http.request.get.BrowseClientQuery;
+import com.wifi.observer.client.wifi.model.BrowseQueryClientModel;
+import com.wifi.observer.client.wifi.model.info.BrowseQueryInfo;
+import com.wifi.observer.client.wifi.support.converter.iptime.IptimeBrowseConverter;
 import com.wifi.observer.client.wifi.support.generator.iptime.IptimeBrowseClientFutureGenerator;
+import com.wifi.observer.client.wifi.support.generator.iptime.IptimeBrowseClientHeaderGenerator;
+import com.wifi.observer.client.wifi.support.jsoup.ClientDocument;
 import com.wifi.observer.test.util.CookieResource;
 import com.wifi.observer.test.util.DocumentResource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +59,9 @@ class IptimeBrowseClientAsyncImplTest {
 	@Autowired CookieResource cookieResource;
 	@Autowired DocumentResource documentResource;
 
+	@Autowired IptimeBrowseConverter iptimeBrowseConverter;
+	@Autowired IptimeBrowseClientHeaderGenerator iptimeBrowseClientHeaderGenerator;
+
 	@AfterEach
 	void clean() {
 		MDC.clear();
@@ -73,15 +82,21 @@ class IptimeBrowseClientAsyncImplTest {
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
 
 		when(browseClientQuery.query(any(IptimeWifiBrowseClientDto.class)))
-				.thenReturn(Optional.of(documentResource.getOnConnectDocument()));
+				.thenReturn(
+						BrowseQueryClientModel.builder()
+								.usersInfo(
+										BrowseQueryInfo.builder()
+												.info(ClientDocument.of(documentResource.getOnConnectDocument()))
+												.build())
+								.build());
 
 		// when
-		List<IptimeOnConnectUserInfosResponse> responses =
+		List<ClientResponse<OnConnectUserInfos>> responses =
 				iptimeBrowseClientAsync.queriesAsync(bulkOnConnectRequest);
 
 		// then
 		responses.stream()
-				.map(IptimeOnConnectUserInfosResponse::getResponse)
+				.map(ClientResponse::getResponse)
 				.filter(Optional::isPresent)
 				.forEach(response -> assertThat(response.get().getUsers()).isNotEmpty());
 	}
@@ -95,27 +110,44 @@ class IptimeBrowseClientAsyncImplTest {
 		IptimeBrowseRequest failRequest =
 				IptimeBrowseRequest.builder().authInfo("failCookie").host("failHost").build();
 		requests.add(failRequest);
+		IptimeBrowseRequest successRequest =
+				IptimeBrowseRequest.builder()
+						.authInfo(cookieResource.getDefaultCookie())
+						.host(host)
+						.build();
 		for (int i = 0; i < BULK_COUNT; i++) {
-			requests.add(
-					IptimeBrowseRequest.builder()
-							.authInfo(cookieResource.getDefaultCookie())
-							.host(host)
-							.build());
+			requests.add(successRequest);
 		}
 		IptimeBulkBrowseRequest bulkOnConnectRequest = IptimeBulkBrowseRequest.of(requests);
 
-		when(browseClientQuery.query(
-						ArgumentMatchers.argThat(
-								dto ->
-										dto.getHost()
-												.equals(
-														host + "/sess-bin/timepro.cgi?tmenu=iframe&smenu=lan_pcinfo_status"))))
-				.thenReturn(Optional.of(documentResource.getOnConnectDocument()));
+		Map<String, String> successHeaders =
+				iptimeBrowseClientHeaderGenerator.execute(successRequest.getHost());
+		IptimeWifiBrowseClientDto successDto =
+				iptimeBrowseConverter.to(successRequest, successHeaders, successRequest.getAuthInfo());
+
+		Map<String, String> failHeaders =
+				iptimeBrowseClientHeaderGenerator.execute(failRequest.getHost());
+		IptimeWifiBrowseClientDto failDto =
+				iptimeBrowseConverter.to(failRequest, failHeaders, failRequest.getAuthInfo());
+
+		when(browseClientQuery.query(successDto))
+				.thenReturn(
+						BrowseQueryClientModel.builder()
+								.usersInfo(
+										BrowseQueryInfo.builder()
+												.info(ClientDocument.of(documentResource.getOnConnectDocument()))
+												.build())
+								.host(successRequest.getHost())
+								.build());
+
+		when(browseClientQuery.query(failDto))
+				.thenReturn(BrowseQueryClientModel.fail(failDto.getHost()));
 
 		// when
-		List<IptimeOnConnectUserInfosResponse> clientResponses =
+
+		List<ClientResponse<OnConnectUserInfos>> clientResponses =
 				iptimeBrowseClientAsync.queriesAsync(bulkOnConnectRequest);
-		IptimeOnConnectUserInfosResponse failResponse = clientResponses.get(0);
+		ClientResponse<OnConnectUserInfos> failResponse = clientResponses.get(0);
 
 		// then
 		assertAll(

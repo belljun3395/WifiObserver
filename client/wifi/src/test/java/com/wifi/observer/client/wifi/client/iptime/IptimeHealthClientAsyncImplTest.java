@@ -11,8 +11,10 @@ import com.wifi.observer.client.wifi.WifiClientConfig;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiHealthClientDto;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
-import com.wifi.observer.client.wifi.dto.response.common.CommonHealthStatusResponse;
+import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import com.wifi.observer.client.wifi.http.request.get.HealthClientQuery;
+import com.wifi.observer.client.wifi.model.HealthQueryClientModel;
+import com.wifi.observer.client.wifi.model.info.HealthQueryInfo;
 import com.wifi.observer.client.wifi.support.generator.iptime.IptimeHealthFutureGenerator;
 import com.wifi.observer.test.util.CookieResource;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -63,10 +66,14 @@ class IptimeHealthClientAsyncImplTest {
 
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
-		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class))).thenReturn(OK);
+		when(healthClientQuery.query(any(IptimeWifiHealthClientDto.class)))
+				.thenReturn(
+						HealthQueryClientModel.builder()
+								.statusInfo(HealthQueryInfo.builder().info(OK).build())
+								.build());
 
 		// when
-		List<CommonHealthStatusResponse> responses =
+		List<ClientResponse<HttpStatus>> responses =
 				iptimeHealthClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then
@@ -84,10 +91,14 @@ class IptimeHealthClientAsyncImplTest {
 
 		IptimeBulkHealthRequest bulkHealthRequest = new IptimeBulkHealthRequest(requests);
 
-		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host)))).thenReturn(OK);
+		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host))))
+				.thenReturn(
+						HealthQueryClientModel.builder()
+								.statusInfo(HealthQueryInfo.builder().info(OK).build())
+								.build());
 
 		// when
-		List<CommonHealthStatusResponse> responses =
+		List<ClientResponse<HttpStatus>> responses =
 				iptimeHealthClientAsync.queriesAsync(bulkHealthRequest);
 
 		// then
