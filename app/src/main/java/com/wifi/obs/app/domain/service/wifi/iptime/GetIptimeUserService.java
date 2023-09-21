@@ -6,8 +6,8 @@ import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
 import com.wifi.obs.app.web.dto.request.beta.IptimeBetaRequest;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
-import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
-import com.wifi.observer.client.wifi.client.iptime.IptimeBrowseClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClient;
+import com.wifi.observer.client.wifi.client.iptime.IptimeBrowseClient;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBrowseRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
@@ -24,8 +24,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetIptimeUserService implements GetUserService {
 
-	private final IptimeAuthClientImpl iptimeAuthClient;
-	private final IptimeBrowseClientImpl iptimeBrowseClient;
+	private final IptimeAuthClient iptimeAuthClient;
+	private final IptimeBrowseClient iptimeBrowseClient;
 
 	public OnConnectUserInfos execute(WifiAuthEntity authInfo) {
 		ClientResponse<AuthInfo> authResponse =

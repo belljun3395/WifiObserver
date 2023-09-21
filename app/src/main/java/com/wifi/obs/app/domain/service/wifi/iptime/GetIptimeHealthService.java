@@ -1,7 +1,7 @@
 package com.wifi.obs.app.domain.service.wifi.iptime;
 
 import com.wifi.obs.app.domain.service.wifi.GetHealthService;
-import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClient;
 import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetIptimeHealthService implements GetHealthService {
 
-	private final IptimeHealthClientImpl iptimeHealthClient;
+	private final IptimeHealthClient iptimeHealthClient;
 
 	public HttpStatus execute(String host) {
 
