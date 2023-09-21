@@ -3,7 +3,7 @@ package com.wifi.obs.infra.batch.job.browse.iptime.step;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
-import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClientImpl;
+import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClient;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IptimeAuthProcessor implements ItemProcessor<WifiServiceEntity, AuthInfo> {
 
-	private final IptimeAuthClientImpl iptimeAuthClient;
+	private final IptimeAuthClient iptimeAuthClient;
 
 	@Override
 	@Transactional(readOnly = true, transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
