@@ -1,8 +1,10 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
+import static com.wifi.observer.client.wifi.support.log.LogFormat.RESPONSE_ERROR;
+import static java.lang.String.format;
+
 import com.wifi.obs.infra.slack.config.SlackChannel;
 import com.wifi.obs.infra.slack.service.SlackService;
-import com.wifi.observer.client.wifi.client.WifiAuthClient;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiAuthClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiAuthClientRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
@@ -10,21 +12,20 @@ import com.wifi.observer.client.wifi.dto.response.AuthInfo;
 import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import com.wifi.observer.client.wifi.dto.response.iptime.IptimeAuthResponse;
 import com.wifi.observer.client.wifi.http.request.post.AuthClientCommand;
+import com.wifi.observer.client.wifi.model.AuthCommandClientModel;
 import com.wifi.observer.client.wifi.support.converter.iptime.IptimeAuthConverter;
 import com.wifi.observer.client.wifi.support.generator.iptime.IptimeAuthClientBodyGenerator;
 import com.wifi.observer.client.wifi.support.generator.iptime.IptimeAuthClientHeaderGenerator;
 import com.wifi.observer.client.wifi.util.resolver.CookieResolver;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeAuthClientImpl implements WifiAuthClient<IptimeAuthRequest, AuthInfo> {
+public class IptimeAuthClientImpl implements IptimeAuthClient {
 
 	private final IptimeAuthConverter iptimeAuthConverter;
 	private final IptimeAuthClientHeaderGenerator iptimeAuthClientHeaderGenerator;
@@ -39,24 +40,30 @@ public class IptimeAuthClientImpl implements WifiAuthClient<IptimeAuthRequest, A
 
 		IptimeWifiAuthClientDto command = getDto(request);
 
-		Optional<Document> response = authClientCommand.command(command);
+		AuthCommandClientModel response = authClientCommand.command(command);
 
-		if (response.isEmpty()) {
-			slackService.sendSlackMessage(
-					"iptime auth client response is empty!!! host : " + request.getHost(),
-					SlackChannel.ERROR);
-			return IptimeAuthResponse.fail(request.getHost());
+		if (response.isFail()) {
+			writeFailLog(response);
+			return IptimeAuthResponse.fail(response.getHost());
 		}
 
-		return iptimeAuthConverter.from(cookieResolver.resolve(response.get()), request.getHost());
+		String cookie = cookieResolver.resolve(response.getAuthInfo());
+
+		return iptimeAuthConverter.from(cookie, response.getHost());
 	}
 
 	private IptimeWifiAuthClientDto getDto(WifiAuthClientRequest request) {
-
 		Map<String, String> headers = iptimeAuthClientHeaderGenerator.execute(request.getHost());
 		Map<String, String> body =
 				iptimeAuthClientBodyGenerator.execute(request.getUserName(), request.getPassword());
 
 		return iptimeAuthConverter.to(request, headers, body);
+	}
+
+	private void writeFailLog(AuthCommandClientModel response) {
+		log.warn(RESPONSE_ERROR.getLogDebugFormat(), this.getClass().getName(), response.getHost());
+		slackService.sendSlackMessage(
+				format(RESPONSE_ERROR.getSlackFormat(), this.getClass().getName(), response.getHost()),
+				SlackChannel.ERROR);
 	}
 }

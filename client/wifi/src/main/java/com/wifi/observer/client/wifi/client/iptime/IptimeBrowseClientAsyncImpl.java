@@ -1,10 +1,10 @@
 package com.wifi.observer.client.wifi.client.iptime;
 
-import com.wifi.observer.client.wifi.client.WifiBrowseClientAsync;
 import com.wifi.observer.client.wifi.dto.http.IptimeWifiBrowseClientDto;
 import com.wifi.observer.client.wifi.dto.request.WifiBulkBrowseRequest;
 import com.wifi.observer.client.wifi.dto.request.iptime.IptimeBrowseRequest;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
+import com.wifi.observer.client.wifi.dto.response.ClientResponse;
+import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos;
 import com.wifi.observer.client.wifi.support.converter.iptime.IptimeBrowseConverter;
 import com.wifi.observer.client.wifi.support.converter.iptime.IptimeOnConnectUsersFutureMapper;
 import com.wifi.observer.client.wifi.support.generator.iptime.IptimeBrowseClientFutureGenerator;
@@ -21,8 +21,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeBrowseClientAsyncImpl
-		implements WifiBrowseClientAsync<IptimeBrowseRequest, IptimeOnConnectUserInfosResponse> {
+public class IptimeBrowseClientAsyncImpl implements IptimeBrowseClientAsync {
 
 	private final IptimeBrowseConverter iptimeBrowseClientConverter;
 	private final IptimeBrowseClientHeaderGenerator iptimeBrowseClientHeaderGenerator;
@@ -30,9 +29,10 @@ public class IptimeBrowseClientAsyncImpl
 	private final IptimeOnConnectUsersFutureMapper iptimeOnConnectUsersFutureMapper;
 
 	@Override
-	public List<IptimeOnConnectUserInfosResponse> queriesAsync(
+	public List<ClientResponse<OnConnectUserInfos>> queriesAsync(
 			@BulkRequest WifiBulkBrowseRequest<IptimeBrowseRequest> requests) {
-		List<CompletableFuture<IptimeOnConnectUserInfosResponse>> futures = getFutures(requests);
+
+		List<CompletableFuture<ClientResponse<OnConnectUserInfos>>> futures = getFutures(requests);
 
 		return futures.stream()
 				.map(iptimeOnConnectUsersFutureMapper::from)
@@ -40,9 +40,8 @@ public class IptimeBrowseClientAsyncImpl
 	}
 
 	@Override
-	public List<CompletableFuture<IptimeOnConnectUserInfosResponse>> getFutures(
+	public List<CompletableFuture<ClientResponse<OnConnectUserInfos>>> getFutures(
 			WifiBulkBrowseRequest<IptimeBrowseRequest> requests) {
-
 		return requests.getSource().stream()
 				.map(this::getDto)
 				.map(this::gerFuture)
@@ -55,9 +54,8 @@ public class IptimeBrowseClientAsyncImpl
 		return iptimeBrowseClientConverter.to(request, headers, request.getAuthInfo());
 	}
 
-	private CompletableFuture<IptimeOnConnectUserInfosResponse> gerFuture(
+	private CompletableFuture<ClientResponse<OnConnectUserInfos>> gerFuture(
 			IptimeWifiBrowseClientDto queryDto) {
-
 		return iptimeBrowseClientFutureGenerator.execute(queryDto);
 	}
 }
