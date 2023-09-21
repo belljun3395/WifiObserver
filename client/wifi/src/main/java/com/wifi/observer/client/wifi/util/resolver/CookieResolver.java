@@ -1,7 +1,7 @@
 package com.wifi.observer.client.wifi.util.resolver;
 
+import com.wifi.observer.client.wifi.model.info.AuthCommandInfo;
 import com.wifi.observer.client.wifi.util.resolver.string.StringResolver;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class CookieResolver {
 		this.resolver = resolver;
 	}
 
-	public String resolve(Document source) {
-		return resolver.resolve(source.toString());
+	public String resolve(AuthCommandInfo source) {
+		return resolver.resolve(source.getInfo().toString());
 	}
 }

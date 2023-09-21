@@ -1,11 +1,9 @@
 package com.wifi.observer.client.wifi.util.resolver.users;
 
+import com.wifi.observer.client.wifi.model.info.BrowseQueryInfo;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
@@ -19,11 +17,8 @@ public class IptimeUserPropertyResolver implements UsersPropertyResolver {
 	private static final String STYLE = "#a9a9a9";
 
 	@Override
-	public List<String> resolve(Optional<Document> source) {
-		if (source.isEmpty()) {
-			return Collections.emptyList();
-		}
-		Element body = source.get().body();
+	public List<String> resolve(BrowseQueryInfo source) {
+		Element body = source.getInfo().getDocument().body();
 
 		Elements tbody = body.select(TBODY);
 

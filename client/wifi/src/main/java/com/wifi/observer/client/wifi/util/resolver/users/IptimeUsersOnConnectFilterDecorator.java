@@ -1,10 +1,9 @@
 package com.wifi.observer.client.wifi.util.resolver.users;
 
+import com.wifi.observer.client.wifi.model.info.BrowseQueryInfo;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,14 +24,11 @@ public class IptimeUsersOnConnectFilterDecorator extends UsersPropertyResolverDe
 	}
 
 	@Override
-	public List<String> resolve(Optional<Document> source) {
-		if (source.isEmpty()) {
-			return Collections.emptyList();
-		}
-
+	public List<String> resolve(BrowseQueryInfo source) {
 		List<String> allUsersProperty = super.resolve(source);
 
-		List<String> onConnectUserProperties = getOnConnectUserProperties(source.get());
+		List<String> onConnectUserProperties =
+				getOnConnectUserProperties(source.getInfo().getDocument());
 
 		return filterOnConnectUsers(allUsersProperty, onConnectUserProperties);
 	}
