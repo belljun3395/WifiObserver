@@ -25,12 +25,12 @@ public class HealthClientQuery {
 			return HealthQueryClientModel.builder()
 					.statusInfo(
 							HealthQueryInfo.builder()
-									.info(wifiHealthFeignClient.query(new URI(source.getURL())).getStatusCode())
+									.info(wifiHealthFeignClient.query(new URI(source.getUrl())).getStatusCode())
 									.build())
 					.host(source.getHost())
 					.build();
 		} catch (URISyntaxException e) {
-			throw new WifiURISyntaxException(source.getURL());
+			throw new WifiURISyntaxException(source.getUrl());
 		} catch (FeignException e) {
 			return HealthQueryClientModel.fail(source.getHost());
 		}

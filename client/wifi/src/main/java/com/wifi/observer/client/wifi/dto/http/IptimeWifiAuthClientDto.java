@@ -21,6 +21,7 @@ public class IptimeWifiAuthClientDto implements HostLogAble {
 	private final Map<String, String> body;
 
 	public String getHost() {
-		return StringUtils.substringAfter(url, "http://");
+		String sub = StringUtils.substringAfter(url, "http://");
+		return StringUtils.substringBefore(sub, "/");
 	}
 }

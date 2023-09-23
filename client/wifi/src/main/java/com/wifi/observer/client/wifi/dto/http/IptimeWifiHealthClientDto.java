@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @ToString
@@ -13,9 +14,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class IptimeWifiHealthClientDto implements HostLogAble {
-	private final String host;
 
-	public String getURL() {
-		return "http://" + host;
+	private final String url;
+
+	public String getHost() {
+		String sub = StringUtils.substringAfter(url, "http://");
+		return StringUtils.substringBefore(sub, "/");
 	}
 }

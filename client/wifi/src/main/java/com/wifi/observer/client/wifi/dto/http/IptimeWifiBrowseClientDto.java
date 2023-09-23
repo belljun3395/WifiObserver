@@ -20,6 +20,7 @@ public class IptimeWifiBrowseClientDto implements HostLogAble {
 	private final Map<String, String> headers;
 
 	public String getHost() {
-		return StringUtils.substringAfter(url, "http://");
+		String sub = StringUtils.substringAfter(url, "http://");
+		return StringUtils.substringBefore(sub, "/");
 	}
 }
