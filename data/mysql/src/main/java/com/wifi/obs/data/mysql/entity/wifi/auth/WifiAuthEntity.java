@@ -7,7 +7,6 @@ import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,7 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @SuperBuilder(toBuilder = true)
 @Entity(name = ENTITY_PREFIX + "_entity")
-@EntityListeners({AuditingEntityListener.class})
 @Table(name = ENTITY_PREFIX + "_tb")
 @SQLDelete(sql = "UPDATE wifi_auth_tb SET deleted=true WHERE id = ?")
 public class WifiAuthEntity extends BaseEntity {

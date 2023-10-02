@@ -16,11 +16,7 @@ import org.hibernate.annotations.SQLDelete;
 @ToString
 @SuperBuilder(toBuilder = true)
 @Entity(name = ENTITY_PREFIX + "_entity")
-@Table(
-		name = ENTITY_PREFIX + "_tb",
-		indexes = {
-			@Index(name = "idx_wifi_service_id_device_mac", columnList = "wifi_service_id, device_mac")
-		})
+@Table(name = ENTITY_PREFIX + "_tb")
 @SQLDelete(sql = "UPDATE device_tb SET deleted=true WHERE id = ?")
 public class DeviceEntity extends BaseEntity {
 

@@ -10,7 +10,6 @@ import lombok.*;
 import lombok.ToString.Exclude;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,13 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @SuperBuilder(toBuilder = true)
 @Entity(name = ENTITY_PREFIX + "_entity")
-@EntityListeners({AuditingEntityListener.class})
-@Table(
-		name = ENTITY_PREFIX + "_tb",
-		indexes = {
-			@Index(name = "idx_member_id", columnList = "member_id"),
-			@Index(name = "idx_wifi_status", columnList = "wifi_service_status")
-		})
+@Table(name = ENTITY_PREFIX + "_tb")
 @SQLDelete(sql = "UPDATE wifi_service_tb SET deleted=true WHERE id = ?")
 public class WifiServiceEntity extends BaseEntity {
 

@@ -10,7 +10,6 @@ import lombok.*;
 import lombok.ToString.Exclude;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,17 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @SuperBuilder(toBuilder = true)
 @Entity(name = ENTITY_PREFIX + "_entity")
-@EntityListeners({AuditingEntityListener.class})
-@Table(
-		name = ENTITY_PREFIX + "_tb",
-		indexes = {
-			@Index(
-					name = "idx_wifi_service_id_device_id_day",
-					columnList = "wifi_service_id, device_id, connect_history_meta_day"),
-			@Index(
-					name = "idx_wifi_service_id_device_id_month",
-					columnList = "wifi_service_id, device_id, connect_history_meta_month")
-		})
+@Table(name = ENTITY_PREFIX + "_tb")
 @SQLDelete(sql = "UPDATE connect_history_meta_tb SET deleted=true WHERE id = ?")
 public class ConnectHistoryMetaEntity extends BaseEntity {
 
