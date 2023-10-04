@@ -1,8 +1,7 @@
-package com.wifi.obs.app.domain.model;
+package com.wifi.obs.app.domain.model.wifi;
 
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,22 +13,30 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class WifiServiceModel {
+public class WifiService {
 
 	private Long id;
+	private WifiAuth auth;
 	private Long memberId;
-	private Long authId;
-	private WifiServiceType serviceType;
+	private WifiServiceType type;
 	private Long cycle;
 	private Long standardTime;
 	private WifiStatus status;
 	private LocalDateTime createdAt;
 
 	public boolean isOn() {
-		return status.equals(WifiStatus.ON);
+		return status.isOn();
 	}
 
-	public String getCreateAtAsString() {
-		return createdAt.toString();
+	public boolean isSameWifiService(Long id) {
+		return Objects.equals(this.id, id);
+	}
+
+	public Long getAuthId() {
+		return auth.getId();
+	}
+
+	public String getHost() {
+		return auth.getHost();
 	}
 }
