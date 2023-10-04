@@ -4,13 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum MemberStatus {
-	NORMAL(1L, 30L),
-	WITHDRAWN(0L, 0L);
+	NORMAL("NORMAL", 1L, 30L),
+	WITHDRAWN("WITHDRAW", 0L, 0L);
 
+	private String type;
 	private Long maxServiceCount;
 	private Long maxDeviceCount;
 
-	MemberStatus(Long maxServiceCount, Long maxDeviceCount) {
+	MemberStatus(String type, Long maxServiceCount, Long maxDeviceCount) {
+		this.type = type;
 		this.maxServiceCount = maxServiceCount;
 		this.maxDeviceCount = maxDeviceCount;
 	}
