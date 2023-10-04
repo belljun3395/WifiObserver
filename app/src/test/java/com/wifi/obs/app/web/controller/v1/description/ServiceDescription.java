@@ -22,30 +22,22 @@ public class ServiceDescription {
 	public static FieldDescriptor[] browseServiceInfos() {
 		return new FieldDescriptor[] {
 			fieldWithPath("data").type(JsonFieldType.OBJECT).description("서비스 정보"),
-			fieldWithPath("data.wifiServiceInfos[]").type(JsonFieldType.ARRAY).description("서비스 리스트"),
-			fieldWithPath("data.wifiServiceInfos[].id").type(JsonFieldType.NUMBER).description("서비스 id"),
-			fieldWithPath("data.wifiServiceInfos[].type")
-					.type(JsonFieldType.STRING)
-					.description("서비스 타입"),
-			fieldWithPath("data.wifiServiceInfos[].cycle")
-					.type(JsonFieldType.NUMBER)
-					.description("서비스 주기"),
-			fieldWithPath("data.wifiServiceInfos[].status")
-					.type(JsonFieldType.STRING)
-					.description("서비스 상태"),
-			fieldWithPath("data.wifiServiceInfos[].createAt")
-					.type(JsonFieldType.STRING)
-					.description("서비스 생성 일자"),
-			fieldWithPath("data.wifiServiceInfos[].deviceInfos[]")
+			fieldWithPath("data.services[]").type(JsonFieldType.ARRAY).description("서비스 리스트"),
+			fieldWithPath("data.services[].id").type(JsonFieldType.NUMBER).description("서비스 id"),
+			fieldWithPath("data.services[].type").type(JsonFieldType.STRING).description("서비스 타입"),
+			fieldWithPath("data.services[].cycle").type(JsonFieldType.NUMBER).description("서비스 주기"),
+			fieldWithPath("data.services[].status").type(JsonFieldType.STRING).description("서비스 상태"),
+			fieldWithPath("data.services[].createAt").type(JsonFieldType.STRING).description("서비스 생성 일자"),
+			fieldWithPath("data.services[].devices[]")
 					.type(JsonFieldType.ARRAY)
 					.description("서비스 등록 디바이스"),
-			fieldWithPath("data.wifiServiceInfos[].deviceInfos[].id")
+			fieldWithPath("data.services[].devices[].id")
 					.type(JsonFieldType.NUMBER)
 					.description("서비스 등록 디바이스 id"),
-			fieldWithPath("data.wifiServiceInfos[].deviceInfos[].type")
+			fieldWithPath("data.services[].devices[].type")
 					.type(JsonFieldType.STRING)
 					.description("서비스 등록 디바이스 타입"),
-			fieldWithPath("data.wifiServiceInfos[].deviceInfos[].mac")
+			fieldWithPath("data.services[].devices[].mac")
 					.type(JsonFieldType.STRING)
 					.description("서비스 등록 디바이스 mac"),
 		};
@@ -54,8 +46,8 @@ public class ServiceDescription {
 	public static FieldDescriptor[] browseUsers() {
 		return new FieldDescriptor[] {
 			fieldWithPath("data").type(JsonFieldType.OBJECT).description("서비스 유저 정보"),
-			fieldWithPath("data.userInfos[]").type(JsonFieldType.ARRAY).description("서비스 유저 리스트"),
-			fieldWithPath("data.userInfos[].mac").type(JsonFieldType.STRING).description("서비스 유저 mac"),
+			fieldWithPath("data.users[]").type(JsonFieldType.ARRAY).description("서비스 유저 리스트"),
+			fieldWithPath("data.users[].mac").type(JsonFieldType.STRING).description("서비스 유저 mac"),
 		};
 	}
 
@@ -69,12 +61,10 @@ public class ServiceDescription {
 		return new FieldDescriptor[] {
 			fieldWithPath("data").type(JsonFieldType.OBJECT).description("서비스 통계"),
 			fieldWithPath("data.serviceId").type(JsonFieldType.NUMBER).description("서비스 id"),
-			fieldWithPath("data.stetInfos[]").type(JsonFieldType.ARRAY).description("서비스 통계 리스트"),
-			fieldWithPath("data.stetInfos[].id").type(JsonFieldType.NUMBER).description("서비스 통계 장치 id"),
-			fieldWithPath("data.stetInfos[].mac").type(JsonFieldType.STRING).description("서비스 통계 장치 mac"),
-			fieldWithPath("data.stetInfos[].time")
-					.type(JsonFieldType.NUMBER)
-					.description("서비스 통계 장치 접속 시간"),
+			fieldWithPath("data.stets[]").type(JsonFieldType.ARRAY).description("서비스 통계 리스트"),
+			fieldWithPath("data.stets[].id").type(JsonFieldType.NUMBER).description("서비스 통계 장치 id"),
+			fieldWithPath("data.stets[].mac").type(JsonFieldType.STRING).description("서비스 통계 장치 mac"),
+			fieldWithPath("data.stets[].time").type(JsonFieldType.NUMBER).description("서비스 통계 장치 접속 시간"),
 		};
 	}
 }

@@ -2,10 +2,11 @@ package com.wifi.obs.app.domain.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.wifi.obs.data.mysql.entity.member.MemberStatus;
+import com.wifi.obs.app.domain.model.member.Member;
+import com.wifi.obs.app.domain.model.member.MemberStatus;
 import org.junit.jupiter.api.Test;
 
-class MemberModelTest {
+class MemberTest {
 
 	static Long memberId = 1L;
 	static String certification = "certification";
@@ -17,18 +18,18 @@ class MemberModelTest {
 	@Test
 	void isOverDeviceMaxCount() {
 		// given
-		MemberModel member =
-				MemberModel.builder()
+		Member member =
+				Member.builder()
 						.id(memberId)
 						.password(password)
 						.status(status)
-						.deviceMaxCount(deviceMaxCount)
-						.serviceMaxCount(serviceMaxCount)
+						.deviceMax(deviceMaxCount)
+						.serviceMax(serviceMaxCount)
 						.build();
 
 		// when
-		boolean falseResult = member.isOverDeviceMaxCount(deviceMaxCount - 1);
-		boolean trueResult = member.isOverDeviceMaxCount(deviceMaxCount);
+		boolean falseResult = member.isOverDeviceMax(deviceMaxCount - 1);
+		boolean trueResult = member.isOverDeviceMax(deviceMaxCount);
 
 		// then
 		assertFalse(falseResult);
@@ -38,18 +39,18 @@ class MemberModelTest {
 	@Test
 	void isOverServiceMaxCount() {
 		// given
-		MemberModel member =
-				MemberModel.builder()
+		Member member =
+				Member.builder()
 						.id(memberId)
 						.password(password)
 						.status(status)
-						.deviceMaxCount(deviceMaxCount)
-						.serviceMaxCount(serviceMaxCount)
+						.deviceMax(deviceMaxCount)
+						.serviceMax(serviceMaxCount)
 						.build();
 
 		// when
-		boolean falseResult = member.isOverServiceMaxCount(serviceMaxCount - 1);
-		boolean trueResult = member.isOverServiceMaxCount(serviceMaxCount);
+		boolean falseResult = member.isOverServiceMax(serviceMaxCount - 1);
+		boolean trueResult = member.isOverServiceMax(serviceMaxCount);
 
 		// then
 		assertFalse(falseResult);
@@ -59,18 +60,18 @@ class MemberModelTest {
 	@Test
 	void isSamePassword() {
 		// given
-		MemberModel member =
-				MemberModel.builder()
+		Member member =
+				Member.builder()
 						.id(memberId)
 						.password(password)
 						.status(status)
-						.deviceMaxCount(deviceMaxCount)
-						.serviceMaxCount(serviceMaxCount)
+						.deviceMax(deviceMaxCount)
+						.serviceMax(serviceMaxCount)
 						.build();
 
 		// when
-		boolean falseResult = member.isSamePassword(password + "false");
-		boolean trueResult = member.isSamePassword(password);
+		boolean falseResult = member.isPassword(password + "false");
+		boolean trueResult = member.isPassword(password);
 
 		// then
 		assertFalse(falseResult);

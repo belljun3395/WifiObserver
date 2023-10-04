@@ -15,5 +15,5 @@ import lombok.ToString;
 public class SavedMemberInfo {
 
 	private Long id;
-	private AuthToken authToken;
+	private AuthToken token;
 }

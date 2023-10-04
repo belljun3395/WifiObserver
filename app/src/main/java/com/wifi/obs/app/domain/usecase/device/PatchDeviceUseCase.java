@@ -1,21 +1,18 @@
 package com.wifi.obs.app.domain.usecase.device;
 
-import com.wifi.obs.app.domain.converter.DeviceModelConverter;
-import com.wifi.obs.app.domain.converter.MemberModelConverter;
-import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
-import com.wifi.obs.app.domain.model.DeviceModel;
-import com.wifi.obs.app.domain.model.MemberModel;
-import com.wifi.obs.app.domain.model.WifiServiceModel;
+import com.wifi.obs.app.domain.converter.DeviceConverter;
+import com.wifi.obs.app.domain.converter.MemberConverter;
+import com.wifi.obs.app.domain.converter.WifiServiceDeviceConverter;
+import com.wifi.obs.app.domain.model.device.WifiServiceDevice;
+import com.wifi.obs.app.domain.model.member.Member;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
-import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
-import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +27,10 @@ public class PatchDeviceUseCase {
 	private final DeviceRepository deviceRepository;
 
 	private final ValidatedMemberService validatedMemberService;
-	private final ValidatedWifiServiceService validatedWifiServiceService;
 
-	private final MemberModelConverter memberModelConverter;
-	private final DeviceModelConverter deviceModelConverter;
-	private final WifiServiceModelConverter wifiServiceModelConverter;
+	private final MemberConverter memberConverter;
+	private final DeviceConverter deviceConverter;
+	private final WifiServiceDeviceConverter wifiServiceDeviceConverter;
 
 	private final IdMatchValidator idMatchValidator;
 
@@ -43,40 +39,46 @@ public class PatchDeviceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, PatchDeviceRequest request) {
 
-		MemberModel member = memberModelConverter.from(validatedMemberService.execute(memberId));
+		Member member = getMember(memberId);
 
-		DeviceModel device = deviceModelConverter.from(getDevice(request));
+		WifiServiceDevice device = getDevice(request.getDeviceId());
 
-		if (device.getServiceId().equals(request.getChangeServiceId())) {
+		if (device.isSameService(request.getChangeServiceId())) {
 			return;
 		}
 
-		WifiServiceModel changeTargetService =
-				wifiServiceModelConverter.from(
-						validatedWifiServiceService.execute(request.getChangeServiceId()));
+		WifiService changeTargetService = device.getService();
 
 		idMatchValidator.validate(memberId, changeTargetService.getMemberId());
 
-		validateServiceDeviceCount(changeTargetService.getId(), member);
+		checkConstraint(member, changeTargetService.getId());
 
-		device.patchServiceId(changeTargetService.getId());
+		device.changeService(changeTargetService.getId());
 
-		deviceRepository.save(deviceModelConverter.toEntity(device));
+		deviceRepository.save(deviceConverter.toEntity(device));
 	}
 
-	private DeviceEntity getDevice(PatchDeviceRequest request) {
-		return deviceRepository
-				.findByIdAndDeletedFalse(request.getDeviceId())
-				.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId()));
+	private Member getMember(Long memberId) {
+		return memberConverter.from(validatedMemberService.execute(memberId));
 	}
 
-	private void validateServiceDeviceCount(Long serviceId, MemberModel member) {
-		WifiServiceEntity service = wifiServiceEntitySupporter.getReferenceEntity(serviceId);
+	private WifiServiceDevice getDevice(Long deviceId) {
+		return wifiServiceDeviceConverter.from(
+				deviceRepository
+						.findByIdAndDeletedFalse(deviceId)
+						.orElseThrow(() -> new DeviceNotFoundException(deviceId)));
+	}
 
-		int savedDeviceCount = deviceRepository.findAllByWifiServiceAndDeletedFalse(service).size();
-
-		if (member.isOverDeviceMaxCount((long) savedDeviceCount)) {
+	private void checkConstraint(Member member, Long serviceId) {
+		if (member.isOverDeviceMax(getSavedDeviceCount(serviceId))) {
 			throw new OverLimitException();
 		}
+	}
+
+	private long getSavedDeviceCount(Long serviceId) {
+		return deviceRepository
+				.findAllByWifiServiceAndDeletedFalse(
+						wifiServiceEntitySupporter.getReferenceEntity(serviceId))
+				.size();
 	}
 }

@@ -1,8 +1,10 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
-import com.wifi.obs.app.domain.converter.MemberModelConverter;
-import com.wifi.obs.app.domain.model.MemberModel;
+import com.wifi.obs.app.domain.converter.MemberConverter;
+import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
+import com.wifi.obs.app.domain.service.wifi.GetHealthService;
+import com.wifi.obs.app.domain.service.wifi.PostAuthService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
 import com.wifi.obs.app.domain.usecase.support.manager.PostAuthServiceManager;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
@@ -38,13 +40,16 @@ public class SaveWifiServiceUseCase {
 	private final GetHealthServiceManager getHealthServiceManager;
 	private final PostAuthServiceManager postAuthServiceManager;
 
-	private final MemberModelConverter memberModelConverter;
+	private final MemberConverter memberConverter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveServiceRequest request) {
 
-		validateMember(memberId);
 		validateRequest(request);
+
+		Member member = getMember(memberId);
+
+		validateMember(member);
 
 		WifiAuthEntity auth =
 				wifiAuthRepository.save(
@@ -63,27 +68,10 @@ public class SaveWifiServiceUseCase {
 						.build());
 	}
 
-	private void validateMember(Long memberId) {
-		MemberModel member = memberModelConverter.from(validatedMemberService.execute(memberId));
-
-		validateMemberServiceCount(member);
-	}
-
-	private void validateMemberServiceCount(MemberModel member) {
-
-		List<WifiServiceEntity> services =
-				wifiServiceRepository.findAllByMemberAndDeletedFalse(
-						MemberEntity.builder().id(member.getId()).build());
-
-		if (member.isOverServiceMaxCount((long) services.size())) {
-			throw new OverLimitException();
-		}
-	}
-
 	private void validateRequest(SaveServiceRequest request) {
 		validateHostForm(request.getHost());
 		validateHostRequestStatus(request.getType(), request.getHost());
-		validateRequestAuthProcess(request);
+		checkAuthService(request);
 	}
 
 	private void validateHostForm(String host) {
@@ -95,16 +83,43 @@ public class SaveWifiServiceUseCase {
 	}
 
 	private void validateHostRequestStatus(ServiceType type, String host) {
-		HttpStatus requestStatus = getHealthServiceManager.getService(type).execute(host);
+		HttpStatus requestStatus = getService(type).execute(host);
 
 		if (requestStatus != HttpStatus.OK) {
 			throw new ClientProblemException();
 		}
 	}
 
-	private void validateRequestAuthProcess(SaveServiceRequest request) {
-		postAuthServiceManager
-				.getService(request.getType())
+	private GetHealthService getService(ServiceType type) {
+		return getHealthServiceManager.getService(type);
+	}
+
+	private void checkAuthService(SaveServiceRequest request) {
+		getService(request)
 				.execute(request.getHost(), request.getCertification(), request.getPassword());
+	}
+
+	private PostAuthService getService(SaveServiceRequest request) {
+		return postAuthServiceManager.getService(request.getType());
+	}
+
+	private Member getMember(Long memberId) {
+		return memberConverter.from(validatedMemberService.execute(memberId));
+	}
+
+	private void validateMember(Member member) {
+		long memberServiceCount = getWifiServices(member).size();
+		checkConstraint(member, memberServiceCount);
+	}
+
+	private List<WifiServiceEntity> getWifiServices(Member member) {
+		return wifiServiceRepository.findAllByMemberAndDeletedFalse(
+				MemberEntity.builder().id(member.getId()).build());
+	}
+
+	private void checkConstraint(Member member, Long serviceCount) {
+		if (member.isOverServiceMax(serviceCount)) {
+			throw new OverLimitException();
+		}
 	}
 }

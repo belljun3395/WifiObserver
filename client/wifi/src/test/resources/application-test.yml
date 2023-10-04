@@ -12,9 +12,9 @@ logging:
     com.wifi.observer.client: debug
 
 test:
-  host: ${WIFI_TEST_HOST}
-  userName: ${WIFI_TEST_USERNAME}
-  password: ${WIFI_TEST_PASSWORD}
-  hosts: ${WIFI_TEST_HOSTS}
-  userNames: ${WIFI_TEST_USERNAMES}
-  passwords: ${WIFI_TEST_PASSWORDS}
+  host: 168.131.35.101:8077
+  userName: admin
+  password: ecnv2010
+  hosts: 168.131.35.101:8077, jongjun.iptime.org:3040
+  userNames: admin, iptimejun
+  passwords: ecnv2010, kim@2737169

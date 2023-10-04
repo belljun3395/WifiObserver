@@ -31,7 +31,7 @@ class GetOnConnectDeviceFacadeUseCaseTest {
 				OnConnectUserInfos.of(List.of(UserInfo.builder().mac(mac).build()));
 
 		// when
-		Optional<String> res = getOnConnectDeviceFacadeUseCase.getFilteredMac(mac, connectUserInfos);
+		Optional<String> res = getOnConnectDeviceFacadeUseCase.getFilteredUsers(mac, connectUserInfos);
 
 		// then
 		assertThat(res).isPresent();
@@ -44,7 +44,7 @@ class GetOnConnectDeviceFacadeUseCaseTest {
 		OnConnectUserInfos connectUserInfos = OnConnectUserInfos.of(List.of());
 
 		// when
-		Optional<String> res = getOnConnectDeviceFacadeUseCase.getFilteredMac(mac, connectUserInfos);
+		Optional<String> res = getOnConnectDeviceFacadeUseCase.getFilteredUsers(mac, connectUserInfos);
 
 		// then
 		assertThat(res).isEmpty();

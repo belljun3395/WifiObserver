@@ -22,6 +22,9 @@ import com.wifi.obs.app.domain.dto.response.service.ServiceDeviceStetInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfos;
+import com.wifi.obs.app.domain.model.device.DeviceType;
+import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
+import com.wifi.obs.app.domain.model.wifi.WifiStatus;
 import com.wifi.obs.app.domain.usecase.wifiService.DeleteWifiServiceUseCase;
 import com.wifi.obs.app.domain.usecase.wifiService.GetHealthStatusUseCase;
 import com.wifi.obs.app.domain.usecase.wifiService.GetServiceStetFacadeUseCase;
@@ -34,9 +37,6 @@ import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.app.web.dto.request.service.DeleteServiceRequest;
 import com.wifi.obs.app.web.dto.request.service.SaveServiceRequest;
 import com.wifi.obs.app.web.dto.request.service.ServiceType;
-import com.wifi.obs.data.mysql.entity.device.DeviceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +139,7 @@ class WifiServiceControllerTest {
 						.cycle(10L)
 						.status(WifiStatus.ON)
 						.createAt("시간")
-						.deviceInfos(
+						.devices(
 								List.of(
 										DeviceInfo.builder()
 												.id(1L)

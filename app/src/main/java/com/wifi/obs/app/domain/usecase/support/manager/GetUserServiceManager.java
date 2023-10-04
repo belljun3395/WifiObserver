@@ -1,8 +1,8 @@
 package com.wifi.obs.app.domain.usecase.support.manager;
 
+import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
 import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.exception.domain.BadTypeRequestException;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

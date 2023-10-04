@@ -1,7 +1,7 @@
 package com.wifi.obs.app.domain.service.wifi;
 
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +18,8 @@ public class DeleteWifiServiceService {
 	private final WifiServiceRepository wifiServiceRepository;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public void execute(List<WifiServiceEntity> services) {
+	public void execute(List<WifiService> services) {
 		wifiServiceRepository.deleteAllById(
-				services.stream().map(WifiServiceEntity::getId).collect(Collectors.toList()));
+				services.stream().map(WifiService::getId).collect(Collectors.toList()));
 	}
 }

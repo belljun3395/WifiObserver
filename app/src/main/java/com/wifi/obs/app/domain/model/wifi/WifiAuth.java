@@ -1,6 +1,5 @@
-package com.wifi.obs.app.domain.dto.response.device;
+package com.wifi.obs.app.domain.model.wifi;
 
-import com.wifi.obs.app.domain.model.device.DeviceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class DeviceInfo {
+public class WifiAuth {
 	private Long id;
-	private DeviceType type;
-	private String mac;
+	private String host;
+	private String certification;
+	private String password;
 }

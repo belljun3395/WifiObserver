@@ -1,9 +1,9 @@
 package com.wifi.obs.app.domain.usecase.device;
 
-import com.wifi.obs.app.domain.converter.MemberModelConverter;
-import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
-import com.wifi.obs.app.domain.model.MemberModel;
-import com.wifi.obs.app.domain.model.WifiServiceModel;
+import com.wifi.obs.app.domain.converter.MemberConverter;
+import com.wifi.obs.app.domain.converter.WifiServiceConverter;
+import com.wifi.obs.app.domain.model.member.Member;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
@@ -12,8 +12,8 @@ import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.SaveDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
+import com.wifi.obs.data.mysql.entity.device.DeviceType;
 import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,8 @@ public class SaveDeviceUseCase {
 	private final ValidatedWifiServiceService validatedWifiServiceService;
 	private final ValidatedMemberService validatedMemberService;
 
-	private final MemberModelConverter memberModelConverter;
-	private final WifiServiceModelConverter wifiServiceModelConverter;
+	private final MemberConverter memberConverter;
+	private final WifiServiceConverter wifiServiceConverter;
 
 	private final IdMatchValidator idMatchValidator;
 
@@ -40,41 +40,51 @@ public class SaveDeviceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveDeviceRequest request) {
 
-		WifiServiceModel service =
-				wifiServiceModelConverter.from(validatedWifiServiceService.execute(request.getSid()));
+		WifiService service = getService(request.getSid());
 
-		MemberModel member = memberModelConverter.from(validatedMemberService.execute(memberId));
+		Member member = getMember(memberId);
 
-		idMatchValidator.validate(memberId, service.getMemberId());
-
-		validateMemberServiceDeviceCount(member, service.getId());
-		validateRequestMacDuplication(request.getMac().toUpperCase(), service.getId());
+		idMatchValidator.validate(member.getId(), service.getMemberId());
+		checkConstraint(member, service.getId());
+		isExist(service.getId(), request.getMac().toUpperCase());
 
 		deviceRepository.save(
 				DeviceEntity.builder()
-						.type(request.getDeviceType())
+						.type(DeviceType.valueOf(request.getDeviceType().name()))
 						.mac(request.getMac().toUpperCase())
 						.wifiService(wifiServiceEntitySupporter.getReferenceEntity(service.getId()))
 						.build());
 	}
 
-	private void validateMemberServiceDeviceCount(MemberModel member, Long serviceId) {
-		WifiServiceEntity service = wifiServiceEntitySupporter.getReferenceEntity(serviceId);
+	private Member getMember(Long memberId) {
+		return memberConverter.from(validatedMemberService.execute(memberId));
+	}
 
-		int savedDeviceCount = deviceRepository.findAllByWifiServiceAndDeletedFalse(service).size();
+	private WifiService getService(Long serviceId) {
+		return wifiServiceConverter.from(validatedWifiServiceService.execute(serviceId));
+	}
 
-		if (member.isOverDeviceMaxCount((long) savedDeviceCount)) {
+	private void checkConstraint(Member member, Long serviceId) {
+		if (member.isOverDeviceMax(getSavedDeviceCount(serviceId))) {
 			throw new OverLimitException();
 		}
 	}
 
-	private void validateRequestMacDuplication(String mac, Long serviceId) {
-		WifiServiceEntity service = wifiServiceEntitySupporter.getReferenceEntity(serviceId);
+	private long getSavedDeviceCount(Long serviceId) {
+		return deviceRepository
+				.findAllByWifiServiceAndDeletedFalse(
+						wifiServiceEntitySupporter.getReferenceEntity(serviceId))
+				.size();
+	}
 
-		Boolean isExist = deviceRepository.existsByMacAndWifiServiceAndDeletedFalse(mac, service);
-
-		if (isExist) {
+	private void isExist(Long serviceId, String mac) {
+		if (isExistDevice(serviceId, mac)) {
 			throw new AlreadyRegisterException();
 		}
+	}
+
+	private boolean isExistDevice(Long serviceId, String mac) {
+		return deviceRepository.existsByMacAndWifiServiceAndDeletedFalse(
+				mac, wifiServiceEntitySupporter.getReferenceEntity(serviceId));
 	}
 }

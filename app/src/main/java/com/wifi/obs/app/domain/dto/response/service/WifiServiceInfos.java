@@ -11,9 +11,9 @@ import lombok.ToString;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class WifiServiceInfos {
 
-	private final List<WifiServiceInfo> wifiServiceInfos;
+	private final List<WifiServiceInfo> services;
 
-	public static WifiServiceInfos of(List<WifiServiceInfo> wifiServiceInfos) {
-		return new WifiServiceInfos(wifiServiceInfos);
+	public static WifiServiceInfos of(List<WifiServiceInfo> infos) {
+		return new WifiServiceInfos(infos);
 	}
 }

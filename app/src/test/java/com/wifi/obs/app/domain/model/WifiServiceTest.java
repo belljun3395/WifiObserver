@@ -2,16 +2,24 @@ package com.wifi.obs.app.domain.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
+import com.wifi.obs.app.domain.model.wifi.WifiAuth;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
+import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
+import com.wifi.obs.app.domain.model.wifi.WifiStatus;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
-class WifiServiceModelTest {
+class WifiServiceTest {
 
 	static Long serviceId = 1L;
 	static Long memberId = 1L;
-	static Long authId = 1L;
+	static WifiAuth auth =
+			WifiAuth.builder()
+					.id(1L)
+					.host("host")
+					.certification("certification")
+					.password("password")
+					.build();
 	static WifiServiceType serviceType = WifiServiceType.IPTIME;
 	static Long cycle = 10L;
 	static Long standardTime = 9L;
@@ -21,12 +29,12 @@ class WifiServiceModelTest {
 	@Test
 	void isOn_O() {
 		// given
-		WifiServiceModel service =
-				WifiServiceModel.builder()
+		WifiService service =
+				WifiService.builder()
 						.id(serviceId)
 						.memberId(memberId)
-						.authId(authId)
-						.serviceType(serviceType)
+						.auth(auth)
+						.type(serviceType)
 						.cycle(cycle)
 						.standardTime(standardTime)
 						.status(status)
@@ -43,12 +51,12 @@ class WifiServiceModelTest {
 	@Test
 	void isOn_X() {
 		// given
-		WifiServiceModel service =
-				WifiServiceModel.builder()
+		WifiService service =
+				WifiService.builder()
 						.id(serviceId)
 						.memberId(memberId)
-						.authId(authId)
-						.serviceType(serviceType)
+						.auth(auth)
+						.type(serviceType)
 						.cycle(cycle)
 						.standardTime(standardTime)
 						.status(WifiStatus.ERROR)

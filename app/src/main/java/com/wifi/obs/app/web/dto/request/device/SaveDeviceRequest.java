@@ -1,6 +1,6 @@
 package com.wifi.obs.app.web.dto.request.device;
 
-import com.wifi.obs.data.mysql.entity.device.DeviceType;
+import com.wifi.obs.app.domain.model.device.DeviceType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

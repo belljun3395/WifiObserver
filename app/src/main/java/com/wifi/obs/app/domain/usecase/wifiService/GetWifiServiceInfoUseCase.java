@@ -1,12 +1,12 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
-import com.wifi.obs.app.domain.converter.DeviceModelConverter;
-import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
+import com.wifi.obs.app.domain.converter.DeviceConverter;
+import com.wifi.obs.app.domain.converter.WifiServiceConverter;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfo;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfos;
-import com.wifi.obs.app.domain.model.DeviceModel;
-import com.wifi.obs.app.domain.model.WifiServiceModel;
+import com.wifi.obs.app.domain.model.device.Device;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
@@ -29,21 +29,22 @@ public class GetWifiServiceInfoUseCase {
 
 	private final BrowseDeviceService browseDeviceService;
 
-	private final WifiServiceModelConverter wifiServiceModelConverter;
-	private final DeviceModelConverter deviceModelConverter;
+	private final WifiServiceConverter wifiServiceConverter;
+	private final DeviceConverter deviceConverter;
 
 	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public WifiServiceInfos execute(Long memberId) {
-		List<WifiServiceModel> services = getServices(memberId);
 
-		List<List<DeviceModel>> devices = getDevices(services);
+		List<WifiService> services = getWifiServices(memberId);
+
+		List<List<Device>> devices = getDevices(services);
 
 		return getServiceInfos(services, devices);
 	}
 
-	private List<List<DeviceModel>> getDevices(List<WifiServiceModel> services) {
+	private List<List<Device>> getDevices(List<WifiService> services) {
 		return services.stream()
 				.map(
 						info ->
@@ -51,47 +52,44 @@ public class GetWifiServiceInfoUseCase {
 										wifiServiceEntitySupporter.getReferenceEntity(info.getAuthId())))
 				.map(
 						deviceEntities ->
-								deviceEntities.stream()
-										.map(deviceModelConverter::from)
-										.collect(Collectors.toList()))
+								deviceEntities.stream().map(deviceConverter::from).collect(Collectors.toList()))
 				.collect(Collectors.toList());
 	}
 
-	private List<WifiServiceModel> getServices(Long memberId) {
+	private List<WifiService> getWifiServices(Long memberId) {
 		return wifiServiceRepository
 				.findAllByMemberAndDeletedFalse(MemberEntity.builder().id(memberId).build())
 				.stream()
-				.map(wifiServiceModelConverter::from)
+				.map(wifiServiceConverter::from)
 				.collect(Collectors.toList());
 	}
 
 	protected WifiServiceInfos getServiceInfos(
-			List<WifiServiceModel> services, List<List<DeviceModel>> devices) {
+			List<WifiService> wifiServiceSources, List<List<Device>> deviceSources) {
 
-		List<WifiServiceInfo> serviceInfos = new ArrayList<>();
+		List<WifiServiceInfo> services = new ArrayList<>();
 
-		for (int i = 0; i < services.size(); i++) {
-			WifiServiceModel cws = services.get(i);
-			List<DeviceModel> cds = devices.get(i);
+		for (int i = 0; i < wifiServiceSources.size(); i++) {
+			WifiService cws = wifiServiceSources.get(i);
+			List<Device> cds = deviceSources.get(i);
 
-			List<DeviceInfo> deviceInfos = new ArrayList<>();
+			List<DeviceInfo> devices = new ArrayList<>();
 
-			for (DeviceModel d : cds) {
-				deviceInfos.add(
-						DeviceInfo.builder().id(d.getId()).type(d.getDeviceType()).mac(d.getMac()).build());
+			for (Device d : cds) {
+				devices.add(DeviceInfo.builder().id(d.getId()).type(d.getType()).mac(d.getMac()).build());
 			}
 
-			serviceInfos.add(
+			services.add(
 					WifiServiceInfo.builder()
 							.id(cws.getId())
-							.type(cws.getServiceType())
+							.type(cws.getType())
 							.cycle(cws.getCycle())
 							.status(cws.getStatus())
-							.createAt(cws.getCreateAtAsString())
-							.deviceInfos(deviceInfos)
+							.createAt(cws.getCreatedAt().toString())
+							.devices(devices)
 							.build());
 		}
 
-		return WifiServiceInfos.of(serviceInfos);
+		return WifiServiceInfos.of(services);
 	}
 }
