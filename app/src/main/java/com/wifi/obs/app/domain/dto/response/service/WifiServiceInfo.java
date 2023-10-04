@@ -1,8 +1,8 @@
 package com.wifi.obs.app.domain.dto.response.service;
 
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiStatus;
+import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
+import com.wifi.obs.app.domain.model.wifi.WifiStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +22,5 @@ public class WifiServiceInfo {
 	private Long cycle;
 	private WifiStatus status;
 	private String createAt;
-	private List<DeviceInfo> deviceInfos;
+	private List<DeviceInfo> devices;
 }

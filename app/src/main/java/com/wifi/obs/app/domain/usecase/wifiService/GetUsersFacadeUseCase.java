@@ -1,10 +1,11 @@
 package com.wifi.obs.app.domain.usecase.wifiService;
 
-import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
+import com.wifi.obs.app.domain.converter.WifiServiceConverter;
 import com.wifi.obs.app.domain.dto.response.service.OnConnectUserInfos;
 import com.wifi.obs.app.domain.dto.response.service.UserInfo;
-import com.wifi.obs.app.domain.model.WifiServiceModel;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
+import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetUserServiceManager;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
@@ -13,8 +14,6 @@ import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.support.WifiAuthEntitySupporter;
 import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceType;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +34,7 @@ public class GetUsersFacadeUseCase {
 
 	private final GetUserServiceManager getUserServiceManager;
 
-	private final WifiServiceModelConverter wifiServiceModelConverter;
+	private final WifiServiceConverter wifiServiceConverter;
 
 	private final IdMatchValidator idMatchValidator;
 
@@ -44,38 +43,58 @@ public class GetUsersFacadeUseCase {
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public OnConnectUserInfos execute(Long memberId, Long sid, Optional<Boolean> filter) {
-		WifiServiceModel service = wifiServiceModelConverter.from(getService(sid));
 
-		isError(service);
+		WifiService service = getWifiService(sid);
+
+		isOn(service);
 
 		idMatchValidator.validate(memberId, service.getMemberId());
 
-		WifiServiceType serviceType = service.getServiceType();
-
 		OnConnectUserInfos res =
-				getUserServiceManager
-						.getService(serviceType)
+				getService(service)
 						.execute(wifiAuthEntitySupporter.getReferenceEntity(service.getAuthId()));
 
-		if (filter.isEmpty() || filter.get().equals(Boolean.FALSE)) {
+		if (!isFiltered(filter)) {
 			return res;
 		}
 
-		List<DeviceEntity> devices =
-				browseDeviceService.execute(wifiServiceEntitySupporter.getReferenceEntity(service.getId()));
+		List<DeviceEntity> devices = getDevices(service);
+
 		return getFilteredRes(res, devices);
 	}
 
-	private void isError(WifiServiceModel service) {
+	private WifiService getWifiService(Long sid) {
+		return wifiServiceConverter.from(
+				wifiServiceRepository
+						.findByIdAndDeletedFalse(sid)
+						.orElseThrow(() -> new ServiceNotFoundException(sid)));
+	}
+
+	private void isOn(WifiService service) {
 		if (!service.isOn()) {
 			throw new ClientProblemException();
 		}
 	}
 
-	private WifiServiceEntity getService(Long sid) {
-		return wifiServiceRepository
-				.findByIdAndDeletedFalse(sid)
-				.orElseThrow(() -> new ServiceNotFoundException(sid));
+	private GetUserService getService(WifiService service) {
+		return getUserServiceManager.getService(service.getType());
+	}
+
+	private boolean isFiltered(Optional<Boolean> filter) {
+		if (filter.isEmpty()) {
+			return false;
+		}
+
+		if (filter.get().equals(Boolean.FALSE)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private List<DeviceEntity> getDevices(WifiService service) {
+		return browseDeviceService.execute(
+				wifiServiceEntitySupporter.getReferenceEntity(service.getId()));
 	}
 
 	protected OnConnectUserInfos getFilteredRes(OnConnectUserInfos res, List<DeviceEntity> devices) {
@@ -83,7 +102,7 @@ public class GetUsersFacadeUseCase {
 				devices.stream().map(DeviceEntity::getMac).collect(Collectors.toList());
 
 		List<UserInfo> filteredUsers =
-				res.getUserInfos().stream()
+				res.getUsers().stream()
 						.filter(info -> macSources.contains(info.getMac()))
 						.collect(Collectors.toList());
 		return OnConnectUserInfos.of(filteredUsers);

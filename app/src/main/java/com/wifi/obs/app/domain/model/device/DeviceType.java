@@ -1,4 +1,4 @@
-package com.wifi.obs.data.mysql.entity.device;
+package com.wifi.obs.app.domain.model.device;
 
 import lombok.Getter;
 

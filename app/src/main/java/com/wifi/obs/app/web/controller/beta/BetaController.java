@@ -60,7 +60,7 @@ public class BetaController {
 
 	@GetMapping("/iptime/response")
 	public String betaResponse(@ModelAttribute("userInfos") OnConnectUserInfos infos, Model model) {
-		model.addAttribute("userInfos", infos.getUserInfos());
+		model.addAttribute("userInfos", infos.getUsers());
 		return "IptimeBetaResponse.html";
 	}
 }

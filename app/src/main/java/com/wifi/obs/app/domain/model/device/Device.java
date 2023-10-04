@@ -1,6 +1,5 @@
-package com.wifi.obs.app.domain.model;
+package com.wifi.obs.app.domain.model.device;
 
-import com.wifi.obs.data.mysql.entity.device.DeviceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +11,14 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class DeviceModel {
+public class Device {
 
 	private Long id;
 	private Long serviceId;
-	private DeviceType deviceType;
+	private DeviceType type;
 	private String mac;
 
-	public void patchServiceId(Long serviceId) {
-		this.serviceId = serviceId;
+	protected void changeServiceId(Long sid) {
+		this.serviceId = sid;
 	}
 }

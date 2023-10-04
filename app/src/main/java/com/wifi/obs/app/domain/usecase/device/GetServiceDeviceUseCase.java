@@ -1,21 +1,22 @@
 package com.wifi.obs.app.domain.usecase.device;
 
-import com.wifi.obs.app.domain.converter.WifiServiceModelConverter;
+import com.wifi.obs.app.domain.converter.WifiServiceConverter;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfo;
 import com.wifi.obs.app.domain.dto.response.device.DeviceInfos;
 import com.wifi.obs.app.domain.dto.response.device.ServiceDeviceInfo;
-import com.wifi.obs.app.domain.model.WifiServiceModel;
+import com.wifi.obs.app.domain.model.device.DeviceType;
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
 import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
-import com.wifi.obs.data.mysql.entity.member.MemberEntity;
+import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class GetServiceDeviceUseCase {
 	private final ValidatedWifiServicesService validatedWifiServicesService;
 	private final ValidatedMemberService validatedMemberService;
 
-	private final WifiServiceModelConverter wifiServiceModelConverter;
+	private final WifiServiceConverter wifiServiceConverter;
 
 	private final IdMatchValidator idMatchValidator;
 
@@ -42,49 +43,74 @@ public class GetServiceDeviceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceInfos execute(Long memberId, Long serviceId) {
 
-		WifiServiceModel service =
-				wifiServiceModelConverter.from(validatedWifiServiceService.execute(serviceId));
+		WifiService service = getWifiService(serviceId);
 
 		idMatchValidator.validate(memberId, service.getMemberId());
 
-		return DeviceInfos.of(
-				getDeviceInfos(wifiServiceEntitySupporter.getReferenceEntity(service.getId())));
+		List<DeviceInfo> serviceDevices = getDevices(service.getId());
+
+		return DeviceInfos.of(serviceDevices);
 	}
 
-	private List<DeviceInfo> getDeviceInfos(WifiServiceEntity service) {
-		return deviceRepository.findAllByWifiServiceAndDeletedFalse(service).stream()
-				.map(d -> DeviceInfo.builder().id(d.getId()).type(d.getType()).mac(d.getMac()).build())
+	private WifiService getWifiService(Long serviceId) {
+		return wifiServiceConverter.from(validatedWifiServiceService.execute(serviceId));
+	}
+
+	private List<DeviceInfo> getDevices(Long sid) {
+		return deviceRepository
+				.findAllByWifiServiceAndDeletedFalse(wifiServiceEntitySupporter.getReferenceEntity(sid))
+				.stream()
+				.map(this::getDeviceInfo)
 				.collect(Collectors.toList());
+	}
+
+	private DeviceInfo getDeviceInfo(DeviceEntity d) {
+		return DeviceInfo.builder()
+				.id(d.getId())
+				.type(DeviceType.valueOf(d.getType().getType()))
+				.mac(d.getMac())
+				.build();
 	}
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceInfos execute(Long memberId) {
 
-		MemberEntity member = validatedMemberService.execute(memberId);
+		List<WifiService> memberServices = getWifiServices(memberId);
 
-		List<WifiServiceEntity> services = validatedWifiServicesService.execute(member);
+		List<ServiceDeviceInfo> memberDevices = getDevices(memberServices);
 
-		return DeviceInfos.of(getDeviceInfos(services));
+		return DeviceInfos.of(memberDevices);
 	}
 
-	private List<ServiceDeviceInfo> getDeviceInfos(List<WifiServiceEntity> services) {
+	private List<WifiService> getWifiServices(Long memberId) {
+		return wifiServiceConverter.from(
+				validatedWifiServicesService.execute(validatedMemberService.execute(memberId)));
+	}
+
+	private List<ServiceDeviceInfo> getDevices(List<WifiService> services) {
 		List<ServiceDeviceInfo> devices = new ArrayList<>();
-		for (WifiServiceEntity service : services) {
-			devices.addAll(getServiceDeviceInfo(service));
+		for (WifiService service : services) {
+			devices.addAll(getServiceDeviceInfos(service));
 		}
 		return devices;
 	}
 
-	private List<ServiceDeviceInfo> getServiceDeviceInfo(WifiServiceEntity service) {
-		return deviceRepository.findAllByWifiServiceAndDeletedFalse(service).stream()
-				.map(
-						device ->
-								ServiceDeviceInfo.builder()
-										.id(device.getId())
-										.serviceId(service.getId())
-										.type(device.getType())
-										.mac(device.getMac())
-										.build())
+	private List<ServiceDeviceInfo> getServiceDeviceInfos(WifiService service) {
+		return deviceRepository
+				.findAllByWifiServiceAndDeletedFalse(
+						wifiServiceEntitySupporter.getWifiServiceIdEntity(service.getId()))
+				.stream()
+				.map(convertToDeviceInfo(service))
 				.collect(Collectors.toList());
+	}
+
+	private Function<DeviceEntity, ServiceDeviceInfo> convertToDeviceInfo(WifiService service) {
+		return source ->
+				ServiceDeviceInfo.builder()
+						.serviceId(service.getId())
+						.id(source.getId())
+						.type(DeviceType.valueOf(source.getType().getType()))
+						.mac(source.getMac())
+						.build();
 	}
 }

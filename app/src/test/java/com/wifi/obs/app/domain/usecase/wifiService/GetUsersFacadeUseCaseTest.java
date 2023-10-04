@@ -37,8 +37,8 @@ class GetUsersFacadeUseCaseTest {
 
 		// then
 		assertThat(res).isNotNull();
-		assertThat(res.getUserInfos()).isNotEmpty();
-		assertThat(res.getUserInfos().get(0).getMac()).isEqualTo(mac);
+		assertThat(res.getUsers()).isNotEmpty();
+		assertThat(res.getUsers().get(0).getMac()).isEqualTo(mac);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ class GetUsersFacadeUseCaseTest {
 
 		// then
 		assertThat(res).isNotNull();
-		assertThat(res.getUserInfos()).isEmpty();
+		assertThat(res.getUsers()).isEmpty();
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class GetUsersFacadeUseCaseTest {
 
 		// then
 		assertThat(res).isNotNull();
-		assertThat(res.getUserInfos()).isEmpty();
+		assertThat(res.getUsers()).isEmpty();
 	}
 
 	@Test
@@ -81,6 +81,6 @@ class GetUsersFacadeUseCaseTest {
 
 		// then
 		assertThat(res).isNotNull();
-		assertThat(res.getUserInfos()).isEmpty();
+		assertThat(res.getUsers()).isEmpty();
 	}
 }
