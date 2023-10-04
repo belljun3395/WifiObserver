@@ -1,6 +1,6 @@
 package com.wifi.obs.app.domain.dto.response.device;
 
-import com.wifi.obs.data.mysql.entity.device.DeviceType;
+import com.wifi.obs.app.domain.model.device.DeviceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
