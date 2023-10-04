@@ -49,7 +49,7 @@ public class BatchMetaDataConfig {
 
 	@Profile(value = "local")
 	@Bean(name = BATCH_DATA_SOURCE_SCRIPT_DATABASE_INITIALIZER_BEAN_NAME)
-	BatchDataSourceScriptDatabaseInitializer batchDataSourceInitializer(
+	public BatchDataSourceScriptDatabaseInitializer batchDataSourceInitializer(
 			@Qualifier(value = DATASOURCE_NAME) DataSource dataSource,
 			@Qualifier(value = PROPERTY_BEAN_NAME) BatchProperties properties) {
 		return new BatchDataSourceScriptDatabaseInitializer(dataSource, properties.getJdbc());

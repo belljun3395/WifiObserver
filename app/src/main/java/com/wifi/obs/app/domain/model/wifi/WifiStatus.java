@@ -1,4 +1,4 @@
-package com.wifi.obs.data.mysql.entity.wifi.service;
+package com.wifi.obs.app.domain.model.wifi;
 
 import lombok.Getter;
 
@@ -11,5 +11,9 @@ public enum WifiStatus {
 
 	WifiStatus(String type) {
 		this.type = type;
+	}
+
+	public boolean isOn() {
+		return this.equals(WifiStatus.ON);
 	}
 }

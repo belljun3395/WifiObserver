@@ -51,7 +51,7 @@ class MemberControllerTest {
 		SavedMemberInfo res =
 				SavedMemberInfo.builder()
 						.id(1L)
-						.authToken(
+						.token(
 								AuthToken.builder().accessToken("accessToken").refreshToken("refreshToken").build())
 						.build();
 

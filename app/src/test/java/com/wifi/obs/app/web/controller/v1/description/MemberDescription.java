@@ -10,13 +10,9 @@ public class MemberDescription {
 		return new FieldDescriptor[] {
 			fieldWithPath("data").type(JsonFieldType.OBJECT).description("멤버"),
 			fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("멤버 id"),
-			fieldWithPath("data.authToken").type(JsonFieldType.OBJECT).description("멤버 토큰"),
-			fieldWithPath("data.authToken.accessToken")
-					.type(JsonFieldType.STRING)
-					.description("access 토큰"),
-			fieldWithPath("data.authToken.refreshToken")
-					.type(JsonFieldType.STRING)
-					.description("refresh 토큰"),
+			fieldWithPath("data.token").type(JsonFieldType.OBJECT).description("멤버 토큰"),
+			fieldWithPath("data.token.accessToken").type(JsonFieldType.STRING).description("access 토큰"),
+			fieldWithPath("data.token.refreshToken").type(JsonFieldType.STRING).description("refresh 토큰"),
 		};
 	}
 
