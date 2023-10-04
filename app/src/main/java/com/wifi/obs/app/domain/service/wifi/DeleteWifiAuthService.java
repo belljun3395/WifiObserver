@@ -1,10 +1,8 @@
 package com.wifi.obs.app.domain.service.wifi;
 
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
-import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.obs.data.mysql.repository.wifi.auth.WifiAuthRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +16,7 @@ public class DeleteWifiAuthService {
 	private final WifiAuthRepository wifiAuthRepository;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public void execute(List<WifiAuthEntity> auths) {
-		wifiAuthRepository.deleteAllById(
-				auths.stream().map(WifiAuthEntity::getId).collect(Collectors.toList()));
+	public void execute(List<Long> auths) {
+		wifiAuthRepository.deleteAllById(auths);
 	}
 }

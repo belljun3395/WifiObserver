@@ -1,8 +1,9 @@
 package com.wifi.obs.app.domain.service.device;
 
+import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
-import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
+import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,20 +19,28 @@ public class DeleteDeviceService {
 
 	private final DeviceRepository deviceRepository;
 
+	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public void execute(List<WifiServiceEntity> services) {
-		for (WifiServiceEntity ws : services) {
+	public void execute(List<WifiService> services) {
+		for (WifiService ws : services) {
 			deviceRepository.deleteAllById(
-					deviceRepository.findAllByWifiServiceAndDeletedFalse(ws).stream()
+					deviceRepository
+							.findAllByWifiServiceAndDeletedFalse(
+									wifiServiceEntitySupporter.getWifiServiceIdEntity(ws.getId()))
+							.stream()
 							.map(DeviceEntity::getId)
 							.collect(Collectors.toList()));
 		}
 	}
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public void execute(WifiServiceEntity service) {
+	public void execute(WifiService service) {
 		deviceRepository.deleteAllById(
-				deviceRepository.findAllByWifiServiceAndDeletedFalse(service).stream()
+				deviceRepository
+						.findAllByWifiServiceAndDeletedFalse(
+								wifiServiceEntitySupporter.getWifiServiceIdEntity(service.getId()))
+						.stream()
 						.map(DeviceEntity::getId)
 						.collect(Collectors.toList()));
 	}
