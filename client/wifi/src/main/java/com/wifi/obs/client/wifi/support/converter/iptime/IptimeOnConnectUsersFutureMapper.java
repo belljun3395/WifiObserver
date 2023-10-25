@@ -1,8 +1,8 @@
-package com.wifi.observer.client.wifi.support.converter.iptime;
+package com.wifi.obs.client.wifi.support.converter.iptime;
 
-import com.wifi.observer.client.wifi.dto.response.ClientResponse;
-import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos;
-import com.wifi.observer.client.wifi.exception.WifiCompletionException;
+import com.wifi.obs.client.wifi.dto.response.ClientResponse;
+import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfos;
+import com.wifi.obs.client.wifi.exception.WifiCompletionException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import org.springframework.stereotype.Component;

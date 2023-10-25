@@ -1,10 +1,10 @@
-package com.wifi.observer.client.wifi.support.converter.iptime;
+package com.wifi.obs.client.wifi.support.converter.iptime;
 
-import com.wifi.observer.client.wifi.dto.http.IptimeWifiBrowseClientDto;
-import com.wifi.observer.client.wifi.dto.request.WifiBrowseRequest;
-import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfo;
-import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfos;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
+import com.wifi.obs.client.wifi.dto.http.iptime.IptimeWifiBrowseRequestElement;
+import com.wifi.obs.client.wifi.dto.request.WifiBrowseRequest;
+import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfo;
+import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfos;
+import com.wifi.obs.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class IptimeBrowseConverter {
 	public IptimeOnConnectUserInfosResponse from(List<String> sources, String host) {
 		List<OnConnectUserInfo> users =
 				sources.stream()
-						.map(source -> OnConnectUserInfo.builder().user(source).host(host).build())
+						.map(source -> OnConnectUserInfo.builder().user(source).build())
 						.collect(Collectors.toList());
 
 		if (users.isEmpty()) {
@@ -30,13 +30,13 @@ public class IptimeBrowseConverter {
 
 		return IptimeOnConnectUserInfosResponse.builder()
 				.host(host)
-				.response(new OnConnectUserInfos(users, host))
+				.response(new OnConnectUserInfos(users))
 				.build();
 	}
 
-	public IptimeWifiBrowseClientDto to(
+	public IptimeWifiBrowseRequestElement to(
 			WifiBrowseRequest browseRequest, Map<String, String> headers, String cookie) {
-		return IptimeWifiBrowseClientDto.builder()
+		return IptimeWifiBrowseRequestElement.builder()
 				.url(HTTP + browseRequest.getHost() + loginTimeproQuery)
 				.headers(headers)
 				.cookie(cookie)
