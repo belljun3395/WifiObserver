@@ -1,8 +1,9 @@
 package com.wifi.obs.app.domain.service.wifi.iptime;
 
 import com.wifi.obs.app.domain.service.wifi.GetHealthService;
-import com.wifi.observer.client.wifi.client.iptime.IptimeHealthClient;
-import com.wifi.observer.client.wifi.dto.request.common.CommonWifiHealthRequest;
+import com.wifi.obs.client.wifi.client.iptime.IptimeHealthClient;
+import com.wifi.obs.client.wifi.dto.request.WifiHostRequest;
+import com.wifi.obs.client.wifi.http.HttpStatusResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,12 @@ public class GetIptimeHealthService implements GetHealthService {
 
 	public HttpStatus execute(String host) {
 
-		Optional<HttpStatus> response =
-				iptimeHealthClient
-						.query(CommonWifiHealthRequest.builder().host(host).build())
-						.getResponse();
+		Optional<HttpStatusResponse> response =
+				iptimeHealthClient.query(WifiHostRequest.builder().host(host).build()).getResponse();
 
-		return response.orElse(HttpStatus.BAD_REQUEST);
+		if (response.isEmpty()) {
+			return HttpStatus.BAD_REQUEST;
+		}
+		return response.get().getResponse();
 	}
 }

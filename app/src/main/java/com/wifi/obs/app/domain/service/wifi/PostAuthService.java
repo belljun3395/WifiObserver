@@ -1,6 +1,6 @@
 package com.wifi.obs.app.domain.service.wifi;
 
-import com.wifi.observer.client.wifi.dto.response.AuthInfo;
+import com.wifi.obs.client.wifi.dto.response.AuthInfo;
 
 public interface PostAuthService {
 
