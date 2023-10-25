@@ -1,7 +1,7 @@
 package com.wifi.obs.app.domain.model.wifi;
 
+import com.wifi.obs.app.domain.model.ModelId;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,21 +15,21 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class WifiService {
 
-	private Long id;
+	private ModelId id;
 	private WifiAuth auth;
-	private Long memberId;
+	private ModelId memberId;
 	private WifiServiceType type;
 	private Long cycle;
 	private Long standardTime;
 	private WifiStatus status;
 	private LocalDateTime createdAt;
 
-	public boolean isOn() {
-		return status.isOn();
+	public Long getId() {
+		return id.getId();
 	}
 
-	public boolean isSameWifiService(Long id) {
-		return Objects.equals(this.id, id);
+	public Long getMemberId() {
+		return memberId.getId();
 	}
 
 	public Long getAuthId() {
@@ -38,5 +38,17 @@ public class WifiService {
 
 	public String getHost() {
 		return auth.getHost();
+	}
+
+	public boolean isOn() {
+		return status.isOn();
+	}
+
+	public boolean isSameWifiService(Long id) {
+		return this.id.isSame(id);
+	}
+
+	public boolean isServiceOwner(Long id) {
+		return memberId.isSame(id);
 	}
 }

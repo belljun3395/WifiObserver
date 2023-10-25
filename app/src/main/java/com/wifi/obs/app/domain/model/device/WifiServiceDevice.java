@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.model.device;
 
+import com.wifi.obs.app.domain.model.ModelId;
 import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,6 @@ public class WifiServiceDevice extends Device {
 
 	public void changeService(Long newServiceId) {
 		super.changeServiceId(newServiceId);
-		this.service = service.toBuilder().id(newServiceId).build();
+		this.service = service.toBuilder().id(ModelId.of(newServiceId)).build();
 	}
 }
