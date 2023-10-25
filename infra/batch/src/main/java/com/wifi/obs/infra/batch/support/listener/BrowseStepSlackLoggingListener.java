@@ -1,7 +1,7 @@
 package com.wifi.obs.infra.batch.support.listener;
 
-import com.wifi.obs.infra.slack.config.SlackChannel;
-import com.wifi.obs.infra.slack.service.SlackService;
+import com.wifi.obs.infra.slack.service.BatchNotificationService;
+import com.wifi.obs.infra.slack.service.ErrorNotificationService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,8 @@ public class BrowseStepSlackLoggingListener implements StepExecutionListener {
 
 	private static List<String> borwseStepPendingMessageList = new ArrayList<>();
 
-	private final SlackService slackService;
+	private final BatchNotificationService batchNotificationService;
+	private final ErrorNotificationService errorNotificationService;
 
 	@Override
 	public void beforeStep(StepExecution stepExecution) {}
@@ -27,8 +28,7 @@ public class BrowseStepSlackLoggingListener implements StepExecutionListener {
 	@Override
 	public ExitStatus afterStep(StepExecution stepExecution) {
 		if (!stepExecution.getExitStatus().equals(ExitStatus.COMPLETED)) {
-			slackService.sendSlackMessage(
-					"step failed : " + stepExecution.getStepName(), SlackChannel.ERROR);
+			errorNotificationService.sendNotification("step failed : " + stepExecution.getStepName());
 		}
 
 		addStepCompleteMessage(stepExecution);
@@ -55,7 +55,7 @@ public class BrowseStepSlackLoggingListener implements StepExecutionListener {
 
 	private void sendPendingMessages() {
 		String content = String.join("\n", borwseStepPendingMessageList);
-		slackService.sendSlackMessage(content, SlackChannel.BATCH);
+		batchNotificationService.sendNotification(content);
 		borwseStepPendingMessageList.clear();
 	}
 }

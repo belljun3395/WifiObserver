@@ -1,7 +1,7 @@
 package com.wifi.obs.infra.batch.support.listener;
 
-import com.wifi.obs.infra.slack.config.SlackChannel;
-import com.wifi.obs.infra.slack.service.SlackService;
+import com.wifi.obs.infra.slack.service.BatchNotificationService;
+import com.wifi.obs.infra.slack.service.ErrorNotificationService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RefreshStepSlackLoggingListener implements StepExecutionListener {
 
-	private final SlackService slackService;
+	private final BatchNotificationService batchNotificationService;
+	private final ErrorNotificationService errorNotificationService;
 
 	@Override
 	public void beforeStep(StepExecution stepExecution) {}
@@ -23,12 +24,11 @@ public class RefreshStepSlackLoggingListener implements StepExecutionListener {
 	@Override
 	public ExitStatus afterStep(StepExecution stepExecution) {
 		if (!stepExecution.getExitStatus().equals(ExitStatus.COMPLETED)) {
-			slackService.sendSlackMessage(
-					"step failed : " + stepExecution.getStepName(), SlackChannel.ERROR);
+			errorNotificationService.sendNotification("step failed : " + stepExecution.getStepName());
 		}
 
 		String stepCompleteMessage = getStepCompleteMessage(stepExecution);
-		slackService.sendSlackMessage(stepCompleteMessage, SlackChannel.BATCH);
+		batchNotificationService.sendNotification(stepCompleteMessage);
 
 		return stepExecution.getExitStatus();
 	}

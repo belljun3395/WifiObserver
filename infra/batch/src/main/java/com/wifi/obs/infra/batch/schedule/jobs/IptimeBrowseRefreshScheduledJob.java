@@ -1,8 +1,7 @@
 package com.wifi.obs.infra.batch.schedule.jobs;
 
 import com.wifi.obs.infra.batch.job.refresh.iptime.IptimeBrowseRefreshConfig;
-import com.wifi.obs.infra.slack.config.SlackChannel;
-import com.wifi.obs.infra.slack.service.SlackService;
+import com.wifi.obs.infra.slack.service.ErrorNotificationService;
 import org.quartz.JobExecutionContext;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -19,17 +18,18 @@ public class IptimeBrowseRefreshScheduledJob extends QuartzJobBean {
 	private final Job job;
 	private final JobExplorer jobExplorer;
 	private final JobLauncher jobLauncher;
-	private final SlackService slackService;
+
+	private final ErrorNotificationService errorNotificationService;
 
 	public IptimeBrowseRefreshScheduledJob(
 			@Qualifier(value = IptimeBrowseRefreshConfig.JOB_NAME) Job job,
 			JobExplorer jobExplorer,
 			JobLauncher jobLauncher,
-			SlackService slackService) {
+			ErrorNotificationService errorNotificationService) {
 		this.job = job;
 		this.jobExplorer = jobExplorer;
 		this.jobLauncher = jobLauncher;
-		this.slackService = slackService;
+		this.errorNotificationService = errorNotificationService;
 	}
 
 	@Override
@@ -40,8 +40,8 @@ public class IptimeBrowseRefreshScheduledJob extends QuartzJobBean {
 			this.jobLauncher.run(this.job, jobParameters);
 		} catch (Exception e) {
 			e.printStackTrace();
-			slackService.sendSlackMessage(
-					IptimeBrowseRefreshConfig.JOB_NAME + "\n" + e.getMessage(), SlackChannel.ERROR);
+			errorNotificationService.sendNotification(
+					IptimeBrowseRefreshConfig.JOB_NAME + "\n" + e.getMessage());
 		}
 	}
 }
