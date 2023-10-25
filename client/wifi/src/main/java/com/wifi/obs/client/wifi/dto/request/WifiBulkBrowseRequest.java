@@ -1,4 +1,4 @@
-package com.wifi.observer.client.wifi.dto.request;
+package com.wifi.obs.client.wifi.dto.request;
 
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -7,10 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode
-public abstract class WifiBulkBrowseRequest<R extends WifiBrowseRequest> {
+@RequiredArgsConstructor
+public abstract class WifiBulkBrowseRequest<R extends WifiBrowseRequest>
+		implements WifiBulkRequest<R> {
 
 	private final List<R> source;
 }
