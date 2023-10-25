@@ -15,7 +15,7 @@ public class GetUserServiceManager {
 
 	public String getKey(WifiServiceType type) {
 		return getUsersServiceMap.keySet().stream()
-				.filter(s -> s.contains(type.getType()))
+				.filter(s -> s.contains(type.getKey()))
 				.findFirst()
 				.orElseThrow(BadTypeRequestException::new);
 	}

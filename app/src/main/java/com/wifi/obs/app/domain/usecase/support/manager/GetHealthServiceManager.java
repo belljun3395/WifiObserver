@@ -23,7 +23,7 @@ public class GetHealthServiceManager {
 
 	public String getKey(WifiServiceType type) {
 		return getHealthServiceMap.keySet().stream()
-				.filter(s -> s.contains(type.getType()))
+				.filter(s -> s.contains(type.getKey()))
 				.findFirst()
 				.orElseThrow(BadTypeRequestException::new);
 	}
