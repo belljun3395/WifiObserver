@@ -1,5 +1,6 @@
 package com.wifi.obs.infra.batch.job.browse.iptime;
 
+import com.wifi.obs.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
 import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeAuthProcessor;
@@ -7,7 +8,6 @@ import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeBrowseProcessor;
 import com.wifi.obs.infra.batch.job.browse.iptime.step.IptimeConnectHistoryWriter;
 import com.wifi.obs.infra.batch.support.listener.BrowseStepSlackLoggingListener;
 import com.wifi.obs.infra.batch.support.param.TimeStamper;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;

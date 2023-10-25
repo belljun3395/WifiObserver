@@ -1,7 +1,7 @@
 package com.wifi.obs.infra.batch;
 
+import com.wifi.obs.client.wifi.WifiClientConfig;
 import com.wifi.obs.infra.slack.SlackConfig;
-import com.wifi.observer.client.wifi.WifiClientConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration;
