@@ -1,6 +1,7 @@
 package com.wifi.obs.infra.batch;
 
 import com.wifi.obs.client.wifi.WifiClientConfig;
+import com.wifi.obs.data.mysql.MysqlConfig;
 import com.wifi.obs.infra.slack.SlackConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages = BatchConfig.BASE_PACKAGE)
 @RequiredArgsConstructor
 @EnableAutoConfiguration(exclude = {BatchAutoConfiguration.class})
-@Import(value = {SlackConfig.class, WifiClientConfig.class})
+@Import(value = {SlackConfig.class, WifiClientConfig.class, MysqlConfig.class})
 public class BatchConfig {
 
 	public static final String BASE_PACKAGE = "com.wifi.obs.infra.batch";
