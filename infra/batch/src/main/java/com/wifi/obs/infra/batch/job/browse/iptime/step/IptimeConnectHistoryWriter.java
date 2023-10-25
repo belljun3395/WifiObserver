@@ -1,5 +1,7 @@
 package com.wifi.obs.infra.batch.job.browse.iptime.step;
 
+import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfo;
+import com.wifi.obs.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.history.ConnectHistoryEntity;
@@ -12,8 +14,6 @@ import com.wifi.obs.data.mysql.repository.history.disConnect.DisConnectHistoryRe
 import com.wifi.obs.data.mysql.repository.wifi.auth.WifiAuthRepository;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
 import com.wifi.obs.infra.batch.service.SaveHistoryMeatService;
-import com.wifi.observer.client.wifi.dto.response.OnConnectUserInfo;
-import com.wifi.observer.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;

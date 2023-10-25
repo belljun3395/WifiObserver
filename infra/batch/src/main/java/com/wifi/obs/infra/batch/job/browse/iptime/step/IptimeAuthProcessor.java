@@ -1,12 +1,12 @@
 package com.wifi.obs.infra.batch.job.browse.iptime.step;
 
+import com.wifi.obs.client.wifi.client.iptime.IptimeAuthClient;
+import com.wifi.obs.client.wifi.dto.request.iptime.IptimeAuthRequest;
+import com.wifi.obs.client.wifi.dto.response.AuthInfo;
+import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.wifi.auth.WifiAuthEntity;
 import com.wifi.obs.data.mysql.entity.wifi.service.WifiServiceEntity;
-import com.wifi.observer.client.wifi.client.iptime.IptimeAuthClient;
-import com.wifi.observer.client.wifi.dto.request.iptime.IptimeAuthRequest;
-import com.wifi.observer.client.wifi.dto.response.AuthInfo;
-import com.wifi.observer.client.wifi.dto.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -16,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeAuthProcessor implements ItemProcessor<WifiServiceEntity, AuthInfo> {
+public class IptimeAuthProcessor
+		implements ItemProcessor<WifiServiceEntity, ClientResponse<AuthInfo>> {
 
 	private final IptimeAuthClient iptimeAuthClient;
 
 	@Override
 	@Transactional(readOnly = true, transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public AuthInfo process(WifiServiceEntity item) {
+	public ClientResponse<AuthInfo> process(WifiServiceEntity item) {
 		WifiAuthEntity auth = item.getWifiAuthEntity();
 		log.debug(">>> auth : {}", auth);
 
@@ -34,7 +35,7 @@ public class IptimeAuthProcessor implements ItemProcessor<WifiServiceEntity, Aut
 			return null;
 		}
 
-		return authInfo.getResponse().get();
+		return authInfo;
 	}
 
 	private IptimeAuthRequest getRequest(WifiAuthEntity auth) {
