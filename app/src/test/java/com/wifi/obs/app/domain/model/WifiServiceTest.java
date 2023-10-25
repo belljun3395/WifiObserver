@@ -15,7 +15,7 @@ class WifiServiceTest {
 	static Long memberId = 1L;
 	static WifiAuth auth =
 			WifiAuth.builder()
-					.id(1L)
+					.id(ModelId.of(1L))
 					.host("host")
 					.certification("certification")
 					.password("password")
@@ -31,8 +31,8 @@ class WifiServiceTest {
 		// given
 		WifiService service =
 				WifiService.builder()
-						.id(serviceId)
-						.memberId(memberId)
+						.id(ModelId.of(serviceId))
+						.memberId(ModelId.of(memberId))
 						.auth(auth)
 						.type(serviceType)
 						.cycle(cycle)
@@ -53,8 +53,8 @@ class WifiServiceTest {
 		// given
 		WifiService service =
 				WifiService.builder()
-						.id(serviceId)
-						.memberId(memberId)
+						.id(ModelId.of(serviceId))
+						.memberId(ModelId.of(memberId))
 						.auth(auth)
 						.type(serviceType)
 						.cycle(cycle)

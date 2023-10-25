@@ -20,7 +20,7 @@ class MemberTest {
 		// given
 		Member member =
 				Member.builder()
-						.id(memberId)
+						.id(ModelId.of(memberId))
 						.password(password)
 						.status(status)
 						.deviceMax(deviceMaxCount)
@@ -41,7 +41,7 @@ class MemberTest {
 		// given
 		Member member =
 				Member.builder()
-						.id(memberId)
+						.id(ModelId.of(memberId))
 						.password(password)
 						.status(status)
 						.deviceMax(deviceMaxCount)
@@ -62,7 +62,7 @@ class MemberTest {
 		// given
 		Member member =
 				Member.builder()
-						.id(memberId)
+						.id(ModelId.of(memberId))
 						.password(password)
 						.status(status)
 						.deviceMax(deviceMaxCount)

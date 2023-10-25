@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wifi.obs.app.config.AppConfig;
 import com.wifi.obs.app.domain.dto.response.service.WifiServiceInfos;
+import com.wifi.obs.app.domain.model.ModelId;
 import com.wifi.obs.app.domain.model.device.Device;
 import com.wifi.obs.app.domain.model.device.DeviceType;
 import com.wifi.obs.app.domain.model.wifi.WifiAuth;
@@ -31,7 +32,7 @@ class GetWifiServiceInfoUseCaseTest {
 	static Long memberId = 1L;
 	static WifiAuth auth =
 			WifiAuth.builder()
-					.id(1L)
+					.id(ModelId.of(1L))
 					.host("host")
 					.certification("certification")
 					.password("password")
@@ -46,8 +47,8 @@ class GetWifiServiceInfoUseCaseTest {
 		List<WifiService> services =
 				List.of(
 						WifiService.builder()
-								.id(serviceId)
-								.memberId(memberId)
+								.id(ModelId.of(serviceId))
+								.memberId(ModelId.of(memberId))
 								.auth(auth)
 								.type(WifiServiceType.IPTIME)
 								.cycle(10L)
@@ -60,8 +61,8 @@ class GetWifiServiceInfoUseCaseTest {
 				List.of(
 						List.of(
 								Device.builder()
-										.id(deviceId)
-										.serviceId(serviceId)
+										.id(ModelId.of(deviceId))
+										.serviceId(ModelId.of(serviceId))
 										.type(DeviceType.NOTEBOOK)
 										.mac(mac)
 										.build()));
