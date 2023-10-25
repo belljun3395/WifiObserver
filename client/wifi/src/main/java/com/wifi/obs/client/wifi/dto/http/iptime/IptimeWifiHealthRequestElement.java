@@ -1,7 +1,6 @@
-package com.wifi.observer.client.wifi.dto.http;
+package com.wifi.obs.client.wifi.dto.http.iptime;
 
-import com.wifi.observer.client.wifi.support.log.HostLogAble;
-import java.util.Map;
+import com.wifi.obs.client.wifi.dto.http.WifiHealthRequestElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,11 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class IptimeWifiBrowseClientDto implements HostLogAble {
-	private final String url;
-	private final String cookie;
-	private final Map<String, String> headers;
+public class IptimeWifiHealthRequestElement implements WifiHealthRequestElement {
 
+	private final String url;
+
+	@Override
 	public String getHost() {
 		String sub = StringUtils.substringAfter(url, "http://");
 		return StringUtils.substringBefore(sub, "/");
