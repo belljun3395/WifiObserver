@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.converter;
 
+import com.wifi.obs.app.domain.model.ModelId;
 import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.model.wifi.WifiServiceType;
 import com.wifi.obs.app.domain.model.wifi.WifiStatus;
@@ -16,8 +17,8 @@ public class WifiServiceConverter {
 
 	public WifiService from(WifiServiceEntity source) {
 		return WifiService.builder()
-				.id(source.getId())
-				.memberId(source.getMember().getId())
+				.id(ModelId.of(source.getId()))
+				.memberId(ModelId.of(source.getMember().getId()))
 				.auth(wifiAuthConverter.from(source.getWifiAuthEntity()))
 				.type(WifiServiceType.valueOf(source.getServiceType().getType()))
 				.cycle(source.getCycle())

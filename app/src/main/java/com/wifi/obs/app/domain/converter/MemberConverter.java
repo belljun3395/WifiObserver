@@ -1,5 +1,6 @@
 package com.wifi.obs.app.domain.converter;
 
+import com.wifi.obs.app.domain.model.ModelId;
 import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.model.member.MemberStatus;
 import com.wifi.obs.data.mysql.entity.member.MemberEntity;
@@ -12,7 +13,7 @@ public class MemberConverter {
 
 	public Member from(MemberEntity source) {
 		return Member.builder()
-				.id(source.getId())
+				.id(ModelId.of(source.getId()))
 				.certification(source.getCertification())
 				.password(source.getPassword())
 				.status(MemberStatus.valueOf(source.getStatus().getType()))
