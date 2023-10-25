@@ -11,8 +11,8 @@ import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetUserServiceManager;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.support.WifiAuthEntitySupporter;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
@@ -35,8 +35,6 @@ public class GetOnConnectDeviceFacadeUseCase {
 	private final MemberConverter memberConverter;
 	private final WifiServiceDeviceConverter wifiServiceDeviceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final WifiAuthEntitySupporter wifiAuthEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
@@ -46,7 +44,7 @@ public class GetOnConnectDeviceFacadeUseCase {
 
 		WifiServiceDevice device = getDevice(mac);
 
-		idMatchValidator.validate(member.getId(), device.getMemberId());
+		validate(member, device);
 
 		GetUserService getUserService = getService(device);
 
@@ -64,11 +62,18 @@ public class GetOnConnectDeviceFacadeUseCase {
 						.orElseThrow(() -> new DeviceNotFoundException(mac)));
 	}
 
+	private void validate(Member member, WifiServiceDevice device) {
+		if (!member.isOwner(device.getMemberId())) {
+			throw new NotMatchInformationException();
+		}
+	}
+
 	private GetUserService getService(WifiServiceDevice device) {
 		return getUserServiceManager.getService(device.getServiceType());
 	}
 
-	protected DeviceOnConnectInfo getDeviceOnConnectInfo(
+	@Transactional(readOnly = true)
+	public DeviceOnConnectInfo getDeviceOnConnectInfo(
 			GetUserService service, String mac, WifiServiceDevice device) {
 
 		OnConnectUserInfos users = getUsers(service, device);
@@ -84,7 +89,7 @@ public class GetOnConnectDeviceFacadeUseCase {
 
 	private OnConnectUserInfos getUsers(GetUserService service, WifiServiceDevice device) {
 		return service.execute(
-				wifiAuthEntitySupporter.getWifiAuthIdEntity(device.getService().getAuthId()));
+				wifiAuthEntitySupporter.getReferenceEntity(device.getService().getAuthId()));
 	}
 
 	protected Optional<String> getFilteredUsers(String mac, OnConnectUserInfos users) {

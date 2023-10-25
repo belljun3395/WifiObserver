@@ -9,7 +9,7 @@ import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
 import com.wifi.obs.data.mysql.entity.support.WifiServiceEntitySupporter;
@@ -36,8 +36,6 @@ public class GetServiceDeviceUseCase {
 
 	private final WifiServiceConverter wifiServiceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
@@ -45,7 +43,7 @@ public class GetServiceDeviceUseCase {
 
 		WifiService service = getWifiService(serviceId);
 
-		idMatchValidator.validate(memberId, service.getMemberId());
+		validate(service, memberId);
 
 		List<DeviceInfo> serviceDevices = getDevices(service.getId());
 
@@ -54,6 +52,12 @@ public class GetServiceDeviceUseCase {
 
 	private WifiService getWifiService(Long serviceId) {
 		return wifiServiceConverter.from(validatedWifiServiceService.execute(serviceId));
+	}
+
+	private void validate(WifiService service, Long memberId) {
+		if (service.isServiceOwner(memberId)) {
+			throw new NotMatchInformationException();
+		}
 	}
 
 	private List<DeviceInfo> getDevices(Long sid) {

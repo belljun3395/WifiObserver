@@ -4,7 +4,7 @@ import com.wifi.obs.app.domain.converter.WifiServiceConverter;
 import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.wifi.GetHealthService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetHealthServiceManager;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.repository.wifi.service.WifiServiceRepository;
@@ -21,8 +21,6 @@ public class GetHealthStatusUseCase {
 
 	private final WifiServiceRepository wifiServiceRepository;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final GetHealthServiceManager getHealthServiceManager;
 
 	private final WifiServiceConverter wifiServiceConverter;
@@ -32,9 +30,15 @@ public class GetHealthStatusUseCase {
 
 		WifiService service = getWifiService(sid);
 
-		idMatchValidator.validate(memberId, service.getMemberId());
+		validate(service, memberId);
 
 		return getService(service).execute(service.getHost());
+	}
+
+	private void validate(WifiService service, Long memberId) {
+		if (service.isServiceOwner(memberId)) {
+			throw new NotMatchInformationException();
+		}
 	}
 
 	private WifiService getWifiService(Long sid) {

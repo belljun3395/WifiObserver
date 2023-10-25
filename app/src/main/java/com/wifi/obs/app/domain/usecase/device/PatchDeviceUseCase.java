@@ -7,8 +7,8 @@ import com.wifi.obs.app.domain.model.device.WifiServiceDevice;
 import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.PatchDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -32,8 +32,6 @@ public class PatchDeviceUseCase {
 	private final DeviceConverter deviceConverter;
 	private final WifiServiceDeviceConverter wifiServiceDeviceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
@@ -43,19 +41,37 @@ public class PatchDeviceUseCase {
 
 		WifiServiceDevice device = getDevice(request.getDeviceId());
 
-		if (device.isSameService(request.getChangeServiceId())) {
-			return;
-		}
-
 		WifiService changeTargetService = device.getService();
 
-		idMatchValidator.validate(memberId, changeTargetService.getMemberId());
+		validate(changeTargetService, device, memberId, request.getChangeServiceId());
 
 		checkConstraint(member, changeTargetService.getId());
 
 		device.changeService(changeTargetService.getId());
 
 		deviceRepository.save(deviceConverter.toEntity(device));
+	}
+
+	private void validate(
+			WifiService changeTargetService,
+			WifiServiceDevice device,
+			Long memberId,
+			Long changeServiceId) {
+		validateService(changeTargetService, memberId);
+
+		validateDevice(device, changeServiceId);
+	}
+
+	private void validateService(WifiService changeTargetService, Long memberId) {
+		if (changeTargetService.isServiceOwner(memberId)) {
+			throw new NotMatchInformationException();
+		}
+	}
+
+	private void validateDevice(WifiServiceDevice device, Long changeServiceId) {
+		if (device.isSameService(changeServiceId)) {
+			return;
+		}
 	}
 
 	private Member getMember(Long memberId) {

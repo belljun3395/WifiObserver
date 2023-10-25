@@ -45,11 +45,9 @@ public class SaveWifiServiceUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, SaveServiceRequest request) {
 
-		validateRequest(request);
-
 		Member member = getMember(memberId);
 
-		validateMember(member);
+		validate(member, request);
 
 		WifiAuthEntity auth =
 				wifiAuthRepository.save(
@@ -66,6 +64,29 @@ public class SaveWifiServiceUseCase {
 						.member(MemberEntity.builder().id(memberId).build())
 						.wifiAuthEntity(auth)
 						.build());
+	}
+
+	private GetHealthService getService(ServiceType type) {
+		return getHealthServiceManager.getService(type);
+	}
+
+	private void checkAuthService(SaveServiceRequest request) {
+		getService(request)
+				.execute(request.getHost(), request.getCertification(), request.getPassword());
+	}
+
+	private PostAuthService getService(SaveServiceRequest request) {
+		return postAuthServiceManager.getService(request.getType());
+	}
+
+	private Member getMember(Long memberId) {
+		return memberConverter.from(validatedMemberService.execute(memberId));
+	}
+
+	private void validate(Member member, SaveServiceRequest request) {
+		validateRequest(request);
+		long memberServiceCount = getWifiServices(member).size();
+		validateMember(member, memberServiceCount);
 	}
 
 	private void validateRequest(SaveServiceRequest request) {
@@ -90,34 +111,12 @@ public class SaveWifiServiceUseCase {
 		}
 	}
 
-	private GetHealthService getService(ServiceType type) {
-		return getHealthServiceManager.getService(type);
-	}
-
-	private void checkAuthService(SaveServiceRequest request) {
-		getService(request)
-				.execute(request.getHost(), request.getCertification(), request.getPassword());
-	}
-
-	private PostAuthService getService(SaveServiceRequest request) {
-		return postAuthServiceManager.getService(request.getType());
-	}
-
-	private Member getMember(Long memberId) {
-		return memberConverter.from(validatedMemberService.execute(memberId));
-	}
-
-	private void validateMember(Member member) {
-		long memberServiceCount = getWifiServices(member).size();
-		checkConstraint(member, memberServiceCount);
-	}
-
 	private List<WifiServiceEntity> getWifiServices(Member member) {
 		return wifiServiceRepository.findAllByMemberAndDeletedFalse(
 				MemberEntity.builder().id(member.getId()).build());
 	}
 
-	private void checkConstraint(Member member, Long serviceCount) {
+	private void validateMember(Member member, Long serviceCount) {
 		if (member.isOverServiceMax(serviceCount)) {
 			throw new OverLimitException();
 		}

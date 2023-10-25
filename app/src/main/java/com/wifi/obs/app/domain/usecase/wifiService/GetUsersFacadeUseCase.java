@@ -7,8 +7,8 @@ import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.device.BrowseDeviceService;
 import com.wifi.obs.app.domain.service.wifi.GetUserService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetUserServiceManager;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.ClientProblemException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.ServiceNotFoundException;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.entity.device.DeviceEntity;
@@ -36,8 +36,6 @@ public class GetUsersFacadeUseCase {
 
 	private final WifiServiceConverter wifiServiceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final WifiAuthEntitySupporter wifiAuthEntitySupporter;
 	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 
@@ -46,9 +44,7 @@ public class GetUsersFacadeUseCase {
 
 		WifiService service = getWifiService(sid);
 
-		isOn(service);
-
-		idMatchValidator.validate(memberId, service.getMemberId());
+		validate(service, memberId);
 
 		OnConnectUserInfos res =
 				getService(service)
@@ -63,17 +59,21 @@ public class GetUsersFacadeUseCase {
 		return getFilteredRes(res, devices);
 	}
 
+	private void validate(WifiService service, Long memberId) {
+		if (!service.isOn()) {
+			throw new ClientProblemException();
+		}
+
+		if (service.isServiceOwner(memberId)) {
+			throw new NotMatchInformationException();
+		}
+	}
+
 	private WifiService getWifiService(Long sid) {
 		return wifiServiceConverter.from(
 				wifiServiceRepository
 						.findByIdAndDeletedFalse(sid)
 						.orElseThrow(() -> new ServiceNotFoundException(sid)));
-	}
-
-	private void isOn(WifiService service) {
-		if (!service.isOn()) {
-			throw new ClientProblemException();
-		}
 	}
 
 	private GetUserService getService(WifiService service) {
@@ -85,7 +85,7 @@ public class GetUsersFacadeUseCase {
 			return false;
 		}
 
-		if (filter.get().equals(Boolean.FALSE)) {
+		if (Boolean.FALSE.equals(filter.get())) {
 			return false;
 		}
 

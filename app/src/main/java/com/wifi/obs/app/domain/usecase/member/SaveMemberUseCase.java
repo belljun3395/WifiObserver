@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SaveMemberUseCase {
 
-	private static final Long NOT_EXIST_MEMBER = -1L;
+	private static final Long NOT_EXIST_MEMBER_FLAG = -1L;
 
 	private final MemberRepository memberRepository;
 	private final TokenGenerator tokenGenerator;
@@ -33,10 +33,10 @@ public class SaveMemberUseCase {
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public SavedMemberInfo execute(SaveMemberRequest request) {
 
-		Long existMember = isExistMember(request.getEmail());
+		Long id = isExistMember(request.getEmail());
 
-		if (!Objects.equals(existMember, NOT_EXIST_MEMBER)) {
-			Member member = getMember(existMember);
+		if (!Objects.equals(NOT_EXIST_MEMBER_FLAG, id)) {
+			Member member = getMember(id);
 
 			validatePassword(member, request.getPassword());
 
@@ -55,7 +55,7 @@ public class SaveMemberUseCase {
 			return source.get().getId();
 		}
 
-		return NOT_EXIST_MEMBER;
+		return NOT_EXIST_MEMBER_FLAG;
 	}
 
 	private Member getMember(Long existMember) {

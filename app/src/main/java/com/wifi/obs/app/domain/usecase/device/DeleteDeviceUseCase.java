@@ -5,8 +5,8 @@ import com.wifi.obs.app.domain.converter.WifiServiceDeviceConverter;
 import com.wifi.obs.app.domain.model.device.WifiServiceDevice;
 import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.web.dto.request.device.DeleteDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
@@ -27,8 +27,6 @@ public class DeleteDeviceUseCase {
 	private final MemberConverter memberConverter;
 	private final WifiServiceDeviceConverter wifiServiceDeviceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(Long memberId, DeleteDeviceRequest request) {
 
@@ -36,7 +34,7 @@ public class DeleteDeviceUseCase {
 
 		WifiServiceDevice device = getDevice(request);
 
-		idMatchValidator.validate(member.getId(), device.getMemberId());
+		validate(member, device);
 
 		deviceRepository.deleteById(device.getId());
 	}
@@ -50,5 +48,11 @@ public class DeleteDeviceUseCase {
 				deviceRepository
 						.findById(request.getDeviceId())
 						.orElseThrow(() -> new DeviceNotFoundException(request.getDeviceId())));
+	}
+
+	private void validate(Member member, WifiServiceDevice device) {
+		if (!member.isOwner(device.getMemberId())) {
+			throw new NotMatchInformationException();
+		}
 	}
 }

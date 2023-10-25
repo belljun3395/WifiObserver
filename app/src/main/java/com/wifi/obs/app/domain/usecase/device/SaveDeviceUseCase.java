@@ -7,8 +7,8 @@ import com.wifi.obs.app.domain.model.wifi.WifiService;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServiceService;
 import com.wifi.obs.app.domain.service.wifi.ValidatedWifiServicesService;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.AlreadyRegisterException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.exception.domain.OverLimitException;
 import com.wifi.obs.app.web.dto.request.device.SaveDeviceRequest;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
@@ -38,8 +38,6 @@ public class SaveDeviceUseCase {
 	private final MemberConverter memberConverter;
 	private final WifiServiceConverter wifiServiceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	private final WifiServiceEntitySupporter wifiServiceEntitySupporter;
 	private final MemberEntitySupporter memberEntitySupporter;
 
@@ -50,9 +48,7 @@ public class SaveDeviceUseCase {
 
 		Member member = getMember(memberId);
 
-		idMatchValidator.validate(member.getId(), service.getMemberId());
-		checkConstraint(member);
-		isExist(service.getId(), request.getMac().toUpperCase());
+		validate(member, service, request);
 
 		deviceRepository.save(
 				DeviceEntity.builder()
@@ -60,6 +56,23 @@ public class SaveDeviceUseCase {
 						.mac(request.getMac().toUpperCase())
 						.wifiService(wifiServiceEntitySupporter.getReferenceEntity(service.getId()))
 						.build());
+	}
+
+	private void validate(Member member, WifiService service, SaveDeviceRequest request) {
+		validateMember(member, service);
+		if (isExistDevice(service.getId(), request.getMac().toUpperCase())) {
+			throw new AlreadyRegisterException();
+		}
+	}
+
+	private void validateMember(Member member, WifiService service) {
+		if (!member.isOwner(service.getMemberId())) {
+			throw new NotMatchInformationException();
+		}
+
+		if (member.isOverDeviceMax(getSavedDeviceCount(member.getId()))) {
+			throw new OverLimitException();
+		}
 	}
 
 	private Member getMember(Long memberId) {
@@ -70,12 +83,6 @@ public class SaveDeviceUseCase {
 		return wifiServiceConverter.from(validatedWifiServiceService.execute(serviceId));
 	}
 
-	private void checkConstraint(Member member) {
-		if (member.isOverDeviceMax(getSavedDeviceCount(member.getId()))) {
-			throw new OverLimitException();
-		}
-	}
-
 	private long getSavedDeviceCount(Long memberId) {
 		List<WifiServiceEntity> wifiServices =
 				validatedWifiServicesService.execute(memberEntitySupporter.getMemberIdEntity(memberId));
@@ -84,12 +91,6 @@ public class SaveDeviceUseCase {
 			count += deviceRepository.findAllByWifiServiceAndDeletedFalse(wifiService).size();
 		}
 		return count;
-	}
-
-	private void isExist(Long serviceId, String mac) {
-		if (isExistDevice(serviceId, mac)) {
-			throw new AlreadyRegisterException();
-		}
 	}
 
 	private boolean isExistDevice(Long serviceId, String mac) {

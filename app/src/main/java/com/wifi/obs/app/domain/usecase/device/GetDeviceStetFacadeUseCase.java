@@ -9,8 +9,8 @@ import com.wifi.obs.app.domain.model.member.Member;
 import com.wifi.obs.app.domain.service.device.GetServiceDeviceStetInfo;
 import com.wifi.obs.app.domain.service.member.ValidatedMemberService;
 import com.wifi.obs.app.domain.usecase.support.manager.GetServiceDeviceStetInfoManager;
-import com.wifi.obs.app.domain.usecase.util.validator.IdMatchValidator;
 import com.wifi.obs.app.exception.domain.DeviceNotFoundException;
+import com.wifi.obs.app.exception.domain.NotMatchInformationException;
 import com.wifi.obs.app.web.dto.request.StetType;
 import com.wifi.obs.data.mysql.config.JpaDataSourceConfig;
 import com.wifi.obs.data.mysql.repository.device.DeviceRepository;
@@ -34,8 +34,6 @@ public class GetDeviceStetFacadeUseCase {
 	private final WifiServiceDeviceConverter wifiServiceDeviceConverter;
 	private final DeviceConverter deviceConverter;
 
-	private final IdMatchValidator idMatchValidator;
-
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceStetInfo execute(Long memberId, String mac, StetType type) {
 
@@ -43,7 +41,7 @@ public class GetDeviceStetFacadeUseCase {
 
 		WifiServiceDevice device = getDevice(mac);
 
-		idMatchValidator.validate(member.getId(), device.getMemberId());
+		validate(member, device);
 
 		GetServiceDeviceStetInfo service = getService(type);
 
@@ -59,6 +57,12 @@ public class GetDeviceStetFacadeUseCase {
 				deviceRepository
 						.findByMacAndDeletedFalse(mac)
 						.orElseThrow(() -> new DeviceNotFoundException(mac)));
+	}
+
+	private void validate(Member member, WifiServiceDevice device) {
+		if (!member.isOwner(device.getMemberId())) {
+			throw new NotMatchInformationException();
+		}
 	}
 
 	private GetServiceDeviceStetInfo getService(StetType type) {
