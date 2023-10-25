@@ -1,4 +1,4 @@
-package com.wifi.observer.client.wifi.dto.response;
+package com.wifi.obs.client.wifi.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,5 +14,4 @@ import lombok.ToString;
 public class OnConnectUserInfo {
 
 	private final String user;
-	private final String host;
 }
