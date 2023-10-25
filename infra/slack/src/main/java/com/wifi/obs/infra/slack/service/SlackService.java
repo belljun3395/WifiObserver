@@ -22,7 +22,7 @@ public class SlackService {
 	@Value(value = "${slack.token}")
 	private String token;
 
-	public void sendSlackMessage(String message, SlackChannel channel) {
+	public void sendNotification(String message, SlackChannel channel) {
 		MethodsClient methods = Slack.getInstance().methods(token);
 
 		try {
