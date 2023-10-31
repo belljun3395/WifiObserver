@@ -12,9 +12,13 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public class HttpStatusResponse implements HttpResponse<HttpStatus> {
 
-	private final HttpStatus response;
+	private final HttpStatus httpResponse;
 
 	public static HttpStatusResponse of(HttpStatus status) {
 		return new HttpStatusResponse(status);
+	}
+
+	public boolean isFail() {
+		return httpResponse.is2xxSuccessful();
 	}
 }
