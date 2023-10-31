@@ -1,9 +1,9 @@
 package com.wifi.obs.client.wifi.util.resolver.users;
 
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import java.util.List;
 
 public interface UsersPropertyResolver {
 
-	List<String> resolve(BrowseQueryVO source);
+	List<String> resolve(HTMLResponse source);
 }

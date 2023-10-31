@@ -1,6 +1,6 @@
 package com.wifi.obs.client.wifi.util.resolver.users;
 
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IptimeUserPropertyResolver implements UsersPropertyResolver {
+public class IptimeDocumentUserPropertyResolver implements UsersPropertyResolver {
 
 	private static final String TBODY = "tbody";
 	private static final String TR = "tr";
@@ -17,8 +17,8 @@ public class IptimeUserPropertyResolver implements UsersPropertyResolver {
 	private static final String STYLE = "#a9a9a9";
 
 	@Override
-	public List<String> resolve(BrowseQueryVO source) {
-		Element body = source.getInfo().getResponse().body();
+	public List<String> resolve(HTMLResponse source) {
+		Element body = source.getHttpResponse().getCrawlResponse().getBody().body();
 
 		Elements tbody = body.select(TBODY);
 

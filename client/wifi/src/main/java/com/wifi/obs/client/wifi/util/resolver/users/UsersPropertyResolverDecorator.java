@@ -1,6 +1,6 @@
 package com.wifi.obs.client.wifi.util.resolver.users;
 
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ public class UsersPropertyResolverDecorator implements UsersPropertyResolver {
 	private final UsersPropertyResolver usersPropertyResolver;
 
 	@Override
-	public List<String> resolve(BrowseQueryVO source) {
+	public List<String> resolve(HTMLResponse source) {
 		return usersPropertyResolver.resolve(source);
 	}
 }

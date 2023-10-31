@@ -1,6 +1,6 @@
 package com.wifi.obs.client.wifi.util.resolver.users;
 
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,24 +13,24 @@ import org.springframework.stereotype.Component;
 
 /** IPTIME 공유기에서 접속 중인 사용자 정보를 추출하는 기능을 구현한 데코레이터 클래스 */
 @Component
-public class IptimeUsersOnConnectFilterDecorator extends UsersPropertyResolverDecorator {
+public class IptimeDocumentUsersOnConnectFilterDecorator extends UsersPropertyResolverDecorator {
 	private static final String TBODY = "tbody";
 	private static final String INPUT = "input";
 
-	public IptimeUsersOnConnectFilterDecorator(
-			@Qualifier(value = "iptimeUserPropertyResolver")
+	public IptimeDocumentUsersOnConnectFilterDecorator(
+			@Qualifier(value = "iptimeDocumentUserPropertyResolver")
 					UsersPropertyResolver usersPropertyResolver) {
 		super(usersPropertyResolver);
 	}
 
 	@Override
-	public List<String> resolve(BrowseQueryVO source) {
-		List<String> allUsersProperty = super.resolve(source);
+	public List<String> resolve(HTMLResponse source) {
+		List<String> allUsersProperties = super.resolve(source);
 
 		List<String> onConnectUserProperties =
-				getOnConnectUserProperties(source.getInfo().getResponse());
+				getOnConnectUserProperties(source.getHttpResponse().getCrawlResponse().getBody());
 
-		return filterOnConnectUsers(allUsersProperty, onConnectUserProperties);
+		return filterOnConnectUsers(allUsersProperties, onConnectUserProperties);
 	}
 
 	private List<String> getOnConnectUserProperties(Document source) {

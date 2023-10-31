@@ -1,6 +1,6 @@
 package com.wifi.obs.client.wifi.util.resolver;
 
-import com.wifi.obs.client.wifi.model.value.AuthCommandVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.util.resolver.string.StringResolver;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ public class CookieResolver {
 		this.resolver = resolver;
 	}
 
-	public String resolve(AuthCommandVO source) {
-		return resolver.resolve(source.getInfo().toString());
+	public String resolve(HTMLResponse source) {
+		return resolver.resolve(source.getHttpResponse().getCrawlResponse().getBody().toString());
 	}
 }
