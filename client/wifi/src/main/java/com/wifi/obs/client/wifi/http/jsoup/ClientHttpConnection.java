@@ -22,13 +22,13 @@ public class ClientHttpConnection extends HttpConnection implements Connection {
 	}
 
 	@Override
-	public HTMLDocumentResponse get() throws IOException {
-		return HTMLDocumentResponse.of(super.get());
+	public ClientDocument get() throws IOException {
+		return ClientDocument.of(super.get());
 	}
 
 	@Override
-	public HTMLDocumentResponse post() throws IOException {
-		return HTMLDocumentResponse.of(super.post());
+	public ClientDocument post() throws IOException {
+		return ClientDocument.of(super.post());
 	}
 
 	@Override

@@ -5,12 +5,12 @@ import org.jsoup.parser.Parser;
 
 public class ClientJsoup {
 
-	public static HTMLDocumentResponse getFailDocument() {
+	public static ClientDocument getFailDocument() {
 		return ClientJsoup.parse(Strings.EMPTY);
 	}
 
-	private static HTMLDocumentResponse parse(String html) {
-		return HTMLDocumentResponse.of(Parser.parse(html, ""));
+	private static ClientDocument parse(String html) {
+		return ClientDocument.of(Parser.parse(html, Strings.EMPTY));
 	}
 
 	public static ClientHttpConnection connect(String url) {
