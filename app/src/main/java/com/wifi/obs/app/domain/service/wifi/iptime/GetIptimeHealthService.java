@@ -25,6 +25,6 @@ public class GetIptimeHealthService implements GetHealthService {
 		if (response.isEmpty()) {
 			return HttpStatus.BAD_REQUEST;
 		}
-		return response.get().getResponse();
+		return response.get().getHttpResponse();
 	}
 }
