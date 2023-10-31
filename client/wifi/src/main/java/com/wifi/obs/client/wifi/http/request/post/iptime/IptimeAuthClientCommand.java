@@ -1,11 +1,10 @@
 package com.wifi.obs.client.wifi.http.request.post.iptime;
 
 import com.wifi.obs.client.wifi.dto.http.WifiAuthRequestElement;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
+import com.wifi.obs.client.wifi.http.jsoup.ClientDocument;
 import com.wifi.obs.client.wifi.http.jsoup.ClientJsoup;
-import com.wifi.obs.client.wifi.http.jsoup.HTMLDocumentResponse;
 import com.wifi.obs.client.wifi.http.request.post.AuthClientCommand;
-import com.wifi.obs.client.wifi.model.Auth;
-import com.wifi.obs.client.wifi.model.value.AuthCommandVO;
 import com.wifi.obs.client.wifi.support.log.WifiClientTrace;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
@@ -27,19 +26,15 @@ public class IptimeAuthClientCommand implements AuthClientCommand {
 	private int timeout;
 
 	@WifiClientTrace
-	public Auth command(WifiAuthRequestElement source) {
+	public HTMLResponse command(WifiAuthRequestElement source) {
 		try {
-			return Auth.builder().authInfo(getAuthInfo(source)).host(source.getHost()).build();
+			return HTMLResponse.of(executeCommand(source));
 		} catch (IOException e) {
-			return Auth.fail(source.getHost());
+			return HTMLResponse.of(ClientJsoup.getFailDocument());
 		}
 	}
 
-	private AuthCommandVO getAuthInfo(WifiAuthRequestElement source) throws IOException {
-		return AuthCommandVO.builder().info(executeCommand(source)).build();
-	}
-
-	private HTMLDocumentResponse executeCommand(WifiAuthRequestElement source) throws IOException {
+	private ClientDocument executeCommand(WifiAuthRequestElement source) throws IOException {
 		return ClientJsoup.connect(source.getUrl())
 				.userAgent(useragent)
 				.headers(source.getHeaders())
