@@ -1,10 +1,10 @@
 package com.wifi.obs.client.wifi.http.request.post;
 
 import com.wifi.obs.client.wifi.dto.http.WifiAuthRequestElement;
-import com.wifi.obs.client.wifi.model.Auth;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 
 @FunctionalInterface
 public interface AuthClientCommand {
 
-	Auth command(WifiAuthRequestElement source);
+	HTMLResponse command(WifiAuthRequestElement source);
 }
