@@ -47,7 +47,7 @@ public class GetServiceDeviceUseCase {
 
 		List<DeviceInfo> serviceDevices = getDevices(service.getId());
 
-		return DeviceInfos.of(serviceDevices);
+		return getDeviceInfos(serviceDevices);
 	}
 
 	private WifiService getWifiService(Long serviceId) {
@@ -76,6 +76,10 @@ public class GetServiceDeviceUseCase {
 				.build();
 	}
 
+	private DeviceInfos getDeviceInfos(List<? extends DeviceInfo> serviceDevices) {
+		return DeviceInfos.of(serviceDevices);
+	}
+
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME, readOnly = true)
 	public DeviceInfos execute(Long memberId) {
 
@@ -83,7 +87,7 @@ public class GetServiceDeviceUseCase {
 
 		List<ServiceDeviceInfo> memberDevices = getDevices(memberServices);
 
-		return DeviceInfos.of(memberDevices);
+		return getDeviceInfos(memberDevices);
 	}
 
 	private List<WifiService> getWifiServices(Long memberId) {
