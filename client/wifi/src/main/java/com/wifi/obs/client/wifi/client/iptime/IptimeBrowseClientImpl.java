@@ -9,12 +9,14 @@ import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfos;
 import com.wifi.obs.client.wifi.dto.response.iptime.IptimeOnConnectUserInfosResponse;
 import com.wifi.obs.client.wifi.exception.WifiRuntimeException;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.http.request.get.BrowseClientQuery;
 import com.wifi.obs.client.wifi.model.Users;
 import com.wifi.obs.client.wifi.support.converter.iptime.IptimeBrowseConverter;
 import com.wifi.obs.client.wifi.support.generator.iptime.IptimeBrowseClientHeaderGenerator;
-import com.wifi.obs.client.wifi.util.resolver.users.IptimeUsersOnConnectFilterDecorator;
+import com.wifi.obs.client.wifi.util.resolver.users.IptimeDocumentUsersOnConnectFilterDecorator;
 import com.wifi.obs.infra.slack.service.ErrorNotificationService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,8 @@ public class IptimeBrowseClientImpl extends IptimeBrowseClient {
 
 	private final IptimeBrowseConverter iptimeBrowseConverter;
 	private final IptimeBrowseClientHeaderGenerator iptimeBrowseClientHeaderGenerator;
-	private final IptimeUsersOnConnectFilterDecorator iptimeUsersOnConnectFilterDecorator;
+	private final IptimeDocumentUsersOnConnectFilterDecorator
+			iptimeDocumentUsersOnConnectFilterDecorator;
 	private final BrowseClientQuery browseClientQuery;
 
 	private final ErrorNotificationService errorNotificationService;
@@ -41,21 +44,22 @@ public class IptimeBrowseClientImpl extends IptimeBrowseClient {
 	}
 
 	@Override
-	protected Users executeQuery(WifiBrowseRequestElement data) {
-		return browseClientQuery.query(data);
+	protected List<String> executeQuery(WifiBrowseRequestElement data) {
+		HTMLResponse response = browseClientQuery.query(data);
+		if (response.isFail()) {
+			return new ArrayList<>();
+		}
+		return iptimeDocumentUsersOnConnectFilterDecorator.resolve(response);
 	}
 
 	@Override
-	protected ClientResponse<OnConnectUserInfos> getClientResponse(Users response) {
-		List<String> resolvedUsers =
-				iptimeUsersOnConnectFilterDecorator.resolve(response.getUsersInfo());
-		return iptimeBrowseConverter.from(resolvedUsers, response.getHost());
+	protected ClientResponse<OnConnectUserInfos> getClientResponse(Users source) {
+		return iptimeBrowseConverter.from(source.getUsers(), source.getHost());
 	}
 
 	@Override
-	protected void writeFailLog(Users response) {
+	protected void writeFailLog(String host) {
 		String className = this.getClass().getName();
-		String host = response.getHost();
 		log.warn(RESPONSE_ERROR.getFormat(), className, host);
 		errorNotificationService.sendNotification(
 				format(RESPONSE_ERROR.getSlackFormat(), className, host));

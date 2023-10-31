@@ -7,6 +7,7 @@ import com.wifi.obs.client.wifi.dto.http.WifiAuthRequestElement;
 import com.wifi.obs.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.obs.client.wifi.dto.response.AuthInfo;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.http.request.post.AuthClientCommand;
 import com.wifi.obs.client.wifi.model.Auth;
 import com.wifi.obs.client.wifi.support.converter.iptime.IptimeAuthConverter;
@@ -17,6 +18,7 @@ import com.wifi.obs.infra.slack.service.ErrorNotificationService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -42,20 +44,22 @@ public class IptimeAuthClientImpl extends IptimeAuthClient {
 	}
 
 	@Override
-	protected Auth executeCommand(WifiAuthRequestElement data) {
-		return authClientCommand.command(data);
+	protected String executeCommand(WifiAuthRequestElement data) {
+		HTMLResponse response = authClientCommand.command(data);
+		if (response.isFail()) {
+			return Strings.EMPTY;
+		}
+		return cookieResolver.resolve(response);
 	}
 
 	@Override
-	protected ClientResponse<AuthInfo> getClientResponse(Auth response) {
-		String cookie = cookieResolver.resolve(response.getAuthInfo());
-		return iptimeAuthConverter.from(cookie, response.getHost());
+	protected ClientResponse<AuthInfo> getClientResponse(Auth source) {
+		return iptimeAuthConverter.from(source.getAuthInfo(), source.getHost());
 	}
 
 	@Override
-	protected void writeFailLog(Auth response) {
+	protected void writeFailLog(String host) {
 		String className = this.getClass().getName();
-		String host = response.getHost();
 		log.warn(RESPONSE_ERROR.getFormat(), className, host);
 		errorNotificationService.sendNotification(
 				format(RESPONSE_ERROR.getSlackFormat(), className, host));

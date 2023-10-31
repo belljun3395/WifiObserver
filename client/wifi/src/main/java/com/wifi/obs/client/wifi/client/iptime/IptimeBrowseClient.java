@@ -21,18 +21,25 @@ public abstract class IptimeBrowseClient
 
 		WifiBrowseRequestElement data = getRequestElement(request);
 
-		Users response = executeQuery(data);
+		List<String> connectedUsers = executeQuery(data);
 
-		if (response.isFail()) {
-			writeFailLog(response);
-			return IptimeOnConnectUserInfosResponse.fail(response.getHost());
+		if (connectedUsers.isEmpty()) {
+			writeFailLog(data.getHost());
+			return IptimeOnConnectUserInfosResponse.fail(data.getHost());
 		}
-		return getClientResponse(response);
+
+		Users users = getUsers(data.getHost(), connectedUsers);
+
+		return getClientResponse(users);
+	}
+
+	private Users getUsers(String host, List<String> users) {
+		return Users.builder().users(users).host(host).build();
 	}
 
 	protected abstract ClientResponse<OnConnectUserInfos> getClientResponse(Users users);
 
-	protected abstract void writeFailLog(Users response);
+	protected abstract void writeFailLog(String host);
 
 	@Override
 	public List<ClientResponse<OnConnectUserInfos>> queries(

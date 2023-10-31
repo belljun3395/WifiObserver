@@ -10,6 +10,7 @@ import com.wifi.obs.client.wifi.model.Health;
 import com.wifi.obs.client.wifi.support.log.WifiClientTrace;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 
 public abstract class IptimeHealthClient
 		extends WifiHealthClient<WifiHostRequest, WifiHealthRequestElement> {
@@ -19,18 +20,24 @@ public abstract class IptimeHealthClient
 
 		WifiHealthRequestElement data = getRequestElement(request);
 
-		Health response = executeQuery(data);
+		HttpStatus status = executeQuery(data);
 
-		if (response.isFail()) {
-			writeFailLog(response);
+		if (!status.is2xxSuccessful()) {
+			writeFailLog(data.getHost());
 		}
 
-		return getClientResponse(response);
+		Health health = getHost(status, data);
+
+		return getClientResponse(health);
+	}
+
+	private Health getHost(HttpStatus status, WifiHealthRequestElement data) {
+		return Health.builder().status(HttpStatusResponse.of(status)).host(data.getHost()).build();
 	}
 
 	protected abstract ClientResponse<HttpStatusResponse> getClientResponse(Health response);
 
-	protected abstract void writeFailLog(Health response);
+	protected abstract void writeFailLog(String host);
 
 	@Override
 	public List<ClientResponse<HttpStatusResponse>> queries(

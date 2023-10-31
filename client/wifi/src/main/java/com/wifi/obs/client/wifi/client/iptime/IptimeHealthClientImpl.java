@@ -13,6 +13,7 @@ import com.wifi.obs.client.wifi.support.converter.iptime.IptimeWifiHealthConvert
 import com.wifi.obs.infra.slack.service.ErrorNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -31,8 +32,8 @@ public class IptimeHealthClientImpl extends IptimeHealthClient {
 	}
 
 	@Override
-	public Health executeQuery(WifiHealthRequestElement data) {
-		return healthClientQuery.query(data);
+	public HttpStatus executeQuery(WifiHealthRequestElement data) {
+		return healthClientQuery.query(data).getHttpResponse();
 	}
 
 	@Override
@@ -41,9 +42,8 @@ public class IptimeHealthClientImpl extends IptimeHealthClient {
 	}
 
 	@Override
-	protected void writeFailLog(Health response) {
+	protected void writeFailLog(String host) {
 		String className = this.getClass().getName();
-		String host = response.getHost();
 		log.warn(RESPONSE_ERROR.getFormat(), className, host);
 		errorNotificationService.sendNotification(
 				format(RESPONSE_ERROR.getSlackFormat(), className, host));

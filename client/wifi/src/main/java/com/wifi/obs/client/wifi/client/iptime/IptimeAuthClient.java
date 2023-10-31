@@ -16,17 +16,23 @@ public abstract class IptimeAuthClient
 
 		WifiAuthRequestElement data = getRequestElement(request);
 
-		Auth response = executeCommand(data);
+		String cookie = executeCommand(data);
 
-		if (response.isFail()) {
-			writeFailLog(response);
-			return IptimeAuthResponse.fail(response.getHost());
+		if (cookie.isEmpty()) {
+			writeFailLog(data.getHost());
+			return IptimeAuthResponse.fail(data.getHost());
 		}
 
-		return getClientResponse(response);
+		Auth auth = getAuth(data.getHost(), cookie);
+
+		return getClientResponse(auth);
+	}
+
+	private Auth getAuth(String host, String cookie) {
+		return Auth.builder().authInfo(cookie).host(host).build();
 	}
 
 	protected abstract ClientResponse<AuthInfo> getClientResponse(Auth response);
 
-	protected abstract void writeFailLog(Auth response);
+	protected abstract void writeFailLog(String host);
 }
