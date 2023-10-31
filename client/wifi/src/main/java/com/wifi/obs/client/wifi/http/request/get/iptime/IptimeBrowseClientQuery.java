@@ -1,11 +1,10 @@
 package com.wifi.obs.client.wifi.http.request.get.iptime;
 
 import com.wifi.obs.client.wifi.dto.http.WifiBrowseRequestElement;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
+import com.wifi.obs.client.wifi.http.jsoup.ClientDocument;
 import com.wifi.obs.client.wifi.http.jsoup.ClientJsoup;
-import com.wifi.obs.client.wifi.http.jsoup.HTMLDocumentResponse;
 import com.wifi.obs.client.wifi.http.request.get.BrowseClientQuery;
-import com.wifi.obs.client.wifi.model.Users;
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
 import com.wifi.obs.client.wifi.support.log.WifiClientTrace;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -25,19 +24,15 @@ public class IptimeBrowseClientQuery implements BrowseClientQuery {
 	private int timeout;
 
 	@WifiClientTrace
-	public Users query(WifiBrowseRequestElement source) {
+	public HTMLResponse query(WifiBrowseRequestElement source) {
 		try {
-			return Users.builder().usersInfo(getBrowseQueryInfo(source)).host(source.getHost()).build();
+			return HTMLResponse.of(execute(source));
 		} catch (IOException e) {
-			return Users.fail(source.getHost());
+			return HTMLResponse.of(ClientJsoup.getFailDocument());
 		}
 	}
 
-	private BrowseQueryVO getBrowseQueryInfo(WifiBrowseRequestElement source) throws IOException {
-		return BrowseQueryVO.builder().info(executeQuery(source)).build();
-	}
-
-	private HTMLDocumentResponse executeQuery(WifiBrowseRequestElement source) throws IOException {
+	private ClientDocument execute(WifiBrowseRequestElement source) throws IOException {
 		return ClientJsoup.connect(source.getUrl())
 				.userAgent(useragent)
 				.cookie(COOKIE_NAME, source.getCookie())
