@@ -5,7 +5,6 @@ import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.dto.response.HealthStatusResponse;
 import com.wifi.obs.client.wifi.http.HttpStatusResponse;
 import com.wifi.obs.client.wifi.http.request.get.HealthClientQuery;
-import com.wifi.obs.client.wifi.model.Health;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
@@ -35,12 +34,11 @@ public class IptimeHealthFutureGenerator {
 				.thenApply(getResponseFunction(host));
 	}
 
-	private Supplier<Health> getQueryResponseSupplier(WifiHealthRequestElement queryDto) {
+	private Supplier<HttpStatusResponse> getQueryResponseSupplier(WifiHealthRequestElement queryDto) {
 		return () -> healthClientQuery.query(queryDto);
 	}
 
-	private Function<Health, HealthStatusResponse> getResponseFunction(String host) {
-		return response ->
-				HealthStatusResponse.builder().response(response.getHttpStatus()).host(host).build();
+	private Function<HttpStatusResponse, HealthStatusResponse> getResponseFunction(String host) {
+		return response -> HealthStatusResponse.builder().response(response).host(host).build();
 	}
 }
