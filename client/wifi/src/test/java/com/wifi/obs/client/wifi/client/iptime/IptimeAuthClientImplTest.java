@@ -9,10 +9,8 @@ import com.wifi.obs.client.wifi.dto.http.iptime.IptimeWifiAuthRequestElement;
 import com.wifi.obs.client.wifi.dto.request.iptime.IptimeAuthRequest;
 import com.wifi.obs.client.wifi.dto.response.AuthInfo;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
-import com.wifi.obs.client.wifi.http.jsoup.HTMLDocumentResponse;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.http.request.post.AuthClientCommand;
-import com.wifi.obs.client.wifi.model.Auth;
-import com.wifi.obs.client.wifi.model.value.AuthCommandVO;
 import com.wifi.obs.test.util.CookieResource;
 import com.wifi.obs.test.util.DocumentResource;
 import java.util.UUID;
@@ -26,6 +24,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -67,14 +66,7 @@ class IptimeAuthClientImplTest {
 				IptimeAuthRequest.builder().host(host).userName(userName).password(password).build();
 
 		when(authClientCommand.command(any(IptimeWifiAuthRequestElement.class)))
-				.thenReturn(
-						Auth.builder()
-								.authInfo(
-										AuthCommandVO.builder()
-												.info(HTMLDocumentResponse.of(documentResource.getAuthDocument()))
-												.build())
-								.host(host)
-								.build());
+				.thenReturn(HTMLResponse.of(() -> new HttpEntity<>(documentResource.getAuthDocument())));
 
 		// when
 		ClientResponse<AuthInfo> response = iptimeAuthClient.command(request);
@@ -95,7 +87,7 @@ class IptimeAuthClientImplTest {
 				IptimeAuthRequest.builder().host(host).userName(userName).password(password).build();
 
 		when(authClientCommand.command(any(IptimeWifiAuthRequestElement.class)))
-				.thenReturn(Auth.fail(host));
+				.thenReturn(HTMLResponse.fail());
 
 		// when
 		ClientResponse<AuthInfo> response = iptimeAuthClient.command(request);

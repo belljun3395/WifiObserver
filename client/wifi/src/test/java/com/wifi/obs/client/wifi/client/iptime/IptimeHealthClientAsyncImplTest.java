@@ -15,8 +15,6 @@ import com.wifi.obs.client.wifi.dto.request.iptime.IptimeBulkHealthRequest;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.http.HttpStatusResponse;
 import com.wifi.obs.client.wifi.http.request.get.HealthClientQuery;
-import com.wifi.obs.client.wifi.model.Health;
-import com.wifi.obs.client.wifi.model.value.HealthQueryVO;
 import com.wifi.obs.client.wifi.support.generator.iptime.IptimeHealthFutureGenerator;
 import com.wifi.obs.test.util.CookieResource;
 import java.util.ArrayList;
@@ -76,10 +74,7 @@ class IptimeHealthClientAsyncImplTest {
 				new IptimeBulkHealthRequest(requests);
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(
-						Health.builder()
-								.statusInfo(HealthQueryVO.builder().info(HttpStatusResponse.of(OK)).build())
-								.build());
+				.thenReturn(HttpStatusResponse.of(OK));
 
 		// when
 		List<ClientResponse<HttpStatusResponse>> responses =
@@ -103,10 +98,7 @@ class IptimeHealthClientAsyncImplTest {
 				new IptimeBulkHealthRequest(requests);
 
 		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host))))
-				.thenReturn(
-						Health.builder()
-								.statusInfo(HealthQueryVO.builder().info(HttpStatusResponse.of(OK)).build())
-								.build());
+				.thenReturn(HttpStatusResponse.of(OK));
 
 		// when
 		List<ClientResponse<HttpStatusResponse>> responses =

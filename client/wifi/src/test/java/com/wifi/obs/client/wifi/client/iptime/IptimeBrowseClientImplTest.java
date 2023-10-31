@@ -11,10 +11,8 @@ import com.wifi.obs.client.wifi.dto.request.iptime.IptimeBrowseRequest;
 import com.wifi.obs.client.wifi.dto.request.iptime.IptimeBulkBrowseRequest;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfos;
-import com.wifi.obs.client.wifi.http.jsoup.HTMLDocumentResponse;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.http.request.get.BrowseClientQuery;
-import com.wifi.obs.client.wifi.model.Users;
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
 import com.wifi.obs.client.wifi.support.converter.iptime.IptimeBrowseConverter;
 import com.wifi.obs.client.wifi.support.generator.iptime.IptimeBrowseClientHeaderGenerator;
 import com.wifi.obs.test.util.CookieResource;
@@ -34,6 +32,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -79,13 +78,7 @@ class IptimeBrowseClientImplTest {
 
 		when(browseClientQuery.query(any(IptimeWifiBrowseRequestElement.class)))
 				.thenReturn(
-						Users.builder()
-								.usersInfo(
-										BrowseQueryVO.builder()
-												.info(HTMLDocumentResponse.of(documentResource.getOnConnectDocument()))
-												.build())
-								.host(host)
-								.build());
+						HTMLResponse.of(() -> new HttpEntity<>(documentResource.getOnConnectDocument())));
 
 		// when
 		ClientResponse<OnConnectUserInfos> response = iptimeBrowseClient.query(request);
@@ -108,7 +101,7 @@ class IptimeBrowseClientImplTest {
 		IptimeBrowseRequest request = IptimeBrowseRequest.builder().authInfo(cookie).host(host).build();
 
 		when(browseClientQuery.query(any(IptimeWifiBrowseRequestElement.class)))
-				.thenReturn(Users.fail(host));
+				.thenReturn(HTMLResponse.fail());
 
 		// when
 		ClientResponse<OnConnectUserInfos> response = iptimeBrowseClient.query(request);
@@ -133,12 +126,7 @@ class IptimeBrowseClientImplTest {
 
 		when(browseClientQuery.query(any(IptimeWifiBrowseRequestElement.class)))
 				.thenReturn(
-						Users.builder()
-								.usersInfo(
-										BrowseQueryVO.builder()
-												.info(HTMLDocumentResponse.of(documentResource.getOnConnectDocument()))
-												.build())
-								.build());
+						HTMLResponse.of(() -> new HttpEntity<>(documentResource.getOnConnectDocument())));
 
 		// when
 		List<ClientResponse<OnConnectUserInfos>> responses =
@@ -183,15 +171,9 @@ class IptimeBrowseClientImplTest {
 
 		when(browseClientQuery.query(successDto))
 				.thenReturn(
-						Users.builder()
-								.usersInfo(
-										BrowseQueryVO.builder()
-												.info(HTMLDocumentResponse.of(documentResource.getOnConnectDocument()))
-												.build())
-								.host(successRequest.getHost())
-								.build());
+						HTMLResponse.of(() -> new HttpEntity<>(documentResource.getOnConnectDocument())));
 
-		when(browseClientQuery.query(failDto)).thenReturn(Users.fail(failDto.getHost()));
+		when(browseClientQuery.query(failDto)).thenReturn(HTMLResponse.fail());
 
 		// when
 		List<ClientResponse<OnConnectUserInfos>> clientResponses =

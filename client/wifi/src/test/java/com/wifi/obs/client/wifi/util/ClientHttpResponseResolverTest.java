@@ -3,14 +3,12 @@ package com.wifi.obs.client.wifi.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wifi.obs.client.wifi.http.jsoup.HTMLDocumentResponse;
-import com.wifi.obs.client.wifi.model.value.AuthCommandVO;
-import com.wifi.obs.client.wifi.model.value.BrowseQueryVO;
+import com.wifi.obs.client.wifi.http.HTMLResponse;
 import com.wifi.obs.client.wifi.util.resolver.CookieResolver;
 import com.wifi.obs.client.wifi.util.resolver.string.CookieNamePatternResolverDecorator;
 import com.wifi.obs.client.wifi.util.resolver.string.SetCookiePatternResolver;
-import com.wifi.obs.client.wifi.util.resolver.users.IptimeUserPropertyResolver;
-import com.wifi.obs.client.wifi.util.resolver.users.IptimeUsersOnConnectFilterDecorator;
+import com.wifi.obs.client.wifi.util.resolver.users.IptimeDocumentUserPropertyResolver;
+import com.wifi.obs.client.wifi.util.resolver.users.IptimeDocumentUsersOnConnectFilterDecorator;
 import com.wifi.obs.test.util.DocumentResource;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -20,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -30,8 +29,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
 		classes = {
-			IptimeUsersOnConnectFilterDecorator.class,
-			IptimeUserPropertyResolver.class,
+			IptimeDocumentUsersOnConnectFilterDecorator.class,
+			IptimeDocumentUserPropertyResolver.class,
 			CookieResolver.class,
 			CookieNamePatternResolverDecorator.class,
 			SetCookiePatternResolver.class,
@@ -51,7 +50,7 @@ class ClientHttpResponseResolverTest {
 				"BC:D0:74:9F:B0:E3"
 			};
 
-	@Autowired IptimeUsersOnConnectFilterDecorator iptimeOnConnectUsersResolver;
+	@Autowired IptimeDocumentUsersOnConnectFilterDecorator iptimeOnConnectUsersResolver;
 	@Autowired CookieResolver cookieResolver;
 
 	@Autowired DocumentResource documentResource;
@@ -63,9 +62,7 @@ class ClientHttpResponseResolverTest {
 		Document authSource = documentResource.getAuthDocument();
 
 		// when
-		String cookie =
-				cookieResolver.resolve(
-						AuthCommandVO.builder().info(HTMLDocumentResponse.of(authSource)).build());
+		String cookie = cookieResolver.resolve(HTMLResponse.of(() -> new HttpEntity<>(authSource)));
 
 		// then
 		assertThat(cookie).isEqualTo(EXPECT_EXTRACT_COOKIE_VALUE);
@@ -81,10 +78,7 @@ class ClientHttpResponseResolverTest {
 		// when
 
 		// then
-		assertThatThrownBy(
-						() ->
-								cookieResolver.resolve(
-										AuthCommandVO.builder().info(HTMLDocumentResponse.of(document)).build()))
+		assertThatThrownBy(() -> cookieResolver.resolve(HTMLResponse.fail()))
 				.isInstanceOf(NoSuchElementException.class)
 				.hasMessageContaining("값을 찾아낼 수 없습니다.");
 	}
@@ -98,7 +92,7 @@ class ClientHttpResponseResolverTest {
 		// when
 		List<String> onConnectUsers =
 				iptimeOnConnectUsersResolver.resolve(
-						BrowseQueryVO.builder().info(HTMLDocumentResponse.of(onConnectSource)).build());
+						HTMLResponse.of(() -> new HttpEntity<>(onConnectSource)));
 
 		// then
 		assertThat(onConnectUsers).containsExactlyInAnyOrder(EXPECT_EXTRACT_ON_CONNECT_USERS);

@@ -16,8 +16,6 @@ import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.exception.WifiURISyntaxException;
 import com.wifi.obs.client.wifi.http.HttpStatusResponse;
 import com.wifi.obs.client.wifi.http.request.get.HealthClientQuery;
-import com.wifi.obs.client.wifi.model.Health;
-import com.wifi.obs.client.wifi.model.value.HealthQueryVO;
 import com.wifi.obs.test.util.CookieResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +68,7 @@ class IptimeHealthClientImplTest {
 		WifiHostRequest request = WifiHostRequest.builder().host(host).build();
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(
-						Health.builder()
-								.statusInfo(HealthQueryVO.builder().info(HttpStatusResponse.of(OK)).build())
-								.build());
+				.thenReturn(HttpStatusResponse.of(OK));
 
 		// when
 		ClientResponse<HttpStatusResponse> response = iptimeHealthClient.query(request);
@@ -89,7 +84,7 @@ class IptimeHealthClientImplTest {
 		WifiHostRequest request = WifiHostRequest.builder().host("fail").build();
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(Health.fail(host));
+				.thenReturn(HttpStatusResponse.of(BAD_REQUEST));
 
 		// when
 		ClientResponse<HttpStatusResponse> response = iptimeHealthClient.query(request);
@@ -122,7 +117,7 @@ class IptimeHealthClientImplTest {
 		WifiHostRequest request = WifiHostRequest.builder().host(host + "fail").build();
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(Health.fail(host));
+				.thenReturn(HttpStatusResponse.of(BAD_REQUEST));
 
 		// when
 		ClientResponse<HttpStatusResponse> response = iptimeHealthClient.query(request);
@@ -138,7 +133,7 @@ class IptimeHealthClientImplTest {
 		WifiHostRequest request = WifiHostRequest.builder().host(host + "/fail").build();
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(Health.fail(host));
+				.thenReturn(HttpStatusResponse.of(BAD_REQUEST));
 
 		// when
 		ClientResponse<HttpStatusResponse> response = iptimeHealthClient.query(request);
@@ -160,10 +155,7 @@ class IptimeHealthClientImplTest {
 				new IptimeBulkHealthRequest(requests);
 
 		when(healthClientQuery.query(any(IptimeWifiHealthRequestElement.class)))
-				.thenReturn(
-						Health.builder()
-								.statusInfo(HealthQueryVO.builder().info(HttpStatusResponse.of(OK)).build())
-								.build());
+				.thenReturn(HttpStatusResponse.of(OK));
 
 		// when
 		List<ClientResponse<HttpStatusResponse>> responses =
@@ -187,10 +179,7 @@ class IptimeHealthClientImplTest {
 				new IptimeBulkHealthRequest(requests);
 
 		when(healthClientQuery.query(argThat(dto -> dto.getHost().equals(host))))
-				.thenReturn(
-						Health.builder()
-								.statusInfo(HealthQueryVO.builder().info(HttpStatusResponse.of(OK)).build())
-								.build());
+				.thenReturn(HttpStatusResponse.of(OK));
 
 		// when
 		List<ClientResponse<HttpStatusResponse>> responses =
