@@ -7,7 +7,7 @@ import com.wifi.obs.client.wifi.dto.request.WifiBrowseRequest;
 import com.wifi.obs.client.wifi.dto.request.WifiBulkBrowseRequest;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.dto.response.OnConnectUserInfos;
-import com.wifi.obs.client.wifi.model.Users;
+import java.util.List;
 
 public abstract class WifiBrowseClient<
 				T extends WifiBrowseRequest, D extends WifiBrowseRequestElement>
@@ -16,5 +16,5 @@ public abstract class WifiBrowseClient<
 
 	protected abstract D getRequestElement(T request);
 
-	protected abstract Users executeQuery(D data);
+	protected abstract List<String> executeQuery(D data);
 }

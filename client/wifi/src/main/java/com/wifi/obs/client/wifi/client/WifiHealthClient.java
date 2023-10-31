@@ -7,7 +7,7 @@ import com.wifi.obs.client.wifi.dto.request.WifiBulkHealthRequest;
 import com.wifi.obs.client.wifi.dto.request.WifiHealthRequest;
 import com.wifi.obs.client.wifi.dto.response.ClientResponse;
 import com.wifi.obs.client.wifi.http.HttpStatusResponse;
-import com.wifi.obs.client.wifi.model.Health;
+import org.springframework.http.HttpStatus;
 
 public abstract class WifiHealthClient<
 				T extends WifiHealthRequest, D extends WifiHealthRequestElement>
@@ -16,5 +16,5 @@ public abstract class WifiHealthClient<
 
 	protected abstract D getRequestElement(T request);
 
-	protected abstract Health executeQuery(D data);
+	protected abstract HttpStatus executeQuery(D data);
 }
