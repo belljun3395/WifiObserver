@@ -1,5 +1,6 @@
 package com.observer.security.config;
 
+import com.observer.common.config.cors.CorsConfigurationSourceProperties;
 import com.observer.security.authentication.token.TokenAuthProvider;
 import com.observer.security.filter.exception.TokenInvalidExceptionHandlerFilter;
 import com.observer.security.filter.token.TokenAuthenticationFilter;
@@ -28,7 +29,7 @@ public class WebSecurityConfig {
 	private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
 	private final DelegatedAccessDeniedHandler accessDeniedHandler;
 	private final TokenAuthProvider tokenAuthProvider;
-	private final CorsConfigurationSourceProperties corsProperties;
+	private final CorsConfigurationSourceProperties securityCorsConfigurationSourceProperties;
 
 	@Bean
 	@Profile("!prod")
@@ -134,13 +135,16 @@ public class WebSecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		configuration.addAllowedOriginPattern(corsProperties.getOriginPattern());
-		configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
-		configuration.addAllowedMethod(corsProperties.getAllowedMethods());
-		configuration.setAllowCredentials(corsProperties.getAllowCredentials());
+		configuration.addAllowedOriginPattern(
+				securityCorsConfigurationSourceProperties.getOriginPattern());
+		configuration.addAllowedHeader(securityCorsConfigurationSourceProperties.getAllowedHeaders());
+		configuration.addAllowedMethod(securityCorsConfigurationSourceProperties.getAllowedMethods());
+		configuration.setAllowCredentials(
+				securityCorsConfigurationSourceProperties.getAllowCredentials());
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration(corsProperties.getPathPattern(), configuration);
+		source.registerCorsConfiguration(
+				securityCorsConfigurationSourceProperties.getPathPattern(), configuration);
 		return source;
 	}
 }

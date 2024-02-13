@@ -1,12 +1,14 @@
 package com.observer.security.config;
 
+import com.observer.common.config.cors.CorsConfigurationSourceProperties;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class CorsConfigurationSourceProperties {
+public class SecurityCorsConfigurationSourceProperties
+		implements CorsConfigurationSourceProperties {
 
 	@Value("${security.cors.path-patterns}")
 	private String pathPattern;
