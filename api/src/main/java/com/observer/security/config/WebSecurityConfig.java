@@ -100,13 +100,7 @@ public class WebSecurityConfig {
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
-								"/reports/**",
-								"/api/v1/members/check")
-						.antMatchers(
-								HttpMethod.POST,
-								"/api/v1/members",
-								"/api/v1/members/token",
-								"/api/v1/members/login");
+								"/reports/**");
 	}
 
 	@Bean
@@ -122,13 +116,7 @@ public class WebSecurityConfig {
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
-								"/reports/**",
-								"/api/v1/members/check")
-						.antMatchers(
-								HttpMethod.POST,
-								"/api/v1/members",
-								"/api/v1/members/token",
-								"/api/v1/members/login");
+								"/reports/**");
 	}
 
 	@Bean
