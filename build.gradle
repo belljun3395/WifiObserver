@@ -82,6 +82,12 @@ subprojects {
 
     allprojects {}
 
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
     dependencies {
         // lombok
         compileOnly 'org.projectlombok:lombok'

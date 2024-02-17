@@ -6,12 +6,6 @@ jar {
     enabled = true
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
 dependencies {
     // http
     implementation 'org.jsoup:jsoup:1.15.3'
