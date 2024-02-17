@@ -1,0 +1,11 @@
+thread:
+  time:
+    await: ${THREAD_AWAIT_TIME}
+  req:
+    core: ${REQ_THREAD_CORE}
+    max: ${REQ_THREAD_MAX}
+    queue: ${REQ_THREAD_QUEUE}
+  health:
+    core: ${HEALTH_THREAD_CORE}
+    max: ${HEALTH_THREAD_MAX}
+    queue: ${HEALTH_THREAD_QUEUE}

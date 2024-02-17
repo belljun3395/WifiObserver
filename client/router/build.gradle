@@ -1,0 +1,29 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    // http
+    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // commons
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    // jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // findbugs
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+}

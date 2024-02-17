@@ -23,6 +23,9 @@ buildscript {
 
         // flyway
         flywayVersion = '9.16.0'
+
+        // spring cloud
+        set('springCloudVersion', "2021.0.1")
     }
 }
 

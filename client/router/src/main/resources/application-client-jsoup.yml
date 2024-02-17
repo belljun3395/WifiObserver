@@ -1,0 +1,5 @@
+jsoup:
+  auth:
+    timeout: ${JSOUP_AUTH_TIMEOUT}
+  browse:
+    timeout: ${JSOUP_BROWSE_TIMEOUT}

@@ -1,0 +1,11 @@
+thread:
+  time:
+    await: 20
+  req:
+    core: 10
+    max: 100
+    queue: 1000
+  health:
+    core: 10
+    max: 100
+    queue: 1000

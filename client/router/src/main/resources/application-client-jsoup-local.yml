@@ -1,0 +1,5 @@
+jsoup:
+  auth:
+    timeout: 50000
+  browse:
+    timeout: 50000
