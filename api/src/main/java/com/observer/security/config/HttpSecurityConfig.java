@@ -24,7 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class HttpSecurityConfig {
 
 	private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
 	private final DelegatedAccessDeniedHandler accessDeniedHandler;

@@ -28,9 +28,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(
 		basePackages = ApiConfig.BASE_PACKAGE,
-		transactionManagerRef = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME,
-		entityManagerFactoryRef = JpaDataSourceConfig.ENTITY_MANAGER_FACTORY_NAME)
-public class JpaDataSourceConfig {
+		transactionManagerRef = ApiJpaDataSourceConfig.TRANSACTION_MANAGER_NAME,
+		entityManagerFactoryRef = ApiJpaDataSourceConfig.ENTITY_MANAGER_FACTORY_NAME)
+public class ApiJpaDataSourceConfig {
 
 	private static final String ENTITY_PROPERTY_PREFIX = ApiConfig.PROPERTY_PREFIX + ".entity";
 
