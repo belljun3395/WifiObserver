@@ -1,6 +1,9 @@
 apply from: '../tasks/docs-task.gradle'
 
 dependencies {
+    // project dependencies
+    implementation project(':client:router')
+
     // web & actuator
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -37,4 +40,9 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
 
+    // apache commons
+    implementation 'org.apache.commons:commons-lang3'
+
+    // thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
