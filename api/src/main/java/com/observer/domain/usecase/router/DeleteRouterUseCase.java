@@ -2,7 +2,7 @@ package com.observer.domain.usecase.router;
 
 import com.observer.domain.dto.router.DeleteRouterUseCaseRequest;
 import com.observer.domain.external.dao.router.RouterDao;
-import com.observer.domain.service.router.GetMemberIdService;
+import com.observer.domain.service.router.RouterGetMemberIdService;
 import com.observer.entity.router.RouterEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class DeleteRouterUseCase {
 
 	private final RouterDao routerDao;
 
-	private final GetMemberIdService getMemberIdService;
+	private final RouterGetMemberIdService getMemberIdService;
 
 	public void execute(DeleteRouterUseCaseRequest request) {
 		final String apiKey = request.getApiKey();

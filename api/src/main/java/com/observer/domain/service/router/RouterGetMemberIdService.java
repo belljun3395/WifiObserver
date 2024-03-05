@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GetMemberIdService {
+public class RouterGetMemberIdService {
 
 	private final GetMemberInfoSupportService getMemberInfoSupportService;
 
