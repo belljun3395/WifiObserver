@@ -1,18 +1,19 @@
-package com.observer.security.token;
+package com.observer.entity.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
-@AllArgsConstructor
+@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
-public class AuthToken {
+public class MemberPasswordData {
 
-	private String accessToken;
-	private String refreshToken;
+	private String password;
 }
