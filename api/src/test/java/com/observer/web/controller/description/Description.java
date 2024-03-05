@@ -63,6 +63,11 @@ public class Description {
 		};
 	}
 
+	public static FieldDescriptor[] created(FieldDescriptor[] data) {
+		return ArrayUtils.addAll(
+				data, getCreateCodeDescriptor(), getCreateMessageDescriptor(), getTimeStampDescriptor());
+	}
+
 	public static FieldDescriptor[] fail() {
 		return new FieldDescriptor[] {
 			getFailCodeDescriptor(), getFailMessageDescriptor(), getTimeStampDescriptor()
