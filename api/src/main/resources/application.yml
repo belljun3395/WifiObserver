@@ -6,3 +6,4 @@ spring:
       - client
       - mysql
       - security
+      - cookie

@@ -6,3 +6,4 @@ spring:
       - client-local
       - mysql-local
       - security-local
+      - cookie-local

@@ -6,3 +6,4 @@ spring:
       - client-prod
       - mysql-prod
       - security-prod
+      - cookie-prod

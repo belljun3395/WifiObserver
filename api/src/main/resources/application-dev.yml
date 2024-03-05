@@ -6,3 +6,4 @@ spring:
       - client-dev
       - mysql-dev
       - security-dev
+      - cookie-dev
