@@ -1,6 +1,6 @@
 package com.observer.security.filter.exception;
 
-import com.observer.security.exception.AccessTokenInvalidException;
+import com.observer.security.exception.ApiKeyInvalidException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javax.servlet.FilterChain;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-public class TokenInvalidExceptionHandlerFilter extends OncePerRequestFilter {
+public class ApiKeyExceptionHandlerFilter extends OncePerRequestFilter {
 
 	private static final String CONTENT_TYPE = "application/json; charset=UTF-8";
 
@@ -20,7 +20,7 @@ public class TokenInvalidExceptionHandlerFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		try {
 			filterChain.doFilter(request, response);
-		} catch (AccessTokenInvalidException e) {
+		} catch (ApiKeyInvalidException e) {
 			setError(response, e);
 		}
 	}
