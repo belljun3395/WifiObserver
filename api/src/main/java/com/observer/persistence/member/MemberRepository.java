@@ -14,4 +14,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 	boolean existsByApiKey(String apiKey);
 
 	Optional<MemberEntity> findByApiKeyAndDeletedFalse(String apiKey);
+
+	Optional<MemberEntity> findByIdAndDeletedFalse(Long memberId);
 }
