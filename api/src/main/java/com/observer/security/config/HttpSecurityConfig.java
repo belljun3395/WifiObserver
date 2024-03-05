@@ -1,16 +1,14 @@
 package com.observer.security.config;
 
 import com.observer.common.config.cors.CorsConfigurationSourceProperties;
-import com.observer.security.authentication.token.TokenAuthProvider;
-import com.observer.security.filter.exception.TokenInvalidExceptionHandlerFilter;
-import com.observer.security.filter.token.TokenAuthenticationFilter;
+import com.observer.security.filter.api.ApiKeyFilter;
+import com.observer.security.filter.exception.ApiKeyExceptionHandlerFilter;
 import com.observer.security.handler.DelegatedAccessDeniedHandler;
 import com.observer.security.handler.DelegatedAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -28,7 +26,6 @@ public class HttpSecurityConfig {
 
 	private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
 	private final DelegatedAccessDeniedHandler accessDeniedHandler;
-	private final TokenAuthProvider tokenAuthProvider;
 	private final CorsConfigurationSourceProperties securityCorsConfigurationSourceProperties;
 
 	@Bean
@@ -77,14 +74,12 @@ public class HttpSecurityConfig {
 		return http.build();
 	}
 
-	public TokenAuthenticationFilter generateAuthenticationFilter() {
-		TokenAuthenticationFilter tokenAuthenticationFilter = new TokenAuthenticationFilter();
-		tokenAuthenticationFilter.setAuthenticationManager(new ProviderManager(tokenAuthProvider));
-		return tokenAuthenticationFilter;
+	public ApiKeyFilter generateAuthenticationFilter() {
+		return new ApiKeyFilter();
 	}
 
 	public OncePerRequestFilter getTokenInvalidExceptionHandlerFilter() {
-		return new TokenInvalidExceptionHandlerFilter();
+		return new ApiKeyExceptionHandlerFilter();
 	}
 
 	@Bean
@@ -100,7 +95,10 @@ public class HttpSecurityConfig {
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
-								"/reports/**");
+								"/reports/**",
+								"/api/v1/members/check")
+						.antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/login")
+						.antMatchers(HttpMethod.PUT, "/api/v1/members/key");
 	}
 
 	@Bean
@@ -116,7 +114,10 @@ public class HttpSecurityConfig {
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
-								"/reports/**");
+								"/reports/**",
+								"/api/v1/members/check")
+						.antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/login")
+						.antMatchers(HttpMethod.PUT, "/api/v1/members/key");
 	}
 
 	@Bean
