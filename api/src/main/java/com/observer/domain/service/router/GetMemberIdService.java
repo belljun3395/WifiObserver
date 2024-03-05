@@ -14,7 +14,8 @@ public class GetMemberIdService {
 	private final GetMemberInfoSupportService getMemberInfoSupportService;
 
 	public Long execute(String apiKey) {
-		MemberInfoSupport memberInfoSupport = getMemberInfoSupportService.execute(apiKey).orElseThrow();
+		MemberInfoSupport memberInfoSupport =
+				getMemberInfoSupportService.execute(apiKey).orElseThrow(IllegalStateException::new);
 		return memberInfoSupport.getMemberId();
 	}
 }
