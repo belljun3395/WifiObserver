@@ -1,6 +1,7 @@
 package com.observer.persistence.router;
 
 import com.observer.entity.router.RouterEntity;
+import com.observer.entity.router.RouterStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface RouterRepository extends JpaRepository<RouterEntity, Long> {
 	List<RouterEntity> findAllByMemberIdAndDeletedFalse(Long memberId);
 
 	Optional<RouterEntity> findByIdAndMemberIdAndDeletedFalse(Long id, Long memberId);
+
+	Optional<RouterEntity> findByIdAndStatusAndDeletedFalse(Long id, RouterStatus status);
 }
