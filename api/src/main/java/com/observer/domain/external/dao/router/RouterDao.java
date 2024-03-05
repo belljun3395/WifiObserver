@@ -1,6 +1,7 @@
 package com.observer.domain.external.dao.router;
 
 import com.observer.entity.router.RouterEntity;
+import com.observer.entity.router.RouterStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface RouterDao {
 	void deleteRouter(RouterEntity routerEntity);
 
 	RouterEntity saveRouter(RouterEntity routerEntity);
+
+	Optional<RouterEntity> findByIdAndStatusAndDeletedFalse(Long id, RouterStatus status);
 }

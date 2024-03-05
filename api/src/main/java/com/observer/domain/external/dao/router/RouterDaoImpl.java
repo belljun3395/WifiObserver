@@ -1,6 +1,7 @@
 package com.observer.domain.external.dao.router;
 
 import com.observer.entity.router.RouterEntity;
+import com.observer.entity.router.RouterStatus;
 import com.observer.persistence.router.RouterRepository;
 import java.util.List;
 import java.util.Optional;
@@ -38,5 +39,10 @@ public class RouterDaoImpl implements RouterDao {
 	@Override
 	public RouterEntity saveRouter(RouterEntity routerEntity) {
 		return routerRepository.save(routerEntity);
+	}
+
+	@Override
+	public Optional<RouterEntity> findByIdAndStatusAndDeletedFalse(Long id, RouterStatus status) {
+		return routerRepository.findByIdAndStatusAndDeletedFalse(id, status);
 	}
 }
