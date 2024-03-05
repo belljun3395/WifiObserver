@@ -1,4 +1,4 @@
-package com.observer.security.authentication.token;
+package com.observer.security.authentication.api;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,16 +15,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class TokenUserDetails implements UserDetails {
+public class ApiKeyUserDetails implements UserDetails {
 
 	private static final String NOT_USE_PASSWORD_VALUE = "0";
 
-	private List<GrantedAuthority> authorities;
-	private String id;
+	private String apiKeyValue;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+		return List.of();
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class TokenUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return id;
+		return apiKeyValue;
 	}
 
 	@Override
