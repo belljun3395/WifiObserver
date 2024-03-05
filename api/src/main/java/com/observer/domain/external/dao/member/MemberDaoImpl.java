@@ -45,4 +45,9 @@ public class MemberDaoImpl implements MemberDao {
 	public void delete(MemberEntity memberEntity) {
 		memberRepository.delete(memberEntity);
 	}
+
+	@Override
+	public Optional<MemberEntity> findByIdAndDeletedFalse(Long memberId) {
+		return memberRepository.findByIdAndDeletedFalse(memberId);
+	}
 }

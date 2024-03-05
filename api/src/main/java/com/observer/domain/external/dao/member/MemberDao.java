@@ -17,4 +17,6 @@ public interface MemberDao {
 	Optional<MemberEntity> findByApiKeyAndDeletedFalse(String apiKey);
 
 	void delete(MemberEntity memberEntity);
+
+	Optional<MemberEntity> findByIdAndDeletedFalse(Long memberId);
 }
