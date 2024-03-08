@@ -1,4 +1,4 @@
-package com.observer.domain.service.device;
+package com.observer.domain.service.connection;
 
 import com.observer.domain.service.member.support.GetMemberInfoSupportService;
 import com.observer.domain.service.member.support.MemberInfoSupport;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DeviceGetMemberIdService {
+public class GetConnectionMemberIdService {
 
 	private final GetMemberInfoSupportService getMemberInfoSupportService;
 
