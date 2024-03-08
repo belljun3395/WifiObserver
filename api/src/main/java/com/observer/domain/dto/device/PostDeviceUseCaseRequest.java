@@ -15,7 +15,7 @@ import lombok.ToString;
 @Builder(toBuilder = true)
 public class PostDeviceUseCaseRequest {
 	private String apiKey;
-	private Long routeId;
+	private Long routerId;
 	private String mac;
 	private String info;
 }

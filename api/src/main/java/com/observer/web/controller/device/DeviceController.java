@@ -43,7 +43,7 @@ public class DeviceController {
 		PostDeviceUseCaseRequest useCaseRequest =
 				PostDeviceUseCaseRequest.builder()
 						.apiKey(userDetails.getApiKeyValue())
-						.routeId(request.getRouteId())
+						.routerId(request.getRouteId())
 						.mac(request.getMac())
 						.info(request.getInfo())
 						.build();
