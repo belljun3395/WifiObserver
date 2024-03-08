@@ -21,4 +21,6 @@ public class RouterInfoSupport {
 	@Builder.Default private Long cycle = 10L;
 	@Builder.Default private Long standardTime = 9L;
 	private String host;
+	private String certification;
+	private String password;
 }

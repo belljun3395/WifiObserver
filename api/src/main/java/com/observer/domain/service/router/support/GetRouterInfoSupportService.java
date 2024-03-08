@@ -30,6 +30,8 @@ public class GetRouterInfoSupportService {
 						.cycle(routerEntity.getCycle())
 						.standardTime(routerEntity.getStandardTime())
 						.host(routerEntity.getHost())
+						.certification(routerEntity.getCertification())
+						.password(routerEntity.getPassword())
 						.build());
 	}
 }
