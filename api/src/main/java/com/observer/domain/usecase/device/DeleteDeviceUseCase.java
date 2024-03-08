@@ -2,8 +2,8 @@ package com.observer.domain.usecase.device;
 
 import com.observer.domain.dto.device.DeleteDeviceUseCaseRequest;
 import com.observer.domain.external.dao.device.DeviceDao;
-import com.observer.domain.service.device.DeviceGetMemberIdService;
-import com.observer.domain.service.device.GetMemberRouterIdService;
+import com.observer.domain.service.device.GetDeviceMemberIdService;
+import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
 import com.observer.entity.device.DeviceEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 public class DeleteDeviceUseCase {
 	private final DeviceDao deviceDao;
 
-	private final DeviceGetMemberIdService getMemberIdService;
-	private final GetMemberRouterIdService getMemberRouterIdService;
+	private final GetDeviceMemberIdService getMemberIdService;
+	private final GetDeviceMemberRouterIdService getMemberRouterIdService;
 
 	public void execute(DeleteDeviceUseCaseRequest request) {
 		final String apiKey = request.getApiKey();

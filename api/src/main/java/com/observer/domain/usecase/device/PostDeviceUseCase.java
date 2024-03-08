@@ -3,8 +3,8 @@ package com.observer.domain.usecase.device;
 import com.observer.domain.dto.device.PostDeviceUseCaseRequest;
 import com.observer.domain.dto.device.PostDeviceUseCaseResponse;
 import com.observer.domain.external.dao.device.DeviceDao;
-import com.observer.domain.service.device.DeviceGetMemberIdService;
-import com.observer.domain.service.device.GetMemberRouterIdService;
+import com.observer.domain.service.device.GetDeviceMemberIdService;
+import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
 import com.observer.entity.device.DeviceEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,12 @@ public class PostDeviceUseCase {
 
 	private final DeviceDao deviceDao;
 
-	private final DeviceGetMemberIdService getMemberIdService;
-	private final GetMemberRouterIdService getMemberRouterIdService;
+	private final GetDeviceMemberIdService getMemberIdService;
+	private final GetDeviceMemberRouterIdService getMemberRouterIdService;
 
 	public PostDeviceUseCaseResponse execute(PostDeviceUseCaseRequest request) {
 		final String apiKey = request.getApiKey();
-		final Long routerId = request.getRouteId();
+		final Long routerId = request.getRouterId();
 		final String mac = request.getMac();
 		final String info = request.getInfo();
 

@@ -4,7 +4,7 @@ import com.observer.domain.dto.router.PostRouterUseCaseRequest;
 import com.observer.domain.dto.router.PostRouterUseCaseResponse;
 import com.observer.domain.external.dao.router.RouterDao;
 import com.observer.domain.service.router.CheckMemberPostRouter;
-import com.observer.domain.service.router.RouterGetMemberIdService;
+import com.observer.domain.service.router.GetRouterMemberIdService;
 import com.observer.entity.router.RouterEntity;
 import com.observer.entity.router.RouterServiceType;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class PostRouterUseCase {
 
 	private final RouterDao routerDao;
 
-	private final RouterGetMemberIdService getMemberIdService;
+	private final GetRouterMemberIdService getMemberIdService;
 
 	private final CheckMemberPostRouter checkMemberPostRouter;
 

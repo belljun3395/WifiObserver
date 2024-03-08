@@ -3,8 +3,8 @@ package com.observer.domain.usecase.device;
 import com.observer.domain.dto.device.GetDevicesUseCaseRequest;
 import com.observer.domain.dto.device.GetDevicesUseCaseResponse;
 import com.observer.domain.external.dao.device.DeviceDao;
-import com.observer.domain.service.device.DeviceGetMemberIdService;
-import com.observer.domain.service.device.GetMemberRouterIdService;
+import com.observer.domain.service.device.GetDeviceMemberIdService;
+import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
 import com.observer.entity.device.DeviceEntity;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +20,8 @@ public class GetDevicesUseCase {
 
 	private final DeviceDao deviceDao;
 
-	private final DeviceGetMemberIdService getMemberIdService;
-	private final GetMemberRouterIdService getMemberRouterIdService;
+	private final GetDeviceMemberIdService getMemberIdService;
+	private final GetDeviceMemberRouterIdService getMemberRouterIdService;
 
 	public GetDevicesUseCaseResponse execute(GetDevicesUseCaseRequest request) {
 		final String apiKey = request.getApiKey();
