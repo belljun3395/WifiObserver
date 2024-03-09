@@ -44,7 +44,7 @@ public class RenewalApiKeyUseCase {
 		MemberPasswordData entityPassword = memberEntity.getPassword();
 		boolean isMatchPassword =
 				passwordEncoder.matches(password.getPassword(), entityPassword.getPassword());
-		if (isMatchPassword) {
+		if (!isMatchPassword) {
 			throw new IllegalArgumentException("Password is not matched.");
 		}
 
