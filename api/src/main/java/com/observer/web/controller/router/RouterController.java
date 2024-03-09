@@ -43,6 +43,7 @@ public class RouterController {
 				PostRouterUseCaseRequest.builder()
 						.apiKey(userDetails.getApiKeyValue())
 						.host(request.getHost())
+						.serviceType(request.getServiceType())
 						.certification(request.getCertification())
 						.password(request.getPassword())
 						.build();
