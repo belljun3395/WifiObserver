@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        projectName = 'recycle'
+        projectName = 'wifi-observer'
         projectVersion = '1.0.0'
         springBootVersion = '2.7.5'
         dependencyManagementVersion = '1.0.15.RELEASE'
