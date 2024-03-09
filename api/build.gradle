@@ -3,6 +3,7 @@ apply from: '../tasks/docs-task.gradle'
 dependencies {
     // project dependencies
     implementation project(':client:router')
+    implementation project(':data')
 
     // web & actuator
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -13,17 +14,6 @@ dependencies {
     swaggerUI "org.webjars:swagger-ui:${swaggerUIVersion}"
     implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     implementation "com.epages:restdocs-api-spec-mockmvc:${epagesRestDocsApiSpecVersion}"
-
-    // database
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'mysql:mysql-connector-java'
-
-    implementation 'org.hibernate:hibernate-envers'
-
-    implementation 'org.hibernate.validator:hibernate-validator'
-    implementation 'javax.annotation:javax.annotation-api'
-
-    annotationProcessor("javax.persistence:javax.persistence-api")
 
     // security
     api 'org.springframework.boot:spring-boot-starter-security'

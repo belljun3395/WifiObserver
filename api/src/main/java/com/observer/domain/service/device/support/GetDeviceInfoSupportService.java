@@ -1,7 +1,7 @@
 package com.observer.domain.service.device.support;
 
+import com.observer.data.entity.device.DeviceEntity;
 import com.observer.domain.external.dao.device.DeviceDao;
-import com.observer.entity.device.DeviceEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

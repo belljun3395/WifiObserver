@@ -1,8 +1,8 @@
 package com.observer.domain.service.router.support;
 
+import com.observer.data.entity.router.RouterEntity;
+import com.observer.data.entity.router.RouterStatus;
 import com.observer.domain.external.dao.router.RouterDao;
-import com.observer.entity.router.RouterEntity;
-import com.observer.entity.router.RouterStatus;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

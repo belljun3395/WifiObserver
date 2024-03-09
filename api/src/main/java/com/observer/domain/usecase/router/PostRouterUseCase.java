@@ -1,12 +1,12 @@
 package com.observer.domain.usecase.router;
 
+import com.observer.data.entity.router.RouterEntity;
+import com.observer.data.entity.router.RouterServiceType;
 import com.observer.domain.dto.router.PostRouterUseCaseRequest;
 import com.observer.domain.dto.router.PostRouterUseCaseResponse;
 import com.observer.domain.external.dao.router.RouterDao;
 import com.observer.domain.service.router.CheckMemberPostRouter;
 import com.observer.domain.service.router.GetRouterMemberIdService;
-import com.observer.entity.router.RouterEntity;
-import com.observer.entity.router.RouterServiceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

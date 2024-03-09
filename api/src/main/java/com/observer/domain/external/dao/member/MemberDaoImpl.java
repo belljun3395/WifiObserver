@@ -1,8 +1,8 @@
 package com.observer.domain.external.dao.member;
 
-import com.observer.entity.member.CertificationData;
-import com.observer.entity.member.MemberEntity;
-import com.observer.persistence.member.MemberRepository;
+import com.observer.data.entity.member.CertificationData;
+import com.observer.data.entity.member.MemberEntity;
+import com.observer.data.persistence.member.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

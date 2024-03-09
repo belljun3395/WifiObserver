@@ -1,11 +1,11 @@
 package com.observer.domain.usecase.member;
 
+import com.observer.data.entity.member.CertificationData;
+import com.observer.data.entity.member.MemberEntity;
+import com.observer.data.entity.member.MemberPasswordData;
 import com.observer.domain.dto.member.LoginMemberUseCaseRequest;
 import com.observer.domain.dto.member.LoginMemberUseCaseResponse;
 import com.observer.domain.external.dao.member.MemberDao;
-import com.observer.entity.member.CertificationData;
-import com.observer.entity.member.MemberEntity;
-import com.observer.entity.member.MemberPasswordData;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

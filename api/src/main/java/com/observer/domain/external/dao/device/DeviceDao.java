@@ -1,6 +1,6 @@
 package com.observer.domain.external.dao.device;
 
-import com.observer.entity.device.DeviceEntity;
+import com.observer.data.entity.device.DeviceEntity;
 import java.util.List;
 import java.util.Optional;
 

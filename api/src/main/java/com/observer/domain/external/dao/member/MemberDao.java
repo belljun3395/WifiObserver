@@ -1,7 +1,7 @@
 package com.observer.domain.external.dao.member;
 
-import com.observer.entity.member.CertificationData;
-import com.observer.entity.member.MemberEntity;
+import com.observer.data.entity.member.CertificationData;
+import com.observer.data.entity.member.MemberEntity;
 import java.util.Optional;
 
 public interface MemberDao {

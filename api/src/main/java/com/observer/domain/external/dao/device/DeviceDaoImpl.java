@@ -1,7 +1,7 @@
 package com.observer.domain.external.dao.device;
 
-import com.observer.entity.device.DeviceEntity;
-import com.observer.persistence.device.DeviceRepository;
+import com.observer.data.entity.device.DeviceEntity;
+import com.observer.data.persistence.device.DeviceRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package com.observer.domain.external.dao.router;
 
-import com.observer.entity.router.RouterEntity;
-import com.observer.entity.router.RouterStatus;
-import com.observer.persistence.router.RouterRepository;
+import com.observer.data.entity.router.RouterEntity;
+import com.observer.data.entity.router.RouterStatus;
+import com.observer.data.persistence.router.RouterRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

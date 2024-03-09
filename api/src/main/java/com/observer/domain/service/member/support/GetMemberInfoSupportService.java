@@ -1,7 +1,7 @@
 package com.observer.domain.service.member.support;
 
+import com.observer.data.entity.member.MemberEntity;
 import com.observer.domain.external.dao.member.MemberDao;
-import com.observer.entity.member.MemberEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

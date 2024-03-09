@@ -1,6 +1,6 @@
 package com.observer.domain.dto.device;
 
-import com.observer.entity.device.DeviceType;
+import com.observer.data.entity.device.DeviceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

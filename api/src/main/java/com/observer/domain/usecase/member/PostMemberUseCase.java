@@ -1,12 +1,12 @@
 package com.observer.domain.usecase.member;
 
+import com.observer.data.entity.member.CertificationData;
+import com.observer.data.entity.member.MemberEntity;
+import com.observer.data.entity.member.MemberPasswordData;
 import com.observer.domain.dto.member.PostMemberUseCaseRequest;
 import com.observer.domain.dto.member.PostMemberUseCaseResponse;
 import com.observer.domain.external.dao.member.MemberDao;
 import com.observer.domain.service.member.ApiKeyGenerateService;
-import com.observer.entity.member.CertificationData;
-import com.observer.entity.member.MemberEntity;
-import com.observer.entity.member.MemberPasswordData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,6 +1,6 @@
 package com.observer.domain.service.member.support;
 
-import com.observer.entity.member.MemberStatus;
+import com.observer.data.entity.member.MemberStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

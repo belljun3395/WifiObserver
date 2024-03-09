@@ -1,10 +1,10 @@
 package com.observer.domain.usecase.device;
 
+import com.observer.data.entity.device.DeviceEntity;
 import com.observer.domain.dto.device.DeleteDeviceUseCaseRequest;
 import com.observer.domain.external.dao.device.DeviceDao;
 import com.observer.domain.service.device.GetDeviceMemberIdService;
 import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
-import com.observer.entity.device.DeviceEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

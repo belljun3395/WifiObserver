@@ -1,6 +1,6 @@
 package com.observer.domain.dto.router;
 
-import com.observer.entity.router.RouterEntity;
+import com.observer.data.entity.router.RouterEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

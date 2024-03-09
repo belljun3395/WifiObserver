@@ -1,11 +1,11 @@
 package com.observer.domain.usecase.device;
 
+import com.observer.data.entity.device.DeviceEntity;
 import com.observer.domain.dto.device.GetDevicesUseCaseRequest;
 import com.observer.domain.dto.device.GetDevicesUseCaseResponse;
 import com.observer.domain.external.dao.device.DeviceDao;
 import com.observer.domain.service.device.GetDeviceMemberIdService;
 import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
-import com.observer.entity.device.DeviceEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

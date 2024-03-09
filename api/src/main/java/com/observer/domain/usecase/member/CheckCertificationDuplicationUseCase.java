@@ -1,9 +1,9 @@
 package com.observer.domain.usecase.member;
 
+import com.observer.data.entity.member.CertificationData;
 import com.observer.domain.dto.member.CheckCertificationDuplicationUseCaseRequest;
 import com.observer.domain.dto.member.CheckCertificationDuplicationUseCaseResponse;
 import com.observer.domain.external.dao.member.MemberDao;
-import com.observer.entity.member.CertificationData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
 package com.observer.domain.usecase.connection;
 
+import com.observer.data.entity.history.ConnectHistoryEntity;
 import com.observer.domain.dto.connection.ConnectionHistoryInfo;
 import com.observer.domain.dto.connection.GetConnectionHistoryUseCaseRequest;
 import com.observer.domain.dto.connection.GetConnectionHistoryUseCaseResponse;
@@ -9,8 +10,6 @@ import com.observer.domain.service.connection.GetConnectionMemberIdService;
 import com.observer.domain.service.connection.GetConnectionMemberRouterHostInfoService;
 import com.observer.domain.service.connection.dto.ConnectionDeviceInfo;
 import com.observer.domain.service.connection.dto.RouterHostInfo;
-import com.observer.entity.history.ConnectHistoryEntity;
-import com.observer.persistence.history.connect.ConnectHistoryRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

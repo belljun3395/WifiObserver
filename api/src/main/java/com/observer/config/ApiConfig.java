@@ -1,10 +1,13 @@
 package com.observer.config;
 
+import com.observer.data.config.DataModuleConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = ApiConfig.BASE_PACKAGE)
+@Import(value = {DataModuleConfig.class})
 public class ApiConfig {
 
 	public static final String BASE_PACKAGE = "com.observer";
