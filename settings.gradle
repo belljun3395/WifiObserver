@@ -5,3 +5,5 @@ include 'api'
 include 'client'
 include 'client:router'
 findProject(':client:router')?.name = 'router'
+include 'data'
+

@@ -1,0 +1,26 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // database
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'mysql:mysql-connector-java'
+
+    api 'org.hibernate:hibernate-envers'
+
+    api 'org.hibernate.validator:hibernate-validator'
+    api 'javax.annotation:javax.annotation-api'
+
+    annotationProcessor("javax.persistence:javax.persistence-api")
+
+    // jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: "${jsr305Version}"
+}
