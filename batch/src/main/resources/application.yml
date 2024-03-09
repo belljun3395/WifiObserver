@@ -1,0 +1,10 @@
+server:
+  port: 18080
+spring:
+  config:
+    use-legacy-processing: true
+  profiles:
+    include:
+      - client
+      - mysql
+      - batch
