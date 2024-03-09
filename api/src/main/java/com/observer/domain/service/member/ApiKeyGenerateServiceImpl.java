@@ -35,7 +35,7 @@ public class ApiKeyGenerateServiceImpl implements ApiKeyGenerateService {
 				throw new RuntimeException("API Key generation is failed.");
 			}
 		}
-		if (!Objects.equals(apiKey, Strings.EMPTY)) {
+		if (Objects.equals(apiKey, Strings.EMPTY)) {
 			throw new RuntimeException("API Key generation is failed.");
 		}
 		return apiKey;
