@@ -101,8 +101,9 @@ public class HttpSecurityConfig {
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
 								"/reports/**",
+								"/sample",
 								"/api/v1/members/check/certification/**")
-						.antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/login")
+						.antMatchers(HttpMethod.POST, "/sample", "/api/v1/members", "/api/v1/members/login")
 						.antMatchers(HttpMethod.PUT, "/api/v1/members/key");
 	}
 
@@ -120,8 +121,9 @@ public class HttpSecurityConfig {
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
 								"/reports/**",
+								"/sample",
 								"/api/v1/members/check/certification/**")
-						.antMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/login")
+						.antMatchers(HttpMethod.POST, "/sample", "/api/v1/members", "/api/v1/members/login")
 						.antMatchers(HttpMethod.PUT, "/api/v1/members/key");
 	}
 
