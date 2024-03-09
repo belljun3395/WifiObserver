@@ -1,0 +1,11 @@
+apply from: '../tasks/docs-task.gradle'
+
+dependencies {
+    implementation project(':data')
+    implementation project(':client:router')
+
+    // batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework:spring-context-support'
+    implementation "org.quartz-scheduler:quartz:${quartzVersion}"
+}
