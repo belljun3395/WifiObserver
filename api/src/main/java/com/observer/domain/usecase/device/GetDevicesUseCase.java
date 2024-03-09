@@ -38,7 +38,7 @@ public class GetDevicesUseCase {
 		List<DeviceEntity> deviceEntities = deviceDao.findAllByRouterIdAndDeletedFalse(routerEntityId);
 		List<DeviceEntity> memberDeviceEntities =
 				deviceEntities.stream()
-						.filter(entity -> !entity.getMemberId().equals(memberId))
+						.filter(entity -> entity.getMemberId().equals(memberId))
 						.collect(Collectors.toList());
 
 		return GetDevicesUseCaseResponse.from(memberDeviceEntities);
