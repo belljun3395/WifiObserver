@@ -93,11 +93,13 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 
 			// 신규 접속 Device Id 목록
 			Set<Long> newConnectDeviceIds = ifContainsRemoveDeviceIds;
+			log.info("======> newConnectDeviceIds: {}", newConnectDeviceIds);
 			for (Long newConnectDeviceId : newConnectDeviceIds) {
 				log.info("======> saveNewRecord() deviceId: {}", newConnectDeviceId);
 				saveNewRecord(newConnectDeviceId, routerId, now);
 			}
 		}
+		log.info("======================================================");
 	}
 
 	private RouterEntity getRouterEntity(String host) {
