@@ -29,6 +29,7 @@ public class GetConnectionMemberRouterHostInfoService {
 						.routerId(routerInfoSupport.getRouterId())
 						.ip(ip)
 						.port(port)
+						.serviceType(routerInfoSupport.getServiceType())
 						.certification(routerInfoSupport.getCertification())
 						.password(routerInfoSupport.getPassword())
 						.build());
