@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kor">
+
+<head>
+  <title></title>
+  <meta content="summary_large_image" name="twitter:card" />
+  <meta content="website" property="og:type" />
+  <meta content="" property="og:description" />
+  <meta content="https://wn1nwqc0dj.preview-postedstuff.com/V2-hT4f-ZZnB8-ZESgg-mDfw/" property="og:url" />
+  <meta content="https://pro-bee-beepro-thumbnail.getbee.io/messages/1147878/1133547/2107563/10658545_large.jpg" property="og:image" />
+  <meta content="" property="og:title" />
+  <meta content="" name="description" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width" name="viewport" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@100;200;300;400;500;600;700;800;900" rel="stylesheet" type="text/css" />
+  <style>
+    .fieldError {
+      color: red;
+    }
+
+    .bee-row,
+    .bee-row-content {
+      position: relative
+    }
+
+    .bee-form .bee-form-row .bee-field button {
+      font-size: inherit;
+      font-family: inherit
+    }
+
+    body {
+      color: #000000;
+      font-family: Oswald, Arial, Helvetica Neue, Helvetica, sans-serif
+    }
+
+    a {
+      color: #0068A5
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body,
+    h2 {
+      margin: 0
+    }
+
+    .bee-row-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex
+    }
+
+    .bee-row-content .bee-col-w6 {
+      flex-basis: 50%
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 div.label:not(.inline),
+    .bee-row-2 .bee-col-1 .bee-block-1 label:not(.inline),
+    .bee-row-content .bee-col-w12 {
+      flex-basis: 100%
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1,
+    .bee-row-2 .bee-col-1 .bee-block-1 .bee-button-container {
+      text-align: center
+    }
+
+    .bee-icon .bee-icon-label-right a {
+      text-decoration: none
+    }
+
+    .bee-divider {
+      overflow: auto
+    }
+
+    .bee-divider .center {
+      margin: 0 auto
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 .bee-form-row:not(.bee-sidelabel) input:not([type=checkbox]):not([type=radio]) {
+      width: 100%
+    }
+
+    .bee-form .bee-form-row .bee-field {
+      padding: 3px;
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .bee-form .bee-form-row .bee-field input:not([type=checkbox]):not([type=radio]) {
+      flex-grow: 1;
+      font-family: inherit;
+      font-size: inherit
+    }
+
+    .bee-form .bee-form-row .bee-field .bee-button-container {
+      flex-grow: 1
+    }
+
+    .bee-form input[type=color] {
+      border: none;
+      height: 38px
+    }
+
+    .bee-form input[type=color]::-webkit-color-swatch-wrapper {
+      margin: 0;
+      padding: 2px
+    }
+
+    .bee-list ul {
+      margin: 0;
+      padding: 0
+    }
+
+    .bee-form input[type=color]::-webkit-color-swatch {
+      margin: 0;
+      padding: 0
+    }
+
+    .bee-icon {
+      display: inline-block;
+      vertical-align: middle
+    }
+
+    .bee-icon .bee-content {
+      display: flex;
+      align-items: center
+    }
+
+    @media (max-width:768px) {
+      .bee-form form {
+        width: 100% !important
+      }
+
+      .bee-row-content:not(.no_stack) {
+        display: block
+      }
+    }
+
+    .bee-row-1,
+    .bee-row-2 {
+      background-repeat: no-repeat;
+      background-size: auto
+    }
+
+    .bee-row-1 .bee-row-content,
+    .bee-row-2 .bee-row-content {
+      background-color: #ffffff;
+      background-repeat: no-repeat;
+      background-size: auto;
+      color: #000000
+    }
+
+    .bee-row-1 .bee-col-1,
+    .bee-row-2 .bee-col-1,
+    .bee-row-3 .bee-col-1 {
+      padding-bottom: 5px;
+      padding-top: 5px
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 {
+      font-family: inherit;
+      font-size: 16px;
+      padding-left: 30px;
+      padding-right: 30px
+    }
+
+    .bee-row-2 .bee-col-2 {
+      padding-top: 5px
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-2 {
+      padding-bottom: 10px;
+      padding-left: 35px;
+      padding-right: 35px;
+      text-align: center;
+      width: 100%
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3,
+    .bee-row-2 .bee-col-2 .bee-block-4,
+    .bee-row-2 .bee-col-2 .bee-block-5 {
+      padding: 10px
+    }
+
+    .bee-row-3 {
+      background-color: #ffffff;
+      background-repeat: no-repeat
+    }
+
+    .bee-row-3 .bee-row-content {
+      background-color: #ffffff;
+      background-repeat: no-repeat;
+      color: #000000
+    }
+
+    .bee-row-3 .bee-col-1 .bee-block-1 {
+      color: #1e0e4b;
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      padding-bottom: 5px;
+      padding-top: 5px;
+      text-align: center
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3,
+    .bee-row-2 .bee-col-2 .bee-block-5 {
+      color: #101112;
+      direction: ltr;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 120%;
+      text-align: left
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3 ul,
+    .bee-row-2 .bee-col-2 .bee-block-5 ul {
+      list-style-type: square;
+      list-style-position: inside
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3 li:not(:last-child),
+    .bee-row-2 .bee-col-2 .bee-block-5 li:not(:last-child) {
+      margin-bottom: 0
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3 li ul,
+    .bee-row-2 .bee-col-2 .bee-block-5 li ul {
+      margin-top: 0
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3 li a,
+    .bee-row-2 .bee-col-2 .bee-block-5 li a {
+      color: #7747FF
+    }
+
+    .bee-row-2 .bee-col-2 .bee-block-3 li li,
+    .bee-row-2 .bee-col-2 .bee-block-5 li li {
+      margin-left: 30px
+    }
+
+    .bee-row-3 .bee-col-1 .bee-block-1 .bee-icon-image {
+      padding: 5px 6px 5px 5px
+    }
+
+    .bee-row-3 .bee-col-1 .bee-block-1 .bee-icon:not(.bee-icon-first) .bee-content {
+      margin-left: 0
+    }
+
+    .bee-row-3 .bee-col-1 .bee-block-1 .bee-icon::not(.bee-icon-last) .bee-content {
+      margin-right: 0
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 form {
+      display: inline-block;
+      width: 100%
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 div.label,
+    .bee-row-2 .bee-col-1 .bee-block-1 label {
+      color: #101112;
+      font-weight: 700;
+      letter-spacing: normal;
+      line-height: 200%;
+      text-align: left;
+      display: block
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 ::-webkit-input-placeholder {
+      color: #000000
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 :-moz-placeholder {
+      color: #000000
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 ::-moz-placeholder {
+      color: #000000
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 :-ms-input-placeholder {
+      color: #000000
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 .bee-field>label:first-child,
+    .bee-row-2 .bee-col-1 .bee-block-1 div.label {
+      padding: 3px
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 input:not([type=checkbox]):not([type=radio]):not([type=image]) {
+      background-color: #ffffff;
+      border-bottom: 1px solid #000000;
+      border-left: 1px solid #000000;
+      border-radius: 4px;
+      border-right: 1px solid #000000;
+      border-top: 1px solid #000000;
+      color: #000000;
+      padding: 5px;
+      min-height: 42px
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 input:not([type=checkbox]):not([type=radio]):focus {
+      outline-color: transparent
+    }
+
+    .bee-row-2 .bee-col-1 .bee-block-1 button {
+      background-color: #0c0c0c;
+      border-bottom: 0 solid transparent;
+      border-left: 0 solid transparent;
+      border-radius: 0;
+      border-right: 0px solid transparent;
+      border-top: 0 solid transparent;
+      color: #ffffff;
+      letter-spacing: normal;
+      line-height: 200%;
+      padding: 10px 20px;
+      width: 100%
+    }
+  </style>
+</head>
+
+<body>
+<div class="bee-page-container">
+  <div class="bee-row bee-row-1">
+    <div class="bee-row-content">
+      <div class="bee-col bee-col-1 bee-col-w12">
+        <div class="bee-block bee-block-1 bee-spacer">
+          <div class="spacer" style="height:30px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bee-row bee-row-2">
+    <div class="bee-row-content">
+      <div class="bee-col bee-col-1 bee-col-w6">
+        <div class="bee-block bee-block-1 bee-form">
+          <form accept-charset="UTF-8" th:action="@{/sample}" th:object="${request}" autocomplete="on" enctype="multipart/form-data" method="post" target="_self">
+            <div class="bee-form-row">
+              <div class="bee-field bee-field-r1c0m0i1"><label for="r1c0m0i1">공유기 주소</label><input id="r1c0m0i1" name="firstname" required="" type="text" th:field="${request.host}" /><span class="fieldError" th:if = "${#fields.hasErrors('host')}"> 주소 형식을 확인해 주세요.</span></div>
+            </div>
+            <div class="bee-form-row">
+              <div class="bee-field bee-field-r1c0m0i2"><label for="r1c0m0i2">공유기 포트</label><input id="r1c0m0i2" name="lastname" required="" type="text" th:field="${request.port}" /></div>
+            </div>
+            <div class="bee-form-row">
+              <div class="bee-field bee-field-r1c0m0i3"><label for="r1c0m0i3">공유기 아이디</label><input id="r1c0m0i3" name="email" required="" type="text" th:field="${request.certification}" /><span class="fieldError" th:if = "${#fields.hasErrors('certification')}">아이디는 필수입니다.</span></div>
+            </div>
+            <div class="bee-form-row">
+              <div class="bee-field bee-field-r1c0m0i4"><label for="r1c0m0i4">공유기 비밀번호</label><input id="r1c0m0i4" name="message" type="text" th:field="${request.password}" /><span class="fieldError" th:if = "${#fields.hasErrors('password')}">비밀번호는 필수입니다.</span></div>
+            </div>
+            <div class="bee-form-row">
+              <div class="bee-field bee-field-r1c0m0i5">
+                <div class="bee-button-container"><button id="r1c0m0i5" name="submit" type="submit" value="조회">조회</button></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="bee-col bee-col-2 bee-col-w6">
+        <div class="bee-block bee-block-1 bee-spacer">
+          <div class="spacer" style="height:30px;"></div>
+        </div>
+        <div class="bee-block bee-block-2 bee-heading">
+          <h2 style="color:#160f0f;direction:ltr;font-family:Oswald, Arial, Helvetica Neue, Helvetica, sans-serif;font-size:30px;font-weight:700;letter-spacing:normal;line-height:120%;text-align:left;margin-top:0;margin-bottom:0;"><span class="tinyMce-placeholder">공유기 접속 기기 목록</span> </h2>
+        </div>
+        <div class="bee-block bee-block-3 bee-list">
+          <div><span th:if="${users == null}"> 조회 결과가 존재하지 않습니다. </span></div>
+          <ul th:if="${users != null}" th:each="user : ${users}">
+            <li><span , th:text="${user.user}"> </span></li>
+            <br/>
+          </ul>
+        </div>
+        <div class="bee-block bee-block-4 bee-divider">
+          <div class="center bee-separator" style="border-top:1px solid #dddddd;width:100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
