@@ -43,13 +43,13 @@
   </appender>
 
   <springProfile name="default">
-    <logger name="com.zzaug" level="INFO" additivity="false">
+    <logger name="com.observer" level="INFO" additivity="false">
       <appender-ref ref="LOGSTASH"/>
     </logger>
   </springProfile>
 
   <springProfile name="prod">
-    <logger name="com.zzaug" level="INFO" additivity="false">
+    <logger name="com.observer" level="INFO" additivity="false">
       <appender-ref ref="LOGSTASH"/>
     </logger>
   </springProfile>
@@ -58,7 +58,7 @@
     <root level="INFO">
       <appender-ref ref="CONSOLE"/>
     </root>
-    <logger name="com.zzaug" level="DEBUG" additivity="false">
+    <logger name="com.observer" level="DEBUG" additivity="false">
       <appender-ref ref="CONSOLE"/>
       <appender-ref ref="LOGSTASH"/>
     </logger>
@@ -71,7 +71,7 @@
     <logger name="org.springframework.transaction.interceptor" level="DEBUG" additivity="false">
       <appender-ref ref="CONSOLE"/>
     </logger>
-    <logger name="com.zzaug" level="DEBUG" additivity="false">
+    <logger name="com.observer" level="DEBUG" additivity="false">
       <appender-ref ref="CONSOLE"/>
 <!--      <appender-ref ref="LOGSTASH"/>-->
     </logger>
