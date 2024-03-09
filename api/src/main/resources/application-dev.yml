@@ -7,3 +7,4 @@ spring:
       - mysql-dev
       - security-dev
       - cookie-dev
+      - log-dev

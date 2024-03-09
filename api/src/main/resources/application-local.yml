@@ -7,3 +7,4 @@ spring:
       - mysql-local
       - security-local
       - cookie-local
+      - log-local

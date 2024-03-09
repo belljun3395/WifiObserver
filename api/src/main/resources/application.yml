@@ -7,3 +7,4 @@ spring:
       - mysql
       - security
       - cookie
+      - log

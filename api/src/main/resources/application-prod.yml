@@ -7,3 +7,4 @@ spring:
       - mysql-prod
       - security-prod
       - cookie-prod
+      - log-prod
