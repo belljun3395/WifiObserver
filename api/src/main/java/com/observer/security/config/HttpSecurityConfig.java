@@ -1,6 +1,7 @@
 package com.observer.security.config;
 
 import com.observer.common.config.cors.CorsConfigurationSourceProperties;
+import com.observer.security.authentication.api.ApiKeyAuthProvider;
 import com.observer.security.filter.api.ApiKeyFilter;
 import com.observer.security.filter.exception.ApiKeyExceptionHandlerFilter;
 import com.observer.security.handler.DelegatedAccessDeniedHandler;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -27,6 +29,7 @@ public class HttpSecurityConfig {
 	private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
 	private final DelegatedAccessDeniedHandler accessDeniedHandler;
 	private final CorsConfigurationSourceProperties securityCorsConfigurationSourceProperties;
+	private final ApiKeyAuthProvider apiKeyAuthProvider;
 
 	@Bean
 	@Profile("!prod")
@@ -75,7 +78,9 @@ public class HttpSecurityConfig {
 	}
 
 	public ApiKeyFilter generateAuthenticationFilter() {
-		return new ApiKeyFilter();
+		ApiKeyFilter filter = new ApiKeyFilter();
+		filter.setAuthenticationManager(new ProviderManager(apiKeyAuthProvider));
+		return filter;
 	}
 
 	public OncePerRequestFilter getTokenInvalidExceptionHandlerFilter() {
