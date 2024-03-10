@@ -8,3 +8,8 @@ spring:
       - security-prod
       - cookie-prod
       - log-prod
+
+springdoc:
+  swagger-ui:
+    url: /docs/openapi3.yaml
+    path: /swagger

@@ -39,3 +39,21 @@ dependencies {
     // logstash
     implementation 'net.logstash.logback:logstash-logback-encoder:6.1'
 }
+
+def moduleStaticPath = "/api/src/main/resources/static"
+swaggerSources {
+    sample {
+        setInputFile(file(rootProject.rootDir.toString() + moduleStaticPath + "/openapi3.yaml"))
+    }
+}
+
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+}
+
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn 'generateSwaggerUI'
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into(rootProject.rootDir.toString() + moduleStaticPath + "/docs/swagger-ui")
+}
