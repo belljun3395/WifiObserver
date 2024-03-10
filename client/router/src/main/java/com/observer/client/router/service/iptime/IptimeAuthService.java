@@ -7,10 +7,11 @@ import com.observer.client.router.http.dto.generator.iptime.IptimeAuthClientBody
 import com.observer.client.router.http.dto.generator.iptime.IptimeAuthClientHeaderGenerator;
 import com.observer.client.router.http.dto.http.RouterConnectBody;
 import com.observer.client.router.http.dto.http.iptime.IptimeWifiAuthClientDto;
+import com.observer.client.router.service.RouterAuthService;
+import com.observer.client.router.service.util.CookieResolver;
 import com.observer.client.router.support.dto.request.iptime.IptimeAuthServiceRequest;
 import com.observer.client.router.support.dto.response.RouterAuthInfo;
 import com.observer.client.router.support.dto.response.RouterAuthResponse;
-import com.observer.client.router.util.CookieResolver;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeAuthService {
+public class IptimeAuthService implements RouterAuthService<IptimeAuthServiceRequest> {
 
 	private static final String HTTP = "http://";
 
@@ -35,6 +36,7 @@ public class IptimeAuthService {
 	private final CookieResolver cookieResolver;
 	private final IptimeAuthClient authClientCommand;
 
+	@Override
 	public RouterAuthResponse execute(IptimeAuthServiceRequest request) {
 		final String host = request.getHost();
 		IptimeWifiAuthClientDto dto = getClientDto(request);

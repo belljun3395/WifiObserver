@@ -5,11 +5,13 @@ import com.observer.client.router.http.client.iptime.IptimeUsersClient;
 import com.observer.client.router.http.dto.generator.iptime.IptimeBrowseClientHeaderGenerator;
 import com.observer.client.router.http.dto.http.iptime.IptimeRouterConnectBody;
 import com.observer.client.router.http.dto.http.iptime.IptimeWifiBrowseClientDto;
+import com.observer.client.router.service.RouterUsersService;
+import com.observer.client.router.service.util.resolver.users.IptimeRouterUsersOnConnectFilterDecorator;
+import com.observer.client.router.service.util.resolver.users.RouterUsersSupport;
 import com.observer.client.router.support.dto.request.iptime.IptimeUsersServiceRequest;
 import com.observer.client.router.support.dto.response.RouterUser;
 import com.observer.client.router.support.dto.response.RouterUsers;
 import com.observer.client.router.support.dto.response.RouterUsersResponse;
-import com.observer.client.router.util.resolver.users.IptimeRouterUsersOnConnectFilterDecorator;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeUsersService {
+public class IptimeUsersService implements RouterUsersService<IptimeUsersServiceRequest> {
 
 	private static final String HTTP = "http://";
 
@@ -34,6 +36,7 @@ public class IptimeUsersService {
 	private final IptimeRouterUsersOnConnectFilterDecorator iptimeRouterUsersOnConnectFilterDecorator;
 	private final IptimeUsersClient iptimeUsersClient;
 
+	@Override
 	public RouterUsersResponse execute(IptimeUsersServiceRequest request) {
 		final String host = request.getHost();
 		IptimeWifiBrowseClientDto data = getClientDto(request);
@@ -60,7 +63,9 @@ public class IptimeUsersService {
 			throw new ClientException(e);
 		}
 		clientResponse = Objects.requireNonNull(clientResponse);
-		return iptimeRouterUsersOnConnectFilterDecorator.resolve(clientResponse).stream()
+		return iptimeRouterUsersOnConnectFilterDecorator
+				.resolve(RouterUsersSupport.of(clientResponse))
+				.stream()
 				.map(source -> RouterUser.builder().user(source).build())
 				.collect(Collectors.toList());
 	}

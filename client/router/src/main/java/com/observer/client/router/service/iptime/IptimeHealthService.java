@@ -4,6 +4,7 @@ import com.observer.client.router.exception.ClientException;
 import com.observer.client.router.http.client.HealthClientImpl;
 import com.observer.client.router.http.dto.http.RouterConnectStatus;
 import com.observer.client.router.http.dto.http.iptime.IptimeWifiHealthClientDto;
+import com.observer.client.router.service.RouterHealthService;
 import com.observer.client.router.support.dto.request.WifiHealthServiceRequest;
 import com.observer.client.router.support.dto.response.RouterHealthResponse;
 import java.io.IOException;
@@ -15,12 +16,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class IptimeHealthService {
+public class IptimeHealthService implements RouterHealthService {
 
 	private static final String HTTP = "http://";
 
 	private final HealthClientImpl healthClient;
 
+	@Override
 	public RouterHealthResponse execute(WifiHealthServiceRequest request) {
 		final String host = request.getHost();
 		IptimeWifiHealthClientDto dto = getClientDto(request);
