@@ -124,7 +124,7 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 	}
 
 	private void saveDisconnectRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
-		final LocalDateTime connectDateTime = historyEntity.getConnectTime();
+		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
 		final long connectedMinutes = Duration.between(connectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
@@ -140,7 +140,7 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 	}
 
 	private void checkRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
-		final LocalDateTime connectDateTime = historyEntity.getConnectTime();
+		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
 		final long connectedMinutes = Duration.between(connectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
