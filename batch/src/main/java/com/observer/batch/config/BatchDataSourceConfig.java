@@ -1,5 +1,8 @@
 package com.observer.batch.config;
 
+import static com.observer.batch.config.BatchConfig.BEAN_NAME_PREFIX;
+
+import com.observer.data.config.JpaDataSourceConfig;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -13,6 +16,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -35,6 +39,8 @@ public class BatchDataSourceConfig {
 	public static final String TRANSACTION_MANAGER_NAME =
 			ENTITY_BEAN_NAME_PREFIX + "TransactionManager";
 	public static final String DATASOURCE_NAME = ENTITY_BEAN_NAME_PREFIX + "DataSource";
+	public static final String BATCH_API_CHAINED_TRANSACTION_MANAGER =
+			"batchApiChainedTransactionManager";
 	private static final String JPA_PROPERTIES_NAME = ENTITY_BEAN_NAME_PREFIX + "JpaProperties";
 	private static final String HIBERNATE_PROPERTIES_NAME =
 			ENTITY_BEAN_NAME_PREFIX + "HibernateProperties";
@@ -43,6 +49,8 @@ public class BatchDataSourceConfig {
 	private static final String PERSIST_UNIT = ENTITY_BEAN_NAME_PREFIX + "PersistenceUnit";
 	private static final String ENTITY_MANAGER_FACTORY_BUILDER_NAME =
 			ENTITY_BEAN_NAME_PREFIX + "ManagerFactoryBuilder";
+	private static final String BATCH_DATA_SOURCE_SCRIPT_DATABASE_INITIALIZER_BEAN_NAME =
+			BEAN_NAME_PREFIX + "BatchDataSourceScriptDatabaseInitializer";
 
 	@Bean(name = DATASOURCE_NAME)
 	@ConfigurationProperties(prefix = BASE_PROPERTY_PREFIX + ".datasource")
@@ -98,5 +106,14 @@ public class BatchDataSourceConfig {
 	public PlatformTransactionManager transactionManager(
 			@Qualifier(ENTITY_MANAGER_FACTORY_NAME) EntityManagerFactory emf) {
 		return new JpaTransactionManager(emf);
+	}
+
+	// todo: JtaTransactionManager 와 ChainedTransactionManager 비교 해보기
+	@Bean(name = BATCH_API_CHAINED_TRANSACTION_MANAGER)
+	public PlatformTransactionManager chainedTransactionManager(
+			@Qualifier(TRANSACTION_MANAGER_NAME) PlatformTransactionManager batchTransactionManager,
+			@Qualifier(JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
+					PlatformTransactionManager apiTransactionManager) {
+		return new ChainedTransactionManager(batchTransactionManager, apiTransactionManager);
 	}
 }
