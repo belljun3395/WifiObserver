@@ -131,7 +131,7 @@ class MemberControllerTest {
 				.perform(
 						post(BASE_URL + "/delete", 0)
 								.content(content)
-								.header("Authorization", "{{accessToken}}")
+								.header("Wokey", "{{apiKey}}")
 								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
