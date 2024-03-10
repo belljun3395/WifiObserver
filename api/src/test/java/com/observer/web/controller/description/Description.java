@@ -102,9 +102,9 @@ public class Description {
 		return fieldWithPath("message").type(JsonFieldType.STRING).description("message");
 	}
 
-	public static HeaderDescriptorWithType authHeader() {
-		return headerWithName("Authorization")
-				.defaultValue("{{accessToken}}")
-				.description("Bearer 어세스 토큰");
+	public static HeaderDescriptorWithType apiKeyHeader() {
+		return headerWithName("Wokey")
+				.defaultValue("{{apiKey}}")
+				.description("API Key");
 	}
 }

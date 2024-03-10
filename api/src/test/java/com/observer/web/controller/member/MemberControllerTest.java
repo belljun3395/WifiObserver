@@ -142,7 +142,7 @@ class MemberControllerTest {
 												.description("회원 탈퇴")
 												.tag(TAG)
 												.requestSchema(Schema.schema("DeleteMemberRequest"))
-												.requestHeaders(Description.authHeader())
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("DeleteMemberResponse"))
 												.responseFields(Description.deleted())
 												.build())));
