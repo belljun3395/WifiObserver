@@ -122,7 +122,7 @@ xxx 도메인를 외부에서 활용할 수 있도록 지원하는 클래스를 
 
 ## API 문서
 
-[API 문서 바로가기](https://wifiobserver.store/swagger-ui/index.html)
+[API 문서 바로가기](https://wifiobserver.store/docs/swagger-ui/index.html)
 
 ### 로컬에서 확인
 

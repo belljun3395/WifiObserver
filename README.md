@@ -48,7 +48,7 @@ IPTIME 공유기에 접속하여, [관리자 페이지](http://192.168.0.1/sess-
 
 주소: https://wifiobserver.store
 
-[swagger-ui](https://wifiobserver.store/swagger-ui/index.html)에 정의된 API를 사용할 수 있습니다.
+[swagger-ui](https://wifiobserver.store/docs/swagger-ui/index.html)에 정의된 API를 사용할 수 있습니다.
 
 ## 프로젝트를 시작하는 방법
 
@@ -74,7 +74,7 @@ cd scripts/
 
 ### 4. API 문서를 생성합니다.
 
-[swagger-ui](https://wifiobserver.store/swagger-ui/index.html): 배포된 API 문서
+[swagger-ui](https://wifiobserver.store/docs/swagger-ui/index.html): 배포된 API 문서
 
 ```bash
 ./gradlew  :api:openapi3
