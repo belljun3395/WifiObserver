@@ -5,9 +5,9 @@ import com.observer.domain.dto.connection.ConnectionHistoryInfo;
 import com.observer.domain.dto.connection.GetConnectionHistoryUseCaseRequest;
 import com.observer.domain.dto.connection.GetConnectionHistoryUseCaseResponse;
 import com.observer.domain.external.dao.history.connect.ConnectHistoryDao;
-import com.observer.domain.service.connection.GetConnectionDeviceInfoService;
-import com.observer.domain.service.connection.GetConnectionMemberIdService;
-import com.observer.domain.service.connection.GetConnectionMemberRouterHostInfoService;
+import com.observer.domain.service.connection.GetConnectionDeviceInfoQuery;
+import com.observer.domain.service.connection.GetConnectionMemberIdQuery;
+import com.observer.domain.service.connection.GetConnectionMemberRouterHostInfoQuery;
 import com.observer.domain.service.connection.dto.ConnectionDeviceInfo;
 import com.observer.domain.service.connection.dto.RouterHostInfo;
 import java.time.LocalDateTime;
@@ -28,20 +28,20 @@ public class GetConnectionHistoryUseCase {
 
 	private final ConnectHistoryDao connectHistoryRepository;
 
-	private final GetConnectionMemberIdService getConnectionMemberIdService;
-	private final GetConnectionMemberRouterHostInfoService getConnectionMemberRouterHostInfoService;
+	private final GetConnectionMemberIdQuery getConnectionMemberIdQuery;
+	private final GetConnectionMemberRouterHostInfoQuery getConnectionMemberRouterHostInfoQuery;
 
-	private final GetConnectionDeviceInfoService getConnectionDeviceInfoService;
+	private final GetConnectionDeviceInfoQuery getConnectionDeviceInfoQuery;
 
 	@Transactional(readOnly = true)
 	public GetConnectionHistoryUseCaseResponse execute(GetConnectionHistoryUseCaseRequest request) {
 		final String apiKey = request.getApiKey();
 		final Long routerId = request.getRouterId();
 
-		Long memberId = getConnectionMemberIdService.execute(apiKey);
+		Long memberId = getConnectionMemberIdQuery.execute(apiKey);
 
 		Optional<RouterHostInfo> routerHostInfoSource =
-				getConnectionMemberRouterHostInfoService.execute(routerId, memberId);
+				getConnectionMemberRouterHostInfoQuery.execute(routerId, memberId);
 		if (routerHostInfoSource.isEmpty()) {
 			throw new IllegalArgumentException("not found router info");
 		}
@@ -61,7 +61,7 @@ public class GetConnectionHistoryUseCase {
 			final Long deviceId = deviceRecord.getKey();
 			final String record = deviceRecord.getValue();
 			Optional<ConnectionDeviceInfo> deviceInfoSource =
-					getConnectionDeviceInfoService.execute(deviceId);
+					getConnectionDeviceInfoQuery.execute(deviceId);
 			if (deviceInfoSource.isEmpty()) {
 				continue;
 			}

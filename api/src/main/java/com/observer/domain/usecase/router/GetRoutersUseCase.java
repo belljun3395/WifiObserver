@@ -4,7 +4,7 @@ import com.observer.data.entity.router.RouterEntity;
 import com.observer.domain.dto.router.GetRoutersUseCaseRequest;
 import com.observer.domain.dto.router.GetRoutersUseCaseResponse;
 import com.observer.domain.external.dao.router.RouterDao;
-import com.observer.domain.service.router.GetRouterMemberIdService;
+import com.observer.domain.service.router.GetRouterMemberIdQuery;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class GetRoutersUseCase {
 
 	private final RouterDao routerDao;
 
-	private final GetRouterMemberIdService getMemberIdService;
+	private final GetRouterMemberIdQuery getMemberIdService;
 
 	public GetRoutersUseCaseResponse execute(GetRoutersUseCaseRequest request) {
 		final String apiKey = request.getApiKey();

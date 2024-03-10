@@ -4,8 +4,8 @@ import com.observer.data.entity.device.DeviceEntity;
 import com.observer.domain.dto.device.PostDeviceUseCaseRequest;
 import com.observer.domain.dto.device.PostDeviceUseCaseResponse;
 import com.observer.domain.external.dao.device.DeviceDao;
-import com.observer.domain.service.device.GetDeviceMemberIdService;
-import com.observer.domain.service.device.GetDeviceMemberRouterIdService;
+import com.observer.domain.service.device.GetDeviceMemberIdQuery;
+import com.observer.domain.service.device.GetDeviceMemberRouterIdQuery;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,8 @@ public class PostDeviceUseCase {
 
 	private final DeviceDao deviceDao;
 
-	private final GetDeviceMemberIdService getMemberIdService;
-	private final GetDeviceMemberRouterIdService getMemberRouterIdService;
+	private final GetDeviceMemberIdQuery getMemberIdService;
+	private final GetDeviceMemberRouterIdQuery getMemberRouterIdService;
 
 	public PostDeviceUseCaseResponse execute(PostDeviceUseCaseRequest request) {
 		final String apiKey = request.getApiKey();

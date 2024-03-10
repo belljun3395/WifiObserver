@@ -5,8 +5,8 @@ import com.observer.domain.dto.connection.IptimeCurrentConnectionUseCaseResponse
 import com.observer.domain.external.client.connection.GetConnectionService;
 import com.observer.domain.external.client.dto.connection.ConnectedUsersRequest;
 import com.observer.domain.external.client.dto.connection.ConnectedUsersResponse;
-import com.observer.domain.service.connection.GetConnectionMemberIdService;
-import com.observer.domain.service.connection.GetConnectionMemberRouterHostInfoService;
+import com.observer.domain.service.connection.GetConnectionMemberIdQuery;
+import com.observer.domain.service.connection.GetConnectionMemberRouterHostInfoQuery;
 import com.observer.domain.service.connection.dto.RouterHostInfo;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GetIptimeConnectionUsersUseCase {
 
-	private final GetConnectionMemberIdService getConnectionMemberIdService;
-	private final GetConnectionMemberRouterHostInfoService getConnectionMemberRouterHostInfoService;
+	private final GetConnectionMemberIdQuery getConnectionMemberIdQuery;
+	private final GetConnectionMemberRouterHostInfoQuery getConnectionMemberRouterHostInfoQuery;
 
 	private final GetConnectionService getIptimeConnectionService;
 
@@ -30,9 +30,9 @@ public class GetIptimeConnectionUsersUseCase {
 		final String apiKey = request.getApiKey();
 		final Long routerId = request.getRouterId();
 
-		Long memberId = getConnectionMemberIdService.execute(apiKey);
+		Long memberId = getConnectionMemberIdQuery.execute(apiKey);
 		Optional<RouterHostInfo> routerHostInfoSource =
-				getConnectionMemberRouterHostInfoService.execute(routerId, memberId);
+				getConnectionMemberRouterHostInfoQuery.execute(routerId, memberId);
 		if (routerHostInfoSource.isEmpty()) {
 			throw new IllegalArgumentException("not found router info");
 		}

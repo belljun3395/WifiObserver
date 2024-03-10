@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GetRouterInfoSupportService {
+public class GetRouterInfoSupportQuery {
 
 	private final RouterDao routerDao;
 

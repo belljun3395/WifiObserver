@@ -2,7 +2,7 @@ package com.observer.domain.service.connection;
 
 import com.observer.domain.service.connection.dto.ConnectionDeviceInfo;
 import com.observer.domain.service.device.support.DeviceInfoSupport;
-import com.observer.domain.service.device.support.GetDeviceInfoSupportService;
+import com.observer.domain.service.device.support.GetDeviceInfoSupportQuery;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GetConnectionDeviceInfoService {
+public class GetConnectionDeviceInfoQuery {
 
-	private final GetDeviceInfoSupportService getDeviceInfoSupportService;
+	private final GetDeviceInfoSupportQuery getDeviceInfoSupportQuery;
 
 	public Optional<ConnectionDeviceInfo> execute(Long deviceId) {
 		Optional<DeviceInfoSupport> deviceInfoSupportSource =
-				getDeviceInfoSupportService.execute(deviceId);
+				getDeviceInfoSupportQuery.execute(deviceId);
 		if (deviceInfoSupportSource.isEmpty()) {
 			return Optional.empty();
 		}

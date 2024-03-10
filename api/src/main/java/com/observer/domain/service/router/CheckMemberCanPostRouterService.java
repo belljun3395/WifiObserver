@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CheckMemberPostRouter {
+public class CheckMemberCanPostRouterService {
 
 	private final RouterDao routerDao;
 

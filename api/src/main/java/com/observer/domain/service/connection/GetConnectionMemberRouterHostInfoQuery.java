@@ -1,7 +1,7 @@
 package com.observer.domain.service.connection;
 
 import com.observer.domain.service.connection.dto.RouterHostInfo;
-import com.observer.domain.service.router.support.GetRouterInfoSupportService;
+import com.observer.domain.service.router.support.GetRouterInfoSupportQuery;
 import com.observer.domain.service.router.support.RouterInfoSupport;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GetConnectionMemberRouterHostInfoService {
+public class GetConnectionMemberRouterHostInfoQuery {
 
-	private final GetRouterInfoSupportService getRouterInfoSupportService;
+	private final GetRouterInfoSupportQuery getRouterInfoSupportQuery;
 
 	public Optional<RouterHostInfo> execute(Long routerId, Long memberId) {
 		RouterInfoSupport routerInfoSupport =
-				getRouterInfoSupportService.execute(routerId).orElseThrow(IllegalStateException::new);
+				getRouterInfoSupportQuery.execute(routerId).orElseThrow(IllegalStateException::new);
 		if (!routerInfoSupport.getMemberId().equals(memberId)) {
 			return Optional.empty();
 		}

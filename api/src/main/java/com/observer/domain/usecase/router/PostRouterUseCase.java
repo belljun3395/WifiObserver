@@ -5,8 +5,8 @@ import com.observer.data.entity.router.RouterServiceType;
 import com.observer.domain.dto.router.PostRouterUseCaseRequest;
 import com.observer.domain.dto.router.PostRouterUseCaseResponse;
 import com.observer.domain.external.dao.router.RouterDao;
-import com.observer.domain.service.router.CheckMemberPostRouter;
-import com.observer.domain.service.router.GetRouterMemberIdService;
+import com.observer.domain.service.router.CheckMemberCanPostRouterService;
+import com.observer.domain.service.router.GetRouterMemberIdQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ public class PostRouterUseCase {
 
 	private final RouterDao routerDao;
 
-	private final GetRouterMemberIdService getMemberIdService;
+	private final GetRouterMemberIdQuery getMemberIdService;
 
-	private final CheckMemberPostRouter checkMemberPostRouter;
+	private final CheckMemberCanPostRouterService checkMemberCanPostRouterService;
 
 	public PostRouterUseCaseResponse execute(PostRouterUseCaseRequest request) {
 		final String apiKey = request.getApiKey();
@@ -33,7 +33,7 @@ public class PostRouterUseCase {
 		Long memberId = getMemberIdService.execute(apiKey);
 
 		log.debug("Check member can post router. memberId: {}", memberId);
-		boolean canPost = checkMemberPostRouter.execute(memberId);
+		boolean canPost = checkMemberCanPostRouterService.execute(memberId);
 		if (!canPost) {
 			throw new IllegalStateException("member can't post more router");
 		}
