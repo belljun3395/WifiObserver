@@ -8,3 +8,4 @@ spring:
       - client
       - mysql
       - batch
+      - log

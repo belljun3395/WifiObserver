@@ -8,3 +8,4 @@ spring:
       - client-local
       - mysql-local
       - batch-local
+      - log-local

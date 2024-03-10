@@ -8,3 +8,4 @@ spring:
       - client-prod
       - mysql-prod
       - batch-prod
+      - log-prod

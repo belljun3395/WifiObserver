@@ -8,4 +8,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework:spring-context-support'
     implementation "org.quartz-scheduler:quartz:${quartzVersion}"
+
+    // logstash
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.1'
 }

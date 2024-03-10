@@ -8,3 +8,4 @@ spring:
       - client-dev
       - mysql-dev
       - batch-dev
+      - log-dev
