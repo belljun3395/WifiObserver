@@ -1,18 +1,15 @@
 package com.observer.client.router.support.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class RouterAuthResponse {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
+public class RouterAuthResponse extends BasicWifiServiceResponse {
 
-	private final String host;
 	private final RouterAuthInfo response;
 }

@@ -1,18 +1,16 @@
 package com.observer.client.router.support.dto.request.iptime;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.observer.client.router.support.dto.request.BasicWifiServiceRequest;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class IptimeUsersServiceRequest {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
+public class IptimeUsersServiceRequest extends BasicWifiServiceRequest {
 
 	private final String authInfo;
-	private final String host;
 }
