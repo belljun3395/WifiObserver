@@ -1,11 +1,9 @@
-package com.observer.client.router.util.resolver.users;
+package com.observer.client.router.service.util.resolver.users;
 
-import com.observer.client.router.http.dto.http.iptime.IptimeRouterConnectBody;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,17 +21,17 @@ public class IptimeRouterUsersOnConnectFilterDecorator extends RouterUsersResolv
 	}
 
 	@Override
-	public List<String> resolve(IptimeRouterConnectBody source) {
+	public List<String> resolve(RouterUsersSupport source) {
 		List<String> allUsersProperties = super.resolve(source);
 
-		List<String> onConnectUserProperties = getOnConnectUserProperties(source.getBody());
+		List<String> onConnectUserProperties =
+				getOnConnectUserProperties(source.getSource().getUserSource());
 
 		return filterOnConnectUsers(allUsersProperties, onConnectUserProperties);
 	}
 
-	private List<String> getOnConnectUserProperties(Document source) {
-		Element body = source.body();
-		Elements tbody = body.select(TBODY);
+	private List<String> getOnConnectUserProperties(Element userSource) {
+		Elements tbody = userSource.select(TBODY);
 
 		return tbody.stream()
 				.map(e -> e.select(INPUT))

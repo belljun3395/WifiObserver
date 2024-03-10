@@ -1,6 +1,6 @@
-package com.observer.client.router.util.resolver.users;
+package com.observer.client.router.service.util.resolver.users;
 
-import com.observer.client.router.http.dto.http.iptime.IptimeRouterConnectBody;
+import com.observer.client.router.service.util.resolver.users.RouterUsersSupport.RouterUserSource;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +17,9 @@ public class IptimeRouterUsersResolver implements RouterUsersResolver {
 	private static final String STYLE = "#a9a9a9";
 
 	@Override
-	public List<String> resolve(IptimeRouterConnectBody source) {
-		Element body = source.getBody();
+	public List<String> resolve(RouterUsersSupport source) {
+		RouterUserSource userSource = source.getSource();
+		Element body = userSource.getUserSource();
 
 		Elements tbody = body.select(TBODY);
 

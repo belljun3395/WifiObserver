@@ -1,6 +1,5 @@
-package com.observer.client.router.util.resolver.users;
+package com.observer.client.router.service.util.resolver.users;
 
-import com.observer.client.router.http.dto.http.iptime.IptimeRouterConnectBody;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +10,7 @@ public class RouterUsersResolverDecorator implements RouterUsersResolver {
 	private final RouterUsersResolver routerUsersResolver;
 
 	@Override
-	public List<String> resolve(IptimeRouterConnectBody source) {
+	public List<String> resolve(RouterUsersSupport source) {
 		return routerUsersResolver.resolve(source);
 	}
 }
