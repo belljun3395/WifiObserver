@@ -29,7 +29,7 @@ public class ConnectHistoryEntity extends DiviceAndRouterFKBaseEntity {
 	@Column(name = "connect_time", nullable = false, updatable = false)
 	private LocalDateTime connectTime;
 
-	@Column(name = "check_time", nullable = false, updatable = false)
+	@Column(name = "check_time", nullable = false)
 	private LocalDateTime checkTime;
 
 	@Column(name = "disconnect_time", nullable = false, updatable = false)
@@ -37,7 +37,7 @@ public class ConnectHistoryEntity extends DiviceAndRouterFKBaseEntity {
 
 	@Builder.Default
 	@Enumerated(EnumType.STRING)
-	@Column(name = "connect_status", nullable = false, updatable = false)
+	@Column(name = "connect_status", nullable = false)
 	private ConnectStatus connectStatus = ConnectStatus.CONNECTED;
 
 	@Builder.Default

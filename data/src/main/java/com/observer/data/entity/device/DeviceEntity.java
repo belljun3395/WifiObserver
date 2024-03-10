@@ -27,10 +27,10 @@ public class DeviceEntity extends RouterAndMemberFKBaseEntity {
 
 	@Builder.Default
 	@Enumerated(EnumType.STRING)
-	@Column(name = "device_type", nullable = false, updatable = false)
+	@Column(name = "device_type", nullable = false)
 	private DeviceType type = DeviceType.NOTEBOOK;
 
-	@Column(name = "mac", nullable = false, updatable = false)
+	@Column(name = "mac", nullable = false)
 	private String mac;
 
 	@Builder.Default
