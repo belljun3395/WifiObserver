@@ -72,7 +72,10 @@ class ConnectionControllerTest {
 				.thenReturn(GetConnectionHistoryUseCaseResponse.of(infos));
 
 		mockMvc
-				.perform(get(BASE_URL + "/history/{routerId}", 1L).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						get(BASE_URL + "/history/{routerId}", 1L)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -82,6 +85,7 @@ class ConnectionControllerTest {
 												.description("라우터에 속한 기기 목록의 해당 달 누적 접속 기록을 조회합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("GetConnectionHistoryRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("GetConnectionHistoryResponse"))
 												.responseFields(
 														Description.success(
@@ -129,7 +133,10 @@ class ConnectionControllerTest {
 								.build());
 
 		mockMvc
-				.perform(get(BASE_URL + "/iptime/{routerId}", 1L).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						get(BASE_URL + "/iptime/{routerId}", 1L)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -139,6 +146,7 @@ class ConnectionControllerTest {
 												.description("Iptime 라우터에 접속한 사용자 목록을 조회합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("GetIptimeConnectionUsersRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("GetIptimeConnectionUsersResponse"))
 												.responseFields(
 														Description.success(

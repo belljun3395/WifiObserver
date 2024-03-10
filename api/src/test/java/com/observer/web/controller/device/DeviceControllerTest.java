@@ -78,7 +78,11 @@ class DeviceControllerTest {
 								.build());
 
 		mockMvc
-				.perform(post(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						post(BASE_URL, 0)
+								.content(content)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -88,6 +92,7 @@ class DeviceControllerTest {
 												.description("기기를 등록합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("SaveDeviceRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("SaveDeviceResponse"))
 												.responseFields(
 														Description.created(
@@ -120,7 +125,10 @@ class DeviceControllerTest {
 
 		mockMvc
 				.perform(
-						post(BASE_URL + "/delete", 0).content(content).contentType(MediaType.APPLICATION_JSON))
+						post(BASE_URL + "/delete", 0)
+								.content(content)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -130,6 +138,7 @@ class DeviceControllerTest {
 												.description("기기를 삭제합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("DeleteDeviceRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("DeleteDeviceResponse"))
 												.responseFields(Description.deleted())
 												.build())));
@@ -151,7 +160,10 @@ class DeviceControllerTest {
 		when(getDeviceUseCase.execute(any())).thenReturn(GetDevicesUseCaseResponse.from(entities));
 
 		mockMvc
-				.perform(get(BASE_URL + "/routers/{routerId}", 1L).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						get(BASE_URL + "/routers/{routerId}", 1L)
+								.contentType(MediaType.APPLICATION_JSON)
+								.header("Wokey", "{{apiKey}}"))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -161,6 +173,7 @@ class DeviceControllerTest {
 												.description("라우터의 기기 목록을 조회합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("GetRouterDevicesRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("GetRouterDevicesResponse"))
 												.responseFields(
 														Description.success(

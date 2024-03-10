@@ -76,7 +76,11 @@ class RouterControllerTest {
 								.build());
 
 		mockMvc
-				.perform(post(BASE_URL, 0).content(content).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						post(BASE_URL, 0)
+								.content(content)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -86,6 +90,7 @@ class RouterControllerTest {
 												.description("새로운 라우터를 등록합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("PostRouterRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("PostRouterResponse"))
 												.responseFields(
 														Description.created(
@@ -112,7 +117,10 @@ class RouterControllerTest {
 
 		mockMvc
 				.perform(
-						post(BASE_URL + "/delete", 0).content(content).contentType(MediaType.APPLICATION_JSON))
+						post(BASE_URL + "/delete", 0)
+								.content(content)
+								.header("Wokey", "{{apiKey}}")
+								.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -122,6 +130,7 @@ class RouterControllerTest {
 												.description("라우터를 삭제합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("DeleteRouterRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("DeleteRouterResponse"))
 												.responseFields(Description.deleted())
 												.build())));
@@ -142,7 +151,8 @@ class RouterControllerTest {
 		when(getRoutersUseCase.execute(any())).thenReturn(GetRoutersUseCaseResponse.from(routers));
 
 		mockMvc
-				.perform(get(BASE_URL, 0).contentType(MediaType.APPLICATION_JSON))
+				.perform(
+						get(BASE_URL, 0).header("Wokey", "{{apiKey}}").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(
 						document(
@@ -152,6 +162,7 @@ class RouterControllerTest {
 												.description("라우터 목록을 조회합니다.")
 												.tag(TAG)
 												.requestSchema(Schema.schema("BrowseRoutersRequest"))
+												.requestHeaders(Description.apiKeyHeader())
 												.responseSchema(Schema.schema("BrowseRoutersResponse"))
 												.responseFields(
 														Description.success(
