@@ -1,7 +1,7 @@
-package com.observer.client.router.util;
+package com.observer.client.router.service.util;
 
 import com.observer.client.router.http.dto.http.RouterConnectBody;
-import com.observer.client.router.util.resolver.string.StringResolver;
+import com.observer.client.router.service.util.resolver.string.StringResolver;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

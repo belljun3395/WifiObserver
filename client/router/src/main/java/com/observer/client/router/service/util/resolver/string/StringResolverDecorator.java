@@ -1,4 +1,4 @@
-package com.observer.client.router.util.resolver.string;
+package com.observer.client.router.service.util.resolver.string;
 
 import lombok.RequiredArgsConstructor;
 
