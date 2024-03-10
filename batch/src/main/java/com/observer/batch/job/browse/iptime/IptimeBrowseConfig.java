@@ -1,10 +1,11 @@
 package com.observer.batch.job.browse.iptime;
 
+import com.observer.batch.config.BatchDataSourceConfig;
 import com.observer.batch.job.browse.iptime.step.IptimeAuthProcessor;
 import com.observer.batch.job.browse.iptime.step.IptimeBrowseProcessor;
 import com.observer.batch.job.browse.iptime.step.IptimeConnectHistoryWriter;
-import com.observer.batch.support.listener.BrowseStepLoggingListener;
-import com.observer.batch.support.param.TimeStamper;
+import com.observer.batch.job.utils.listener.BrowseStepLoggingListener;
+import com.observer.batch.job.utils.param.TimeStamper;
 import com.observer.client.router.support.dto.response.RouterUsersResponse;
 import com.observer.data.config.JpaDataSourceConfig;
 import com.observer.data.entity.router.RouterEntity;
@@ -33,15 +34,22 @@ public class IptimeBrowseConfig {
 
 	public static final String JOB_NAME = "IptimeBrowseJob";
 	public static final String STEP_NAME = "iptimeBrowseStep";
+	private static final String IPTIME_BROWSE_READER_NAME = "iptimeRouterReader";
 	private static final int CHUNK_SIZE = 20;
 	private static final String FIND_IPTIME_ROUTER_STATUS_ON_QUERY =
 			"select r from router r where r.serviceType = 'IPTIME' and  r.status = 'ON' and r.deleted = false";
 
+	// builder
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private final TimeStamper timeStamper;
+
+	// listener
 	private final BrowseStepLoggingListener browseStepLoggingListener;
 
+	// param
+	private final TimeStamper timeStamper;
+
+	// step
 	private final IptimeAuthProcessor iptimeAuthProcessor;
 	private final IptimeBrowseProcessor iptimeBrowseProcessor;
 	private final IptimeConnectHistoryWriter iptimeConnectHistoryWriter;
@@ -58,7 +66,7 @@ public class IptimeBrowseConfig {
 
 	@Autowired
 	public void setTransactionManager(
-			@Qualifier(value = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
+			@Qualifier(value = BatchDataSourceConfig.BATCH_API_CHAINED_TRANSACTION_MANAGER)
 					PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}
@@ -72,6 +80,8 @@ public class IptimeBrowseConfig {
 				.build();
 	}
 
+	// todo: 현재 공유기에서 사용자 목록을 조회하는 작업과 이를 기반으로 사용자 접속 이력을 갱신하는 작업을 하나의 스텝에서 처리하고 있는데 이를 분리하였을 때 장단
+	// 알아보기
 	@Bean
 	public Step iptimeBrowseStep() {
 		return this.stepBuilderFactory
@@ -88,7 +98,7 @@ public class IptimeBrowseConfig {
 	@Bean
 	public JpaPagingItemReader<RouterEntity> reader() {
 		return new JpaPagingItemReaderBuilder<RouterEntity>()
-				.name("iptimeRouterReader")
+				.name(IPTIME_BROWSE_READER_NAME)
 				.entityManagerFactory(entityManagerFactory)
 				.pageSize(CHUNK_SIZE)
 				.queryString(FIND_IPTIME_ROUTER_STATUS_ON_QUERY)
