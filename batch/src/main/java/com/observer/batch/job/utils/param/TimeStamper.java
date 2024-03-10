@@ -1,4 +1,4 @@
-package com.observer.batch.support.param;
+package com.observer.batch.job.utils.param;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
