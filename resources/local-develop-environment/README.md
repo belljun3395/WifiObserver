@@ -17,8 +17,8 @@ docker-compose stop
 * 초기화 파일 수정시에는 `docker-compose down` 으로 완전 초기화를 해야한다.
 
 ## mysql client
-* 서비스용 계정 : `recycle-local`
-* 서비스용 비밀번호 : `recycle-local`
+* 서비스용 계정 : `observer-local`
+* 서비스용 비밀번호 : `observer-local`
 * [docker localhost adminer](http://localhost:18080) 로 접속하면 [adminer](https://www.adminer.org) Web DB Client 로 DB조회 조작 가능.
 
 ```shell
