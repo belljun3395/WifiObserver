@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BatchSupportConfig {
+public class BatchPropertyConfig {
 
 	public static final String PROPERTY_BEAN_NAME = BEAN_NAME_PREFIX + "Properties";
 

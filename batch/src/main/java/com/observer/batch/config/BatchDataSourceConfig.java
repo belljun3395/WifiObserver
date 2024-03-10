@@ -1,6 +1,7 @@
 package com.observer.batch.config;
 
 import static com.observer.batch.config.BatchConfig.BEAN_NAME_PREFIX;
+import static com.observer.batch.config.BatchPropertyConfig.PROPERTY_BEAN_NAME;
 
 import com.observer.data.config.JpaDataSourceConfig;
 import java.util.Map;
@@ -8,6 +9,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.batch.BatchDataSourceScriptDatabaseInitializer;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -115,5 +118,12 @@ public class BatchDataSourceConfig {
 			@Qualifier(JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 					PlatformTransactionManager apiTransactionManager) {
 		return new ChainedTransactionManager(batchTransactionManager, apiTransactionManager);
+	}
+
+	@Bean(name = BATCH_DATA_SOURCE_SCRIPT_DATABASE_INITIALIZER_BEAN_NAME)
+	BatchDataSourceScriptDatabaseInitializer batchDataSourceInitializer(
+		@Qualifier(value = DATASOURCE_NAME) DataSource dataSource,
+		@Qualifier(value = PROPERTY_BEAN_NAME) BatchProperties properties) {
+		return new BatchDataSourceScriptDatabaseInitializer(dataSource, properties.getJdbc());
 	}
 }

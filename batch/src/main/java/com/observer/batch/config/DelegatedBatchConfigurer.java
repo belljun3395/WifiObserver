@@ -18,7 +18,7 @@ public class DelegatedBatchConfigurer extends JpaBatchConfigurer {
 	public PlatformTransactionManager transactionManager;
 
 	public DelegatedBatchConfigurer(
-			@Qualifier(value = BatchSupportConfig.PROPERTY_BEAN_NAME) BatchProperties properties,
+			@Qualifier(value = BatchPropertyConfig.PROPERTY_BEAN_NAME) BatchProperties properties,
 			@Qualifier(value = BatchDataSourceConfig.DATASOURCE_NAME) DataSource dataSource,
 			TransactionManagerCustomizers transactionManagerCustomizers,
 			@Qualifier(value = BatchDataSourceConfig.ENTITY_MANAGER_FACTORY_NAME)
