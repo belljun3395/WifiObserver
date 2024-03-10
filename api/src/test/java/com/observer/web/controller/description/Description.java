@@ -103,8 +103,6 @@ public class Description {
 	}
 
 	public static HeaderDescriptorWithType apiKeyHeader() {
-		return headerWithName("Wokey")
-				.defaultValue("{{apiKey}}")
-				.description("API Key");
+		return headerWithName("Wokey").defaultValue("{{apiKey}}").description("API Key");
 	}
 }
