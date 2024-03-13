@@ -9,6 +9,9 @@ public interface ConnectHistoryDao {
 	List<ConnectHistoryEntity> findAllByRouterIdAndCreateAtAfterAndDeletedFalse(
 			Long routerId, LocalDateTime createAt);
 
+	List<ConnectHistoryEntity> findAllByRouterIdAndCreateAtBeforeAndDeletedFalse(
+			Long routerId, LocalDateTime createAt);
+
 	ConnectHistoryEntity saveConnectHistory(ConnectHistoryEntity connectHistoryEntity);
 
 	void deleteConnectHistory(ConnectHistoryEntity connectHistoryEntity);

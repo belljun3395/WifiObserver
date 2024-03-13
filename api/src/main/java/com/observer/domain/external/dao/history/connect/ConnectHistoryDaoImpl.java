@@ -23,6 +23,13 @@ public class ConnectHistoryDaoImpl implements ConnectHistoryDao {
 	}
 
 	@Override
+	public List<ConnectHistoryEntity> findAllByRouterIdAndCreateAtBeforeAndDeletedFalse(
+			Long routerId, LocalDateTime createAt) {
+		return connectHistoryRepository.findAllByRouterIdAndCreateAtBeforeAndDeletedFalse(
+				routerId, createAt);
+	}
+
+	@Override
 	public ConnectHistoryEntity saveConnectHistory(ConnectHistoryEntity connectHistoryEntity) {
 		return connectHistoryRepository.save(connectHistoryEntity);
 	}

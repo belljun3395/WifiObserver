@@ -11,6 +11,9 @@ public interface ConnectHistoryRepository extends JpaRepository<ConnectHistoryEn
 	List<ConnectHistoryEntity> findAllByRouterIdAndCreateAtAfterAndDeletedFalse(
 			Long routerId, LocalDateTime createAt);
 
+	List<ConnectHistoryEntity> findAllByRouterIdAndCreateAtBeforeAndDeletedFalse(
+		Long routerId, LocalDateTime createAt);
+
 	List<ConnectHistoryEntity> findAllByRouterIdAndConnectStatusAndDeletedFalse(
 			Long routerId, ConnectStatus connectStatus);
 }
