@@ -48,18 +48,24 @@ public class GetConnectionHistoryUseCase {
 		RouterHostInfo routerHostInfo = routerHostInfoSource.get();
 
 		List<ConnectHistoryEntity> historyEntitySources =
-				connectHistoryRepository.findAllByRouterIdAndCreateAtAfterAndDeletedFalse(
+				connectHistoryRepository.findAllByRouterIdAndCreateAtBeforeAndDeletedFalse(
 						routerHostInfo.getRouterId(), LocalDateTime.now());
+
 		Map<Long, String> deviceRecords =
 				historyEntitySources.stream()
+						.sorted((r1, r2) -> r2.getCreateAt().compareTo(r1.getCreateAt()))
 						.collect(
 								Collectors.toMap(
-										ConnectHistoryEntity::getDeviceId, ConnectHistoryEntity::getRecord));
+										ConnectHistoryEntity::getDeviceId,
+										ConnectHistoryEntity::getRecord,
+										(r1, r2) -> r1));
+		log.info("deviceRecords: {}", deviceRecords);
 
 		List<ConnectionHistoryInfo> connectionHistoryInfos = new ArrayList<>();
 		for (Map.Entry<Long, String> deviceRecord : deviceRecords.entrySet()) {
 			final Long deviceId = deviceRecord.getKey();
 			final String record = deviceRecord.getValue();
+			log.info("deviceId: {}, record: {}", deviceId, record);
 			Optional<ConnectionDeviceInfo> deviceInfoSource =
 					getConnectionDeviceInfoQuery.execute(deviceId);
 			if (deviceInfoSource.isEmpty()) {
