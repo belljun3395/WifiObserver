@@ -152,8 +152,15 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 			// 이전 월까지의 누적 시간 계산
 			final LocalDateTime nowMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
+			LocalDateTime adjustConnectDateTime =
+					LocalDateTime.of(
+							connectDateTime.getYear(),
+							connectDateTime.getMonth(),
+							connectDateTime.getDayOfMonth(),
+							connectDateTime.getHour(),
+							connectDateTime.getMinute());
 			long beforeNowAccumulateMinutes =
-					Duration.between(connectDateTime, nowMonthStartDateTime).toMinutes();
+					Duration.between(adjustConnectDateTime, nowMonthStartDateTime).toMinutes();
 			recordSupportInfo.accumulate(beforeNowAccumulateMinutes);
 			String beforeNowRecord = recordMapper.execute(recordSupportInfo);
 			recordSupportInfo.resetMonth();
@@ -201,8 +208,15 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 		if (connectDateTime.getDayOfWeek() != now.getDayOfWeek()) {
 			final LocalDateTime nowStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0);
+			LocalDateTime adjustConnectDateTime =
+					LocalDateTime.of(
+							connectDateTime.getYear(),
+							connectDateTime.getMonth(),
+							connectDateTime.getDayOfMonth(),
+							connectDateTime.getHour(),
+							connectDateTime.getMinute());
 			long beforeNowAccumulateMinutes =
-					Duration.between(connectDateTime, nowStartDateTime).toMinutes();
+					Duration.between(adjustConnectDateTime, nowStartDateTime).toMinutes();
 			recordSupportInfo.accumulate(beforeNowAccumulateMinutes);
 			recordSupportInfo.resetDay();
 			long remainAccumulateMinutes = connectedMinutes - beforeNowAccumulateMinutes;
