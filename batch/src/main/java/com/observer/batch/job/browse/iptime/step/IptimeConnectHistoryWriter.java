@@ -125,7 +125,14 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 
 	private void saveDisconnectRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
-		final long connectedMinutes = Duration.between(connectDateTime, now).toMinutes();
+		final LocalDateTime adjustConnectDateTime =
+				LocalDateTime.of(
+						connectDateTime.getYear(),
+						connectDateTime.getMonth(),
+						connectDateTime.getDayOfMonth(),
+						connectDateTime.getHour(),
+						connectDateTime.getMinute());
+		final long connectedMinutes = Duration.between(adjustConnectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
 		RecordSupportInfo recordSupportInfo = recordParser.execute(record);
@@ -141,7 +148,14 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 
 	private void checkRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
-		final long connectedMinutes = Duration.between(connectDateTime, now).toMinutes();
+		final LocalDateTime adjustConnectDateTime =
+				LocalDateTime.of(
+						connectDateTime.getYear(),
+						connectDateTime.getMonth(),
+						connectDateTime.getDayOfMonth(),
+						connectDateTime.getHour(),
+						connectDateTime.getMinute());
+		final long connectedMinutes = Duration.between(adjustConnectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
 		boolean isNewEntity = false;
@@ -152,13 +166,6 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 			// 이전 월까지의 누적 시간 계산
 			final LocalDateTime nowMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
-			LocalDateTime adjustConnectDateTime =
-					LocalDateTime.of(
-							connectDateTime.getYear(),
-							connectDateTime.getMonth(),
-							connectDateTime.getDayOfMonth(),
-							connectDateTime.getHour(),
-							connectDateTime.getMinute());
 			long beforeNowAccumulateMinutes =
 					Duration.between(adjustConnectDateTime, nowMonthStartDateTime).toMinutes();
 			recordSupportInfo.accumulate(beforeNowAccumulateMinutes);
