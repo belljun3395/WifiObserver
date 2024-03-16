@@ -45,7 +45,7 @@ public class RetryAbleIptimeAuthProcessor
 					public RouterAuthResponse recover(RetryContext retryContext) {
 						RouterEntity errorRouter = item.toBuilder().status(RouterStatus.ERROR).build();
 						routerRepository.save(errorRouter);
-						throw new RouterAuthException(item.toString());
+						return null;
 					}
 				});
 	}

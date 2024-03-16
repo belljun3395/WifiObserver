@@ -51,7 +51,7 @@ public class RetryAbleIptimeBrowseProcessor
 										.orElseThrow(() -> new RouterBrowseException(item.toString()));
 						RouterEntity errorRouter = routerEntity.toBuilder().status(RouterStatus.ERROR).build();
 						routerRepository.save(errorRouter);
-						throw new RouterBrowseException(item.toString());
+						return null;
 					}
 				});
 	}
