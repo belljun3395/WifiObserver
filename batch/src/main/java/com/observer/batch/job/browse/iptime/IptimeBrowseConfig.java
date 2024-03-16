@@ -1,6 +1,7 @@
 package com.observer.batch.job.browse.iptime;
 
 import com.observer.batch.config.BatchDataSourceConfig;
+import com.observer.batch.job.browse.exception.AbstractRouterException;
 import com.observer.batch.job.browse.iptime.step.IptimeAuthProcessor;
 import com.observer.batch.job.browse.iptime.step.IptimeBrowseProcessor;
 import com.observer.batch.job.browse.iptime.step.IptimeConnectHistoryWriter;
@@ -34,8 +35,10 @@ public class IptimeBrowseConfig {
 
 	public static final String JOB_NAME = "IptimeBrowseJob";
 	public static final String STEP_NAME = "iptimeBrowseStep";
+	public static final int CHUNK_SIZE = 20;
+
+	private static final int RETRY_LIMIT = 3;
 	private static final String IPTIME_BROWSE_READER_NAME = "iptimeRouterReader";
-	private static final int CHUNK_SIZE = 20;
 	private static final String FIND_IPTIME_ROUTER_STATUS_ON_QUERY =
 			"select r from router r where r.serviceType = 'IPTIME' and  r.status = 'ON' and r.deleted = false";
 
@@ -80,8 +83,6 @@ public class IptimeBrowseConfig {
 				.build();
 	}
 
-	// todo: 현재 공유기에서 사용자 목록을 조회하는 작업과 이를 기반으로 사용자 접속 이력을 갱신하는 작업을 하나의 스텝에서 처리하고 있는데 이를 분리하였을 때 장단
-	// 알아보기
 	@Bean
 	public Step iptimeBrowseStep() {
 		return this.stepBuilderFactory
@@ -90,6 +91,12 @@ public class IptimeBrowseConfig {
 				.reader(reader())
 				.processor(processor())
 				.writer(iptimeConnectHistoryWriter)
+				.faultTolerant()
+				.processorNonTransactional()
+				.retry(AbstractRouterException.class)
+				.retryLimit(RETRY_LIMIT)
+				.skip(AbstractRouterException.class)
+				.skipPolicy(new IptimeBrowseSkipPolicy(CHUNK_SIZE))
 				.transactionManager(transactionManager)
 				.listener(browseStepLoggingListener)
 				.build();
