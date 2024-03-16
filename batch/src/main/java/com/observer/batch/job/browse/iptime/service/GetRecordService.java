@@ -27,11 +27,11 @@ public class GetRecordService {
 		}
 
 		long connectedMinutes = ZeroSecondDateTimeCalculator.between(d1, d2).toMinutes();
-		if (d2.getDayOfWeek() != d1.getDayOfWeek()) {
+		if (d1.getDayOfWeek() != d2.getDayOfWeek()) {
 			final LocalDateTime changedDayStartDateTime =
-					LocalDateTime.of(d1.getYear(), d1.getMonth(), d1.getDayOfMonth(), 0, 0);
+					LocalDateTime.of(d2.getYear(), d2.getMonth(), d2.getDayOfMonth(), 0, 0);
 			long beforeChangeDayAccumulateMinutes =
-					ZeroSecondDateTimeCalculator.between(d2, changedDayStartDateTime).toMinutes();
+					ZeroSecondDateTimeCalculator.between(d1, changedDayStartDateTime).toMinutes();
 			recordInfo.accumulate(beforeChangeDayAccumulateMinutes);
 			recordInfo.resetDay();
 			long remainAccumulateMinutes = connectedMinutes - beforeChangeDayAccumulateMinutes;
