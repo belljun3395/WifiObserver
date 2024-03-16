@@ -39,7 +39,12 @@ public class GetIptimeConnectionService implements GetConnectionService {
 
 		WifiHealthServiceRequest hostRequest =
 				WifiHealthServiceRequest.builder().host(getHost(ip, port)).build();
-		RouterHealthResponse healthResponse = iptimeHealthService.execute(hostRequest);
+		RouterHealthResponse healthResponse = null;
+		try {
+			healthResponse = iptimeHealthService.execute(hostRequest);
+		} catch (ClientException e) {
+			throw new IllegalStateException("router is not connected");
+		}
 		if (healthResponse.getResponse().is4xxClientError()) {
 			throw new IllegalStateException("router is not connected");
 		}
