@@ -7,6 +7,7 @@ import com.observer.data.persistence.history.connect.ConnectHistoryRepository;
 import com.observer.data.support.RecordMapper;
 import com.observer.data.support.RecordParser;
 import com.observer.data.support.RecordSupportInfo;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +36,9 @@ public class CheckRecordService {
 
 		// 접속한 시간과 접속이 끊긴 시간 사이에 월이 바뀐 경우: 월 단위로 누적 시간 계산
 		if (lastConnectDateTime.getMonth() != now.getMonth()) {
-			getRecordService.execute(lastConnectDateTime, now, recordSupportInfo);
+			String beforeNowRecord =
+					getRecordService.execute(lastConnectDateTime, now, recordSupportInfo);
 			recordSupportInfo.resetMonth();
-			String beforeNowRecord = recordMapper.execute(recordSupportInfo);
 
 			LocalDateTime changedMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
