@@ -1,5 +1,7 @@
 package com.observer.client.router.exception;
 
-public class ClientAuthException extends RuntimeException {
+import java.io.IOException;
+
+public class ClientAuthException extends IOException {
 	public ClientAuthException() {}
 }

@@ -37,11 +37,24 @@ public class IptimeUsersService implements RouterUsersService<IptimeUsersService
 	private final IptimeUsersClient iptimeUsersClient;
 
 	@Override
-	public RouterUsersResponse execute(IptimeUsersServiceRequest request) {
+	public RouterUsersResponse execute(IptimeUsersServiceRequest request) throws ClientException {
 		final String host = request.getHost();
 		IptimeWifiBrowseClientDto data = getClientDto(request);
 
-		List<RouterUser> users = getUsers(data);
+		IptimeRouterConnectBody clientResponse = null;
+		try {
+			clientResponse = iptimeUsersClient.execute(data);
+		} catch (IOException e) {
+			throw new ClientException(e);
+		}
+		clientResponse = Objects.requireNonNull(clientResponse);
+
+		List<RouterUser> users =
+				iptimeRouterUsersOnConnectFilterDecorator
+						.resolve(RouterUsersSupport.of(clientResponse))
+						.stream()
+						.map(source -> RouterUser.builder().user(source).build())
+						.collect(Collectors.toList());
 
 		return RouterUsersResponse.builder().host(host).response(new RouterUsers(users)).build();
 	}
@@ -53,20 +66,5 @@ public class IptimeUsersService implements RouterUsersService<IptimeUsersService
 				.headers(headers)
 				.cookie(request.getAuthInfo())
 				.build();
-	}
-
-	private List<RouterUser> getUsers(IptimeWifiBrowseClientDto data) {
-		IptimeRouterConnectBody clientResponse = null;
-		try {
-			clientResponse = iptimeUsersClient.execute(data);
-		} catch (IOException e) {
-			throw new ClientException(e);
-		}
-		clientResponse = Objects.requireNonNull(clientResponse);
-		return iptimeRouterUsersOnConnectFilterDecorator
-				.resolve(RouterUsersSupport.of(clientResponse))
-				.stream()
-				.map(source -> RouterUser.builder().user(source).build())
-				.collect(Collectors.toList());
 	}
 }

@@ -37,11 +37,18 @@ public class IptimeAuthService implements RouterAuthService<IptimeAuthServiceReq
 	private final IptimeAuthClient authClientCommand;
 
 	@Override
-	public RouterAuthResponse execute(IptimeAuthServiceRequest request) {
+	public RouterAuthResponse execute(IptimeAuthServiceRequest request)
+			throws ClientAuthException, ClientException {
 		final String host = request.getHost();
 		IptimeWifiAuthClientDto dto = getClientDto(request);
 
-		RouterConnectBody<Document> auth = getAuth(dto);
+		RouterConnectBody<Document> clientResponse = null;
+		try {
+			clientResponse = authClientCommand.execute(dto);
+		} catch (IOException e) {
+			throw new ClientException(e);
+		}
+		RouterConnectBody<Document> auth = Objects.requireNonNull(clientResponse);
 
 		String cookie = cookieResolver.resolve(auth);
 		if (cookie.isEmpty()) {
@@ -63,15 +70,5 @@ public class IptimeAuthService implements RouterAuthService<IptimeAuthServiceReq
 				.headers(headers)
 				.body(body)
 				.build();
-	}
-
-	private RouterConnectBody<Document> getAuth(IptimeWifiAuthClientDto dto) {
-		RouterConnectBody<Document> clientResponse = null;
-		try {
-			clientResponse = authClientCommand.execute(dto);
-		} catch (IOException e) {
-			throw new ClientException(e);
-		}
-		return Objects.requireNonNull(clientResponse);
 	}
 }
