@@ -29,6 +29,8 @@ public class CheckRecordService {
 	public void execute(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime lastConnectDateTime = historyEntity.getCheckTime();
 		final String record = historyEntity.getRecord();
+		final Long deviceId = historyEntity.getDeviceId();
+		final Long routerId = historyEntity.getRouterId();
 
 		RecordSupportInfo recordSupportInfo = recordParser.execute(record);
 
@@ -54,8 +56,8 @@ public class CheckRecordService {
 					getRecordService.execute(changedMonthStartDateTime, now, recordSupportInfo);
 			connectHistoryRepository.save(
 					ConnectHistoryEntity.builder()
-							.deviceId(historyEntity.getDeviceId())
-							.routerId(historyEntity.getRouterId())
+							.deviceId(deviceId)
+							.routerId(routerId)
 							.connectTime(now)
 							.checkTime(now)
 							.disConnectTime(now)
