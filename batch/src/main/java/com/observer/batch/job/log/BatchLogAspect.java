@@ -20,7 +20,10 @@ public class BatchLogAspect {
 	@Pointcut(value = "execution(* com.observer.batch.job..*.write(..))")
 	public void writeAdvice() {}
 
-	@Around("processAdvice() || writeAdvice()")
+	@Pointcut(value = "execution(* com.observer.batch.job..*.execute(..))")
+	public void serviceAdvice() {}
+
+	@Around("processAdvice() || writeAdvice() || serviceAdvice()")
 	public Object requestLogging(ProceedingJoinPoint joinPoint) throws Throwable {
 		Signature signature = joinPoint.getSignature();
 		String[] splitByDot = signature.getDeclaringTypeName().split("\\.");
