@@ -1,5 +1,7 @@
 package com.observer.domain.external.client.connection;
 
+import com.observer.client.router.exception.ClientAuthException;
+import com.observer.client.router.exception.ClientException;
 import com.observer.client.router.service.iptime.IptimeAuthService;
 import com.observer.client.router.service.iptime.IptimeHealthService;
 import com.observer.client.router.service.iptime.IptimeUsersService;
@@ -48,14 +50,24 @@ public class GetIptimeConnectionService implements GetConnectionService {
 						.userName(userName)
 						.password(password)
 						.build();
-		RouterAuthResponse authResponse = iptimeAuthService.execute(authRequest);
+		RouterAuthResponse authResponse = null;
+		try {
+			authResponse = iptimeAuthService.execute(authRequest);
+		} catch (ClientAuthException | ClientException e) {
+			throw new RuntimeException(e);
+		}
 
 		IptimeUsersServiceRequest browseRequest =
 				IptimeUsersServiceRequest.builder()
 						.authInfo(authResponse.getResponse().getAuth())
 						.host(getHost(ip, port))
 						.build();
-		RouterUsersResponse usersResponse = iptimeUsersService.execute(browseRequest);
+		RouterUsersResponse usersResponse = null;
+		try {
+			usersResponse = iptimeUsersService.execute(browseRequest);
+		} catch (ClientException e) {
+			throw new RuntimeException(e);
+		}
 		ConnectedUsers connectedUsers = toConnectedUsers(usersResponse);
 		return ConnectedUsersResponse.builder().host(ip).response(connectedUsers).build();
 	}
