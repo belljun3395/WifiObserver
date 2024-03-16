@@ -1,9 +1,11 @@
 package com.observer.batch.job.browse.iptime.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.observer.data.config.JpaDataSourceConfig;
 import com.observer.data.entity.history.ConnectHistoryEntity;
 import com.observer.data.entity.history.ConnectStatus;
 import com.observer.data.persistence.history.connect.ConnectHistoryRepository;
+import com.observer.data.support.RecordMapper;
 import com.observer.data.support.RecordParser;
 import com.observer.data.support.RecordSupportInfo;
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public class CheckRecordService {
 	private final GetRecordService getRecordService;
 
 	private final RecordParser recordParser;
+	private final RecordMapper recordMapper;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
 	public void execute(ConnectHistoryEntity historyEntity, LocalDateTime now) {
@@ -31,9 +34,9 @@ public class CheckRecordService {
 
 		// 접속한 시간과 접속이 끊긴 시간 사이에 월이 바뀐 경우: 월 단위로 누적 시간 계산
 		if (lastConnectDateTime.getMonth() != now.getMonth()) {
-			String beforeNowRecord =
-					getRecordService.execute(lastConnectDateTime, now, recordSupportInfo);
+			getRecordService.execute(lastConnectDateTime, now, recordSupportInfo);
 			recordSupportInfo.resetMonth();
+			String beforeNowRecord = recordMapper.execute(recordSupportInfo);
 
 			LocalDateTime changedMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
