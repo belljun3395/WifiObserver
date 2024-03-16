@@ -1,6 +1,5 @@
 package com.observer.batch.job.browse.iptime.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.observer.data.config.JpaDataSourceConfig;
 import com.observer.data.entity.history.ConnectHistoryEntity;
 import com.observer.data.entity.history.ConnectStatus;
