@@ -2,9 +2,9 @@ package com.observer.batch.job.browse.iptime;
 
 import com.observer.batch.config.BatchDataSourceConfig;
 import com.observer.batch.job.browse.exception.AbstractRouterException;
-import com.observer.batch.job.browse.iptime.step.IptimeAuthProcessor;
-import com.observer.batch.job.browse.iptime.step.IptimeBrowseProcessor;
 import com.observer.batch.job.browse.iptime.step.IptimeConnectHistoryWriter;
+import com.observer.batch.job.browse.iptime.step.RetryAbleIptimeAuthProcessor;
+import com.observer.batch.job.browse.iptime.step.RetryAbleIptimeBrowseProcessor;
 import com.observer.batch.job.utils.listener.BrowseStepLoggingListener;
 import com.observer.batch.job.utils.param.TimeStamper;
 import com.observer.client.router.support.dto.response.RouterUsersResponse;
@@ -37,7 +37,6 @@ public class IptimeBrowseConfig {
 	public static final String STEP_NAME = "iptimeBrowseStep";
 	public static final int CHUNK_SIZE = 20;
 
-	private static final int RETRY_LIMIT = 3;
 	private static final String IPTIME_BROWSE_READER_NAME = "iptimeRouterReader";
 	private static final String FIND_IPTIME_ROUTER_STATUS_ON_QUERY =
 			"select r from router r where r.serviceType = 'IPTIME' and  r.status = 'ON' and r.deleted = false";
@@ -53,8 +52,8 @@ public class IptimeBrowseConfig {
 	private final TimeStamper timeStamper;
 
 	// step
-	private final IptimeAuthProcessor iptimeAuthProcessor;
-	private final IptimeBrowseProcessor iptimeBrowseProcessor;
+	private final RetryAbleIptimeAuthProcessor iptimeAuthProcessor;
+	private final RetryAbleIptimeBrowseProcessor iptimeBrowseProcessor;
 	private final IptimeConnectHistoryWriter iptimeConnectHistoryWriter;
 
 	private EntityManagerFactory entityManagerFactory;
@@ -93,8 +92,6 @@ public class IptimeBrowseConfig {
 				.writer(iptimeConnectHistoryWriter)
 				.faultTolerant()
 				.processorNonTransactional()
-				.retry(AbstractRouterException.class)
-				.retryLimit(RETRY_LIMIT)
 				.skip(AbstractRouterException.class)
 				.skipPolicy(new IptimeBrowseSkipPolicy(CHUNK_SIZE))
 				.transactionManager(transactionManager)
