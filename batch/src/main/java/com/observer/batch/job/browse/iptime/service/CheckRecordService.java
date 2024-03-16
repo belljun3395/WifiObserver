@@ -7,7 +7,6 @@ import com.observer.data.persistence.history.connect.ConnectHistoryRepository;
 import com.observer.data.support.RecordMapper;
 import com.observer.data.support.RecordParser;
 import com.observer.data.support.RecordSupportInfo;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
