@@ -26,7 +26,7 @@ public class IptimeAuthProcessor implements ItemProcessor<RouterEntity, RouterAu
 		final String host = item.getHost();
 		final String userName = item.getCertification();
 		final String password = item.getPassword();
-		log.info("===> IptimeAuthProcessor.process() host: {}, userName: {}", host, userName);
+
 		final IptimeAuthServiceRequest request =
 				IptimeAuthServiceRequest.builder().host(host).userName(userName).password(password).build();
 		try {

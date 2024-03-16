@@ -25,7 +25,7 @@ public class IptimeBrowseProcessor
 	public RouterUsersResponse process(RouterAuthResponse item) {
 		final String auth = item.getResponse().getAuth();
 		final String host = item.getHost();
-		log.info("===> IptimeBrowseProcessor.process() host: {}", host);
+
 		final IptimeUsersServiceRequest request =
 				IptimeUsersServiceRequest.builder().authInfo(auth).host(host).build();
 		try {

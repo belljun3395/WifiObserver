@@ -45,7 +45,6 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 	public void write(List<? extends RouterUsersResponse> items) {
 		final LocalDateTime now = LocalDateTime.now();
 
-		log.info("===> IptimeConnectHistoryWriter.write() time: {}", now);
 		log.info("======================================================");
 		for (RouterUsersResponse item : items) {
 			final String host = item.getHost();
