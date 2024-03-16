@@ -55,6 +55,7 @@ public class CheckRecordService {
 							.routerId(historyEntity.getRouterId())
 							.connectTime(now)
 							.checkTime(now)
+							.disConnectTime(now)
 							.connectStatus(ConnectStatus.CONNECTED)
 							.record(newRecord)
 							.build());
