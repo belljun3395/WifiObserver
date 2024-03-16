@@ -45,6 +45,7 @@ public class CheckRecordService {
 			// 이전 월까지의 누적 시간을 기록
 			connectHistoryRepository.save(
 					historyEntity.toBuilder()
+							.checkTime(changedMonthStartDateTime)
 							.disConnectTime(changedMonthStartDateTime)
 							.connectStatus(ConnectStatus.DISCONNECTED)
 							.record(beforeNowRecord)
