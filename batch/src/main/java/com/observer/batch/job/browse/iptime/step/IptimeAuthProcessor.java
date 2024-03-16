@@ -1,5 +1,8 @@
 package com.observer.batch.job.browse.iptime.step;
 
+import com.observer.batch.job.browse.exception.RouterAuthException;
+import com.observer.client.router.exception.ClientAuthException;
+import com.observer.client.router.exception.ClientException;
 import com.observer.client.router.service.iptime.IptimeAuthService;
 import com.observer.client.router.support.dto.request.iptime.IptimeAuthServiceRequest;
 import com.observer.client.router.support.dto.response.RouterAuthResponse;
@@ -26,6 +29,10 @@ public class IptimeAuthProcessor implements ItemProcessor<RouterEntity, RouterAu
 		log.info("===> IptimeAuthProcessor.process() host: {}, userName: {}", host, userName);
 		final IptimeAuthServiceRequest request =
 				IptimeAuthServiceRequest.builder().host(host).userName(userName).password(password).build();
-		return iptimeAuthService.execute(request);
+		try {
+			return iptimeAuthService.execute(request);
+		} catch (ClientAuthException | ClientException e) {
+			throw new RouterAuthException(request.toString());
+		}
 	}
 }

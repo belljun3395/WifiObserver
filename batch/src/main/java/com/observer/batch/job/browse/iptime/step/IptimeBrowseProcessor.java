@@ -1,5 +1,7 @@
 package com.observer.batch.job.browse.iptime.step;
 
+import com.observer.batch.job.browse.exception.RouterBrowseException;
+import com.observer.client.router.exception.ClientException;
 import com.observer.client.router.service.iptime.IptimeUsersService;
 import com.observer.client.router.support.dto.request.iptime.IptimeUsersServiceRequest;
 import com.observer.client.router.support.dto.response.RouterAuthResponse;
@@ -26,6 +28,10 @@ public class IptimeBrowseProcessor
 		log.info("===> IptimeBrowseProcessor.process() host: {}", host);
 		final IptimeUsersServiceRequest request =
 				IptimeUsersServiceRequest.builder().authInfo(auth).host(host).build();
-		return iptimeUsersService.execute(request);
+		try {
+			return iptimeUsersService.execute(request);
+		} catch (ClientException e) {
+			throw new RouterBrowseException(request.toString());
+		}
 	}
 }
