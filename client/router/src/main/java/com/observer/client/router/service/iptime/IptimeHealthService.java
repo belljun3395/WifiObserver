@@ -23,26 +23,22 @@ public class IptimeHealthService implements RouterHealthService {
 	private final HealthClientImpl healthClient;
 
 	@Override
-	public RouterHealthResponse execute(WifiHealthServiceRequest request) {
+	public RouterHealthResponse execute(WifiHealthServiceRequest request) throws ClientException {
 		final String host = request.getHost();
 		IptimeWifiHealthClientDto dto = getClientDto(request);
 
-		RouterConnectStatus health = getHealth(dto);
-
-		return RouterHealthResponse.builder().host(host).response(health.getStatus()).build();
-	}
-
-	private IptimeWifiHealthClientDto getClientDto(WifiHealthServiceRequest request) {
-		return IptimeWifiHealthClientDto.builder().url(HTTP + request.getHost()).build();
-	}
-
-	private RouterConnectStatus getHealth(IptimeWifiHealthClientDto dto) {
 		RouterConnectStatus clientResponse = null;
 		try {
 			clientResponse = healthClient.execute(dto);
 		} catch (IOException e) {
 			throw new ClientException(e);
 		}
-		return Objects.requireNonNull(clientResponse);
+		RouterConnectStatus health = Objects.requireNonNull(clientResponse);
+
+		return RouterHealthResponse.builder().host(host).response(health.getStatus()).build();
+	}
+
+	private IptimeWifiHealthClientDto getClientDto(WifiHealthServiceRequest request) {
+		return IptimeWifiHealthClientDto.builder().url(HTTP + request.getHost()).build();
 	}
 }
