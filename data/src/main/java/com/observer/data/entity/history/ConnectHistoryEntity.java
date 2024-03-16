@@ -32,7 +32,7 @@ public class ConnectHistoryEntity extends DiviceAndRouterFKBaseEntity {
 	@Column(name = "check_time", nullable = false)
 	private LocalDateTime checkTime;
 
-	@Column(name = "disconnect_time", nullable = false, updatable = false)
+	@Column(name = "disconnect_time", nullable = false)
 	private LocalDateTime disConnectTime;
 
 	@Builder.Default
