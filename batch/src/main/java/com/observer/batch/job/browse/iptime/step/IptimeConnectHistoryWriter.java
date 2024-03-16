@@ -1,5 +1,6 @@
 package com.observer.batch.job.browse.iptime.step;
 
+import com.observer.batch.job.utils.ZeroSecondDateTimeCalculator;
 import com.observer.client.router.support.dto.response.RouterUser;
 import com.observer.client.router.support.dto.response.RouterUsersResponse;
 import com.observer.data.config.JpaDataSourceConfig;
@@ -13,7 +14,6 @@ import com.observer.data.persistence.router.RouterRepository;
 import com.observer.data.support.RecordMapper;
 import com.observer.data.support.RecordParser;
 import com.observer.data.support.RecordSupportInfo;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -125,14 +125,8 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 
 	private void saveDisconnectRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
-		final LocalDateTime adjustConnectDateTime =
-				LocalDateTime.of(
-						connectDateTime.getYear(),
-						connectDateTime.getMonth(),
-						connectDateTime.getDayOfMonth(),
-						connectDateTime.getHour(),
-						connectDateTime.getMinute());
-		final long connectedMinutes = Duration.between(adjustConnectDateTime, now).toMinutes();
+		final long connectedMinutes =
+				ZeroSecondDateTimeCalculator.between(connectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
 		RecordSupportInfo recordSupportInfo = recordParser.execute(record);
@@ -148,14 +142,8 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 
 	private void checkRecord(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime connectDateTime = historyEntity.getCheckTime();
-		final LocalDateTime adjustConnectDateTime =
-				LocalDateTime.of(
-						connectDateTime.getYear(),
-						connectDateTime.getMonth(),
-						connectDateTime.getDayOfMonth(),
-						connectDateTime.getHour(),
-						connectDateTime.getMinute());
-		final long connectedMinutes = Duration.between(adjustConnectDateTime, now).toMinutes();
+		final long connectedMinutes =
+				ZeroSecondDateTimeCalculator.between(connectDateTime, now).toMinutes();
 		final String record = historyEntity.getRecord();
 
 		boolean isNewEntity = false;
@@ -167,7 +155,7 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 			final LocalDateTime nowMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
 			long beforeNowAccumulateMinutes =
-					Duration.between(adjustConnectDateTime, nowMonthStartDateTime).toMinutes();
+					ZeroSecondDateTimeCalculator.between(connectDateTime, nowMonthStartDateTime).toMinutes();
 			recordSupportInfo.accumulate(beforeNowAccumulateMinutes);
 			String beforeNowRecord = recordMapper.execute(recordSupportInfo);
 			recordSupportInfo.resetMonth();
@@ -215,15 +203,8 @@ public class IptimeConnectHistoryWriter implements ItemWriter<RouterUsersRespons
 		if (connectDateTime.getDayOfWeek() != now.getDayOfWeek()) {
 			final LocalDateTime nowStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0);
-			LocalDateTime adjustConnectDateTime =
-					LocalDateTime.of(
-							connectDateTime.getYear(),
-							connectDateTime.getMonth(),
-							connectDateTime.getDayOfMonth(),
-							connectDateTime.getHour(),
-							connectDateTime.getMinute());
 			long beforeNowAccumulateMinutes =
-					Duration.between(adjustConnectDateTime, nowStartDateTime).toMinutes();
+					ZeroSecondDateTimeCalculator.between(connectDateTime, nowStartDateTime).toMinutes();
 			recordSupportInfo.accumulate(beforeNowAccumulateMinutes);
 			recordSupportInfo.resetDay();
 			long remainAccumulateMinutes = connectedMinutes - beforeNowAccumulateMinutes;
