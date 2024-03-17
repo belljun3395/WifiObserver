@@ -3,7 +3,7 @@ apply plugin: 'com.epages.restdocs-api-spec'
 apply plugin: 'org.hidetake.swagger.generator'
 
 openapi3 {
-    servers = [ { url = "http://localhost:8080" }]
+    servers = [ { url = "http://localhost:8080" }, { url = "https://wifiobesrver.store"}]
     title = "${projectName}"
     version = "${projectVersion}"
     format = 'yaml'
