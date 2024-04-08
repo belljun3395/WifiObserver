@@ -1,7 +1,7 @@
 package com.observer.client.router.service.iptime;
 
 import com.observer.client.router.exception.ClientException;
-import com.observer.client.router.http.client.HealthClientImpl;
+import com.observer.client.router.http.client.HealthClient;
 import com.observer.client.router.http.dto.http.RouterConnectStatus;
 import com.observer.client.router.http.dto.http.iptime.IptimeWifiHealthClientDto;
 import com.observer.client.router.service.RouterHealthService;
@@ -20,7 +20,7 @@ public class IptimeHealthService implements RouterHealthService {
 
 	private static final String HTTP = "http://";
 
-	private final HealthClientImpl healthClient;
+	private final HealthClient<IptimeWifiHealthClientDto> healthClient;
 
 	@Override
 	public RouterHealthResponse execute(WifiHealthServiceRequest request) throws ClientException {
