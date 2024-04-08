@@ -1,0 +1,9 @@
+spring:
+  config:
+    use-legacy-processing: true
+  profiles:
+    include:
+      - client-wifi
+      - client-local
+      - client-jsoup-local
+      - client-thread-local
