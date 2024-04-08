@@ -1,25 +1,23 @@
 package com.observer.batch.job.browse.iptime.step;
 
 import com.observer.batch.job.browse.exception.RouterAuthException;
+import com.observer.batch.job.browse.iptime.client.BatchIptimeAuthClient;
 import com.observer.client.router.exception.ClientAuthException;
 import com.observer.client.router.exception.ClientException;
-import com.observer.client.router.service.iptime.IptimeAuthService;
 import com.observer.client.router.support.dto.request.iptime.IptimeAuthServiceRequest;
 import com.observer.client.router.support.dto.response.RouterAuthResponse;
 import com.observer.data.entity.router.RouterEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Import(IptimeAuthService.class)
 public class IptimeAuthProcessor implements ItemProcessor<RouterEntity, RouterAuthResponse> {
 
-	private final IptimeAuthService iptimeAuthService;
+	private final BatchIptimeAuthClient iptimeAuthService;
 
 	@Override
 	public RouterAuthResponse process(RouterEntity item) {

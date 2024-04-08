@@ -1,7 +1,6 @@
 package com.observer.batch.job.browse.iptime.step;
 
 import com.observer.batch.job.browse.exception.RouterAuthException;
-import com.observer.client.router.service.iptime.IptimeAuthService;
 import com.observer.client.router.support.dto.response.RouterAuthResponse;
 import com.observer.data.config.JpaDataSourceConfig;
 import com.observer.data.entity.router.RouterEntity;
@@ -10,7 +9,6 @@ import com.observer.data.persistence.router.RouterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.context.annotation.Import;
 import org.springframework.retry.RecoveryCallback;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Import(IptimeAuthService.class)
 public class RetryAbleIptimeAuthProcessor
 		implements ItemProcessor<RouterEntity, RouterAuthResponse> {
 
