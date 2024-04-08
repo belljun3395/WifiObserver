@@ -1,9 +1,9 @@
 package com.observer.batch.job.browse.iptime.service;
 
+import com.observer.batch.job.browse.iptime.dao.ConnectHistoryDao;
 import com.observer.data.config.JpaDataSourceConfig;
 import com.observer.data.entity.history.ConnectHistoryEntity;
 import com.observer.data.entity.history.ConnectStatus;
-import com.observer.data.persistence.history.connect.ConnectHistoryRepository;
 import com.observer.data.support.RecordMapper;
 import com.observer.data.support.RecordParser;
 import com.observer.data.support.RecordSupportInfo;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class CheckRecordService {
-	private final ConnectHistoryRepository connectHistoryRepository;
+	private final ConnectHistoryDao connectHistoryDao;
 
 	private final GetRecordService getRecordService;
 
@@ -25,7 +25,7 @@ public class CheckRecordService {
 	private final RecordMapper recordMapper;
 
 	@Transactional(transactionManager = JpaDataSourceConfig.TRANSACTION_MANAGER_NAME)
-	public void execute(ConnectHistoryEntity historyEntity, LocalDateTime now) {
+	public ConnectHistoryEntity execute(ConnectHistoryEntity historyEntity, LocalDateTime now) {
 		final LocalDateTime lastConnectDateTime = historyEntity.getCheckTime();
 		final String record = historyEntity.getRecord();
 		final Long deviceId = historyEntity.getDeviceId();
@@ -42,7 +42,7 @@ public class CheckRecordService {
 			LocalDateTime changedMonthStartDateTime =
 					LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
 			// 이전 월까지의 누적 시간을 기록
-			connectHistoryRepository.save(
+			connectHistoryDao.save(
 					historyEntity.toBuilder()
 							.checkTime(changedMonthStartDateTime)
 							.disConnectTime(changedMonthStartDateTime)
@@ -54,21 +54,20 @@ public class CheckRecordService {
 			// 새로운 레코드로 저장
 			String newRecord =
 					getRecordService.execute(changedMonthStartDateTime, now, recordSupportInfo);
-			connectHistoryRepository.save(
+			return connectHistoryDao.save(
 					ConnectHistoryEntity.builder()
 							.deviceId(deviceId)
 							.routerId(routerId)
-							.connectTime(now)
+							.connectTime(changedMonthStartDateTime)
 							.checkTime(now)
 							.disConnectTime(now)
 							.connectStatus(ConnectStatus.CONNECTED)
 							.record(newRecord)
 							.build());
-			return;
 		}
 
 		String newRecord = getRecordService.execute(lastConnectDateTime, now, recordSupportInfo);
-		connectHistoryRepository.save(
+		return connectHistoryDao.save(
 				historyEntity.toBuilder()
 						.checkTime(now)
 						.connectStatus(ConnectStatus.CONNECTED)
