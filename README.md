@@ -44,12 +44,6 @@ IPTIME 공유기에 접속하여, [관리자 페이지](http://192.168.0.1/sess-
 
 외부 접속 보안 아래 원격 관리 포트 사용을 클릭하고 적절한 **포트번호**(8080)을 입력합니다. => **공유기 포트 정보입니다.**
 
-## 프로젝트 배포 주소
-
-주소: https://wifiobserver.store
-
-[swagger-ui](https://wifiobserver.store/docs/swagger-ui/index.html)에 정의된 API를 사용할 수 있습니다.
-
 ## 프로젝트를 시작하는 방법
 
 ### 1. 프로젝트를 클론합니다.
