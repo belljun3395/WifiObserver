@@ -68,8 +68,6 @@ cd scripts/
 
 ### 4. API 문서를 생성합니다.
 
-[swagger-ui](https://wifiobserver.store/docs/swagger-ui/index.html): 배포된 API 문서
-
 ```bash
 ./gradlew  :api:openapi3
 ```
